@@ -4,23 +4,164 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF9340"
-    tools:context=".MainActivity">
+    android:background="@color/background_main"
+    tools:context=".MainActivity"
+    android:scrollbars="vertical">
 
-
-    <TextView
-        android:id="@+id/text"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Personal Development Assistant :)"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:textSize="20dp"/>
+        android:id="@+id/scroll">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="03.10.2024"
+            android:textAlignment="textStart"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/todayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сегодня"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="22dp"
+            android:layout_toRightOf="@+id/dateText"
+            android:layout_alignParentRight="true"
+            android:textAlignment="textEnd"
+            android:padding="10dp"/>
 
 
+        <TextView
+            android:id="@+id/timetableBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dateText"
+            android:background="@color/background2"
+            android:textAlignment="center"
+            android:text="Расписание"
+            android:textAllCaps="false"
+            android:textSize="24dp"
+            android:layout_marginBottom="10dp"
+            android:paddingVertical="5dp"
+            />
 
+        <TextView
+            android:id="@+id/notesBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timetableBtn"
+            android:background="@color/background2"
+            android:textAlignment="center"
+            android:text="Заметки"
+            android:textAllCaps="false"
+            android:textSize="24dp"
+            android:layout_marginBottom="10dp"
+            android:paddingVertical="5dp"
+            />
+
+
+        <TextView
+            android:id="@+id/TasksText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notesBtn"
+            android:text="Задачи"
+            android:textAlignment="center"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TasksText"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/forDayTaskText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="На день"
+                android:textSize="22dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/forDayLIST"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp"/>
+
+
+            <TextView
+                android:id="@+id/overdieTaskText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Просрочено"
+                android:textSize="22dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/overdieLIST"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/openEndedTaskText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Бессрочно"
+                android:textSize="22dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/openEndedLIST"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/soonDeadlineTaskText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Скоро дедлайн"
+                android:textSize="22dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/soonDeadlineLIST"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+    </ScrollView>
+    <FrameLayout
+        android:id="@+id/flFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bottom_menu"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        app:itemIconTint="@color/black"
+
+
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_menu"
+
+    />
 
 </RelativeLayout>
