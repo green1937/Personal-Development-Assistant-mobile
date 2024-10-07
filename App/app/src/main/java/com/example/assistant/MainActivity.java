@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -21,24 +22,64 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    TextView dateTextView, notesBtn, timetableBtn;
+    EditText notesEditText;
+    LinearLayout timetableView;
+
     String dateCurrStr, anotherDateStr;
     String itemDay;
     String[] days = { "Сегодня", "Завтра", "Вчера"};
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
-
-        /* Отображение текущей даты */
-        dateCurrStr = getCurrDate();
-        dateTextView.setText(dateCurrStr);
+        dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
 
 
-        /* Выпадающий список с днями "сегодня", "завтра", "вчера" */
-        LocalDate dateLocalDate = LocalDate.parse(dateCurrStr, formatter);
+        showSpinnerDays();  // Выпадающий список дней
 
+        showHiddenElements();  // Показ скрытых элементов (расписание занятий, заметка)
+
+    }
+
+
+
+    /*
+        Определение текущей даты в формате ДЕНЬ.МЕСЯЦ.ГОД.
+    */
+    protected String getCurrDate() {
+        Date currDate = new Date();
+        dateCurrStr = formatForDate.format(currDate);
+        return dateCurrStr;
+    }
+
+
+    /*
+        Получение даты отличной на некоторое кол-во дней от текущей даты в формате ДЕНЬ.МЕСЯЦ.ГОД.
+        Например, для "завтра" - это плюс один день, а для "вчера" - это минус один день
+    */
+    protected String getAnotherDate(int a) {
+        try {
+            Date date = formatForDate.parse(dateCurrStr);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add(Calendar.DATE, a);  // number of days to add
+            date = c.getTime();
+            anotherDateStr = formatForDate.format(date);
+            return anotherDateStr;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /*
+        Выпадающий список с днями "сегодня", "завтра", "вчера".
+        Также меняет дату в зависимости от выбранного дня.
+        Например, если "сегодня", то отобразится текущая дата.
+    */
+    protected void showSpinnerDays() {
         Spinner spinner = findViewById(R.id.daySpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, days);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -70,12 +111,34 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         spinner.setOnItemSelectedListener(itemSelectedListener);
+    }
 
 
-        TextView notesTextView = findViewById(R.id.notesBtn);
-        EditText notesEditText = findViewById(R.id.notesEditText);
+    /*
+        Дает возможность увидеть свёрнутые поля - заметка и расписание занятий.
+        Изначально они скрыты.
+     */
+    protected void showHiddenElements() {
+        //РАСПИСАНИЕ ЗАНЯТИЙ
+        timetableBtn = findViewById(R.id.timetableBtn);
+        timetableView = findViewById(R.id.timetableLayout);
 
-        notesTextView.setOnClickListener(new View.OnClickListener() {
+        timetableBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if(timetableView.getVisibility() == View.GONE) {
+                    timetableView.setVisibility(View.VISIBLE);
+                }
+                else {
+                    timetableView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        //ЗАМЕТКА
+        notesBtn = findViewById(R.id.notesBtn);
+        notesEditText = findViewById(R.id.notesEditText);
+
+        notesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if(notesEditText.getVisibility() == View.GONE) {
                     notesEditText.setVisibility(View.VISIBLE);
@@ -85,35 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
-
-
-    /* Определение текущей даты в формате день.месяц.год */
-    protected String getCurrDate() {
-        Date currDate = new Date();
-        DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        dateCurrStr = formatForDate.format(currDate);
-        return dateCurrStr;
-    }
-
-    protected String getAnotherDate(int a) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatDate = new SimpleDateFormat("dd.MM.yyyy");
-        try {
-            Date date = formatDate.parse(dateCurrStr);
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.DATE, a);  // number of days to add
-            date = c.getTime();
-            anotherDateStr = formatDate.format(date);
-            return anotherDateStr;
-
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
 
 

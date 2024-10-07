@@ -56,9 +56,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/timetableTextView"
+            android:id="@+id/timetableLayout"
             android:layout_below="@+id/timetableBtn"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@color/background2"
             android:orientation="vertical" >
 
@@ -75,7 +75,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:id="@+id/timetableRecyclerView"
                 android:layout_marginHorizontal="10dp"
                 />
@@ -87,7 +87,7 @@
             android:id="@+id/notesBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/timetableTextView"
+            android:layout_below="@+id/timetableLayout"
             android:background="@color/background2"
             android:textAlignment="center"
             android:text="Заметки"
@@ -103,10 +103,12 @@
             android:id="@+id/notesEditText"
             android:layout_below="@+id/notesBtn"
             android:background="@color/background2"
-            android:text="qwertyuiop[ asdfghjk zxcvbn   dfgh hdsgsdg"
+            android:text="Здесь написана какая-то заметка. В дальнейшем ее можно будет изменять."
             android:textColor="@color/black"
-            android:textSize="30dp"
-            android:visibility="gone"/>
+            android:textSize="16dp"
+            android:paddingHorizontal="10dp"
+            android:visibility="gone"
+            android:paddingBottom="10dp"/>
 
         <TextView
             android:id="@+id/TasksText"
