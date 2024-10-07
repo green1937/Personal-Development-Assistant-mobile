@@ -4,6 +4,30 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">@color/background_main</item>
+
+        <item name="android:spinnerItemStyle">
+            @style/spinnerItemStyle
+        </item>
+
+        <!-- For each individual Spinner list item once clicked on -->
+        <item name="android:spinnerDropDownItemStyle">
+            @style/spinnerDropDownItemStyle
+        </item>
+
+    </style>
+    <style name="spinnerItemStyle">
+
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="spinnerDropDownItemStyle">
+        <item name="android:paddingHorizontal">20dp</item>
+        <item name="android:paddingVertical">10dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
     <style name="Theme.Assistant" parent="Base.Theme.Assistant" />
 </resources>

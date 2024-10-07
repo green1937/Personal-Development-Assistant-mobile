@@ -29,19 +29,15 @@
             android:textSize="22dp"
             android:padding="10dp" />
 
-        <TextView
-            android:id="@+id/todayText"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/daySpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Сегодня"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="22dp"
             android:layout_toRightOf="@+id/dateText"
             android:layout_alignParentRight="true"
             android:textAlignment="textEnd"
-            android:padding="10dp"/>
-
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="30dp"/>
 
         <TextView
             android:id="@+id/timetableBtn"
@@ -53,30 +49,70 @@
             android:text="Расписание"
             android:textAllCaps="false"
             android:textSize="24dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:paddingVertical="5dp"
             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/timetableTextView"
+            android:layout_below="@+id/timetableBtn"
+            android:visibility="visible"
+            android:background="@color/background2"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Понедельник"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginHorizontal="30dp"
+                android:background="@drawable/days_style_for_timetable"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/timetableRecyclerView"
+                android:layout_marginHorizontal="10dp"
+                />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/notesBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/timetableBtn"
+            android:layout_below="@+id/timetableTextView"
             android:background="@color/background2"
             android:textAlignment="center"
             android:text="Заметки"
             android:textAllCaps="false"
             android:textSize="24dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:paddingVertical="5dp"
             />
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/notesEditText"
+            android:layout_below="@+id/notesBtn"
+            android:background="@color/background2"
+            android:text="qwertyuiop[ asdfghjk zxcvbn   dfgh hdsgsdg"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/TasksText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/notesBtn"
+            android:layout_below="@+id/notesEditText"
             android:text="Задачи"
             android:textAlignment="center"
             android:textSize="24dp"
@@ -140,6 +176,16 @@
         </LinearLayout>
     </RelativeLayout>
     </ScrollView>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addTaskBtn"
+        android:background="@drawable/add"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        />
     <FrameLayout
         android:id="@+id/flFragment"
         android:layout_width="match_parent"
