@@ -37,7 +37,8 @@
             android:layout_alignParentRight="true"
             android:textAlignment="textEnd"
             android:paddingVertical="10dp"
-            android:paddingHorizontal="30dp"/>
+            android:paddingHorizontal="30dp"
+            />
 
         <TextView
             android:id="@+id/timetableBtn"
@@ -178,25 +179,21 @@
         </LinearLayout>
     </RelativeLayout>
     </ScrollView>
+
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:id="@+id/addTaskBtn"
-        android:background="@drawable/add"
+        android:src="@drawable/add_plus3"
+        android:scaleType="fitCenter"
+        android:padding="10dp"
+        android:background="@drawable/image_btn_style"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="70dp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         />
-    <FrameLayout
-        android:id="@+id/flFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

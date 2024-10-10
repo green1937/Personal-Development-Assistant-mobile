@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/person"
+        android:id="@+id/bottom_home"
         android:icon="@drawable/home"
         android:title=""
         />
     <item
-        android:id="@+id/home"
+        android:id="@+id/bottom_plans"
         android:icon="@drawable/plans"
         android:title=""/>
     <item
-        android:id="@+id/settings"
+        android:id="@+id/bottom_settings"
         android:icon="@drawable/balance"
         android:title=""/>
     <item
-        android:id="@+id/diary"
+        android:id="@+id/bottom_diary"
         android:icon="@drawable/diary"
         android:title=""/>
     <item
-        android:id="@+id/mainMenu"
+        android:id="@+id/bottom_mainMenu"
         android:icon="@drawable/menu"
         android:title=""/>
 </menu>

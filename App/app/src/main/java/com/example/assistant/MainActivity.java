@@ -3,14 +3,19 @@ package com.example.assistant;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.assistant.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -22,6 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+
     DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     TextView dateTextView, notesBtn, timetableBtn;
     EditText notesEditText;
@@ -30,16 +36,44 @@ public class MainActivity extends AppCompatActivity {
     String dateCurrStr, anotherDateStr;
     String itemDay;
     String[] days = { "Сегодня", "Завтра", "Вчера"};
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.bottom_home) {
+                return true;
+            }
+            if (item.getItemId() == R.id.bottom_plans) {
+                startActivity(new Intent(getApplicationContext(), PlansActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+            return false;
+        });
+
         dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
 
 
         showSpinnerDays();  // Выпадающий список дней
 
         showHiddenElements();  // Показ скрытых элементов (расписание занятий, заметка)
+
+        ImageButton addTask = findViewById(R.id.addTaskBtn);
+        addTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, OptionToAddNoteActivity.class));
+            }
+        });
+
 
     }
 
@@ -60,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         Например, для "завтра" - это плюс один день, а для "вчера" - это минус один день
     */
     protected String getAnotherDate(int a) {
+
         try {
             Date date = formatForDate.parse(dateCurrStr);
             Calendar c = Calendar.getInstance();

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    tools:context=".NewTaskActivity">
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/backBtn"
+        android:src="@drawable/back"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/background_main"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:id="@+id/newTaskText"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@+id/backBtn"
+        android:text="Повтор задачи"
+        android:textSize="24dp"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        />
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/tickBtn"
+        android:src="@drawable/tick"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:background="@drawable/image_btn_style"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        />
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/newTaskText"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Повторяется раз в"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="20dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:hint="кол-во"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:background="@drawable/image_btn_style"
+                android:layout_marginVertical="10dp"
+                />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:id="@+id/repeatSpinner"
+                android:hint="кол-во"
+                android:textAlignment="center"
+                android:background="@drawable/image_btn_style"
+                android:layout_marginVertical="10dp"
+                android:layout_marginLeft="20dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Когда повторяется"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="20dp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/mondayBtn"
+                android:backgroundTint="@color/background2"
+                android:textColor="@color/black"
+                android:text="пн"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:paddingHorizontal="5dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tuesdayBtn"
+                android:backgroundTint="@color/background2"
+                android:textColor="@color/black"
+                android:text="вт"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:paddingHorizontal="5dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/wednesdayBtn"
+                android:backgroundTint="@color/background2"
+                android:textColor="@color/black"
+                android:text="ср"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:paddingHorizontal="5dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/background2"
+                android:id="@+id/thursdayBtn"
+                android:textColor="@color/black"
+                android:text="чт"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:paddingHorizontal="5dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fridayBtn"
+                android:backgroundTint="@color/background2"
+                android:textColor="@color/black"
+                android:text="пт"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:paddingHorizontal="5dp"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/saturdayBtn"
+                android:backgroundTint="@color/background2"
+                android:textColor="@color/black"
+                android:text="сб"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:layout_marginHorizontal="3dp"
+                android:paddingHorizontal="5dp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sundayBtn"
+                android:backgroundTint="@color/background2"
+                android:textColor="@color/black"
+                android:text="вс"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textSize="11dp"
+                android:paddingHorizontal="5dp"/>
+
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

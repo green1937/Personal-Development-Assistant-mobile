@@ -17,17 +17,24 @@
     </style>
     <style name="spinnerItemStyle">
 
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:paddingHorizontal">20dp</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="spinnerDropDownItemStyle">
         <item name="android:paddingHorizontal">20dp</item>
         <item name="android:paddingVertical">10dp</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
     <style name="Theme.Assistant" parent="Base.Theme.Assistant" />
+
+
+
+    <style name="SlideActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+    </style>
 </resources>
