@@ -6,4 +6,5 @@
     <color name="back_elem">#FFEFDACB</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="filter_bcg">#FFF0EAE2</color>
 </resources>
