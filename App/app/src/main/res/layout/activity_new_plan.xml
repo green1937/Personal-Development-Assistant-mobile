@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    tools:context=".NewTaskActivity">
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/backBtn"
+        android:src="@drawable/back"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/background_main"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:id="@+id/newPlanText"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@+id/backBtn"
+        android:text="Новый план"
+        android:textSize="24dp"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        />
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/tickBtn"
+        android:src="@drawable/tick"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:background="@drawable/image_btn_style"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        />
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/newPlanText"
+        android:layout_marginHorizontal="30dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/planName"
+            android:hint="Название"
+            android:textSize="20dp"
+            android:textStyle="italic"
+            android:maxLength="30"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/time_for_task"
+                android:scaleType="centerCrop"
+                android:background="@color/background_main"
+                android:layout_marginVertical="10dp"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/datePlanFrom"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:inputType="date"
+                android:hint="От дд.мм.гггг"
+                android:layout_marginLeft="10dp"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="40dp">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/datePlanTo"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:inputType="date"
+                android:hint="До дд.мм.гггг"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/decrPlanEditText"
+            android:hint="Описание"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:maxLines="10"
+            android:gravity="start"
+            android:padding="10dp"
+            android:background="@drawable/image_btn_style"
+            android:textStyle="italic"
+            android:layout_marginVertical="30dp"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -7,7 +7,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 public class PlansActivity extends AppCompatActivity {
-    SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     LinearLayout filterBtn;
     LinearLayout filterView;
     ImageButton filterPlansBtn;
@@ -29,21 +27,8 @@ public class PlansActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plans);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_plans);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.bottom_home) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                finish();
-            }
-            if (item.getItemId() == R.id.bottom_plans) {
-                return true;
-            }
-            return false;
-        });
-
+        bottNavItem();  // Нижнее меню
+        addPlan();  // Переход на страницу добавления плана
 
         filterBtn = findViewById(R.id.filterBtnView);
         filterView = findViewById(R.id.filterView);
@@ -52,6 +37,74 @@ public class PlansActivity extends AppCompatActivity {
         showHiddenFilterSett();  // Показ настроек фильтрации планов
         filterAllPlans();
     }
+
+
+    /*
+        Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
+        колесо баланса, дневник, боковое/главное меню)
+    */
+    protected void bottNavItem() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_plans);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Главная
+            if (item.getItemId() == R.id.bottom_home) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+            }
+            // Планы
+            if (item.getItemId() == R.id.bottom_plans) {
+                return true;
+            }
+            // Колесо баланса
+            /*
+            if (item.getItemId() == R.id.bottom_wheel) {
+                startActivity(new Intent(getApplicationContext(), WheelActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+            */
+
+            // Дневник
+            if (item.getItemId() == R.id.bottom_diary) {
+                startActivity(new Intent(getApplicationContext(), DiaryActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+
+            // Боковое меню
+            /*
+            if (item.getItemId() == R.id.bottom_mainMenu) {
+                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+             */
+            return false;
+        });
+
+    }
+
+
+    /*
+        Функция, отвечающая за переход
+        на страницу добавления нового плана
+     */
+    protected void addPlan() {
+        ImageButton addPlans = findViewById(R.id.addPlansBtn);
+        addPlans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PlansActivity.this, NewPlanActivity.class));
+            }
+        });
+    }
+
 
     /*
         Дает возможность увидеть свёрнутое поле - фильтрация планов.
@@ -105,7 +158,8 @@ public class PlansActivity extends AppCompatActivity {
 
 
 
-    protected int checkDateFormat(String param) {
+    protected static int checkDateFormat(String param) {
+        SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         int flag = 0;
         if (!param.equals("")) {
             sdfDATE.setLenient(false);

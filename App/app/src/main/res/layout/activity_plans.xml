@@ -140,6 +140,19 @@
 
     </ScrollView>
 
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/addPlansBtn"
+        android:src="@drawable/add_plus3"
+        android:scaleType="fitCenter"
+        android:padding="10dp"
+        android:background="@drawable/image_btn_style"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

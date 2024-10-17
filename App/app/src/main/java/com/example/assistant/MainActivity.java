@@ -43,21 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.bottom_home) {
-                return true;
-            }
-            if (item.getItemId() == R.id.bottom_plans) {
-                startActivity(new Intent(getApplicationContext(), PlansActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                finish();
-                return true;
-            }
-            return false;
-        });
+        bottNavItem();  // Нижнее меню
 
         dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
 
@@ -75,6 +61,60 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+
+    /*
+        Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
+        колесо баланса, дневник, боковое/главное меню)
+    */
+    protected void bottNavItem() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.bottom_home);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            // Главная
+            if (item.getItemId() == R.id.bottom_home) {
+                return true;
+            }
+
+            // Планы
+            if (item.getItemId() == R.id.bottom_plans) {
+                startActivity(new Intent(getApplicationContext(), PlansActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+
+            // Колесо баланса
+            /*
+            if (item.getItemId() == R.id.bottom_wheel) {
+                startActivity(new Intent(getApplicationContext(), WheelActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+            */
+
+            // Дневник
+            if (item.getItemId() == R.id.bottom_diary) {
+                startActivity(new Intent(getApplicationContext(), DiaryActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+
+            // Боковое меню
+            /*
+            if (item.getItemId() == R.id.bottom_mainMenu) {
+                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+                return true;
+            }
+             */
+            return false;
+        });
     }
 
 
