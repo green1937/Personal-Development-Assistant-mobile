@@ -5,14 +5,142 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".MainActivity"
+    tools:context=".DiaryActivity"
     android:scrollbars="vertical">
+
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Diary Activity"
-        android:textSize="30dp"
-        android:layout_centerInParent="true"/>
+        android:id="@+id/textPlans"
+        android:text="Дневник"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll"
+        android:layout_below="@+id/textPlans">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/filterBtnView"
+                android:background="@drawable/filter_shape"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/filterText"
+                    android:text="Фильтр чтения"
+                    android:textSize="22dp"
+                    android:textColor="@color/black"
+                    android:paddingStart="10dp"
+                    />
+                <ImageButton
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:id="@+id/filterRecordsBtn"
+                    android:src="@drawable/tick"
+                    android:scaleType="fitCenter"
+                    android:padding="5dp"
+                    android:backgroundTint="@color/bottom_menu"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone"
+                    />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/filterBtnView"
+                android:id="@+id/filterView"
+                android:visibility="gone"
+                android:background="@color/filter_bcg"
+                android:orientation="vertical"
+                android:paddingBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textLL"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxTextF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="Текст" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/audioLL"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/checkBoxAudioF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="Аудио" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/allRecordDiaryRecyclerView"
+                android:layout_below="@+id/filterView"
+                android:layout_marginTop="30dp" />
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/addRecordBtn"
+        android:src="@drawable/add_plus3"
+        android:scaleType="fitCenter"
+        android:padding="10dp"
+        android:background="@drawable/image_btn_style"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
@@ -20,7 +148,11 @@
         android:background="@color/bottom_menu"
         style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         app:itemIconTint="@color/black"
+
+
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_menu"
+
         />
+
 </RelativeLayout>

@@ -2,13 +2,20 @@ package com.example.assistant;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DiaryActivity extends AppCompatActivity {
-
+    LinearLayout filterBtn, filterView;
+    ImageButton filterRecordsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +23,13 @@ public class DiaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_diary);
 
         bottNavItem();  // Нижнее меню
+
+        filterBtn = findViewById(R.id.filterBtnView);
+        filterView = findViewById(R.id.filterView);
+        filterRecordsBtn = findViewById(R.id.filterRecordsBtn);
+
+        showHiddenFilterSett();  // Показ настроек фильтрации планов
+        filterAllRecords();
 
     }
 
@@ -67,4 +81,53 @@ public class DiaryActivity extends AppCompatActivity {
 
 
     }
+
+
+
+    /*
+        Дает возможность увидеть свёрнутое поле - фильтрация записей в дневнике.
+     */
+    protected void showHiddenFilterSett() {
+
+        filterBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (filterView.getVisibility() == View.GONE) {
+                    filterView.setVisibility(View.VISIBLE);
+                    filterRecordsBtn.setVisibility(View.VISIBLE);
+
+                } else {
+                    filterView.setVisibility(View.GONE);
+                    filterRecordsBtn.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    protected void filterAllRecords() {
+
+        CheckBox textCheck = findViewById(R.id.checkBoxTextF);
+        CheckBox audioCheck = findViewById(R.id.checkBoxAudioF);
+
+        filterRecordsBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if(textCheck.isChecked() && !audioCheck.isChecked()) {
+                    Toast.makeText(getApplicationContext(), "Фильтрация по типу: текстовые записи", Toast.LENGTH_SHORT).show();
+                }
+
+                if(audioCheck.isChecked() && !textCheck.isChecked()) {
+                    Toast.makeText(getApplicationContext(), "Фильтрация по типу: аудио записи", Toast.LENGTH_SHORT).show();
+                }
+
+                if( (textCheck.isChecked() && audioCheck.isChecked()) || (!textCheck.isChecked() && !audioCheck.isChecked()) ) {
+                    Toast.makeText(getApplicationContext(), "Фильтрация по типу: ВСЕ записи", Toast.LENGTH_SHORT).show();
+                }
+
+                filterView.setVisibility(View.GONE);
+                filterRecordsBtn.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+
 }
