@@ -125,6 +125,10 @@ public class PlansActivity extends AppCompatActivity {
         });
     }
 
+
+    /*
+        Фильтрация планов
+     */
     protected void filterAllPlans() {
 
         CheckBox dateCheck = findViewById(R.id.checkBoxDateF);

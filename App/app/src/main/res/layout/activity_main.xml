@@ -192,6 +192,7 @@
         android:layout_marginBottom="70dp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
+        android:contentDescription=""
         />
 
 

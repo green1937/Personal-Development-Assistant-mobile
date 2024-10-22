@@ -5,6 +5,7 @@ import static com.example.assistant.PlansActivity.checkDateFormat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -21,18 +22,36 @@ import java.util.Locale;
 
 public class NewPlanActivity extends AppCompatActivity {
     SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    EditText namePlan, dateFrom, dateTo;
+
+    LinearLayout calendarLL;
+    CalendarView calendarView;
+    TextView calendarBtn;
+    ImageButton saveTaskBtn, backBtn;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_plan);
 
-        backToOption();  // Возвращение назад
+        namePlan = findViewById(R.id.planName);      // название плана
+        dateFrom = findViewById(R.id.datePlanFrom);  // дата от
+        dateTo = findViewById(R.id.datePlanTo);      // дата до
 
-        savePlan();  // Сохранение задачи
+        calendarLL = findViewById(R.id.calendarLL);
+        calendarView = findViewById(R.id.calendarView);
+        calendarBtn = findViewById(R.id.calendarBtn);
+
+        saveTaskBtn = findViewById(R.id.tickBtn);
+        backBtn = findViewById(R.id.backBtn);
 
 
 
+        backToOption();         // Возвращение назад
+        getDataFromCalendar(dateFrom, dateTo, calendarLL, calendarView, calendarBtn);  // Показ календаря при повторном нажатии
+        savePlan();             // Сохранение задачи
 
     }
 
@@ -41,12 +60,73 @@ public class NewPlanActivity extends AppCompatActivity {
         Возвращение назад на страницу просмотра всех планов.
      */
     protected void backToOption() {
-        ImageButton backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(NewPlanActivity.this, PlansActivity.class));
             }
+        });
+    }
+
+    protected static void getDataFromCalendar(EditText dateFrom, EditText dateTo,
+                                              LinearLayout calendarLL, CalendarView calendarView,
+                                              TextView calendarBtn ) {
+
+        dateFrom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Показ календаря
+                calendarLL.setVisibility(View.VISIBLE);
+
+                // Выбор даты
+                dataFromCalendar(calendarView, dateFrom);
+            }
+        });
+
+        dateTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Показ календаря
+                calendarLL.setVisibility(View.VISIBLE);
+
+                // Выбор даты
+                dataFromCalendar(calendarView, dateTo);
+            }
+        });
+
+        calendarBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Сокрытие календаря по нажатию на кнопку выбора
+                calendarLL.setVisibility(View.GONE);
+            }
+        });
+    }
+
+
+    /*
+        Функция, отвечающая за вывод даты
+        в поле EditText при нажатии на любую дату в календаре (CalendarView)
+     */
+    protected static void dataFromCalendar(CalendarView calendarView, EditText dateED) {
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                if ((month + 1 < 10) &&(dayOfMonth >= 10)) {
+                    dateED.setText(dayOfMonth + ".0" + (month + 1) + "." + year);
+                }
+                if ((dayOfMonth < 10) && (month + 1 < 10)) {
+                    dateED.setText("0" + dayOfMonth + ".0" + (month + 1) + "." + year);
+                }
+                if ((month + 1 >= 10) && (dayOfMonth < 10)) {
+                    dateED.setText("0" + dayOfMonth + "." + (month + 1) + "." + year);
+                }
+                if ((month + 1 >= 10) && (dayOfMonth >= 10)) {
+                    dateED.setText(dayOfMonth + "." + (month + 1) + "." + year);
+                }
+            }
+
         });
     }
 
@@ -61,12 +141,6 @@ public class NewPlanActivity extends AppCompatActivity {
 
      */
     protected void savePlan() {
-
-        EditText namePlan = findViewById(R.id.planName);      // название плана
-        EditText dateFrom = findViewById(R.id.datePlanFrom);  // дата от
-        EditText dateTo = findViewById(R.id.datePlanTo);      // дата до
-
-        ImageButton saveTaskBtn = findViewById(R.id.tickBtn);
         saveTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,10 +1,14 @@
 package com.example.assistant;
 
+import static com.example.assistant.NewPlanActivity.getDataFromCalendar;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +25,34 @@ public class NewTaskActivity extends AppCompatActivity {
     SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
     SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
+    EditText nameTask, scoreEditText, dateFrom, timeFrom, dateTo, timeTo;
+    LinearLayout calendarLL;
+    CalendarView calendarView;
+    TextView calendarBtn;
+    ImageButton saveTaskBtn, backBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_task);
 
+        nameTask = findViewById(R.id.taskName);              // название задачи
+        scoreEditText = findViewById(R.id.scoreEditText);    // оценка
+        dateFrom = findViewById(R.id.dateTimeTaskFromDate);  // дата от
+        timeFrom = findViewById(R.id.dateTimeTaskFromTime);  // время от
+        dateTo = findViewById(R.id.dateTimeTaskToDate);      // дата до
+        timeTo = findViewById(R.id.dateTimeTaskToTime);      // время до
+
+        calendarLL = findViewById(R.id.calendarLL);
+        calendarView = findViewById(R.id.calendarView);
+        calendarBtn = findViewById(R.id.calendarBtn);
+
+        saveTaskBtn = findViewById(R.id.tickBtn);
+        backBtn = findViewById(R.id.backBtn);
+
         backToOption();  // Возвращение назад
+
+        getDataFromCalendar(dateFrom, dateTo, calendarLL, calendarView, calendarBtn);
 
         saveTask();  // Сохранение задачи
 
@@ -41,7 +67,6 @@ public class NewTaskActivity extends AppCompatActivity {
         Возвращение назад на страницу выбора типа создания (голосая заметка или задача).
      */
     protected void backToOption() {
-        ImageButton backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,14 +87,6 @@ public class NewTaskActivity extends AppCompatActivity {
      */
     protected void saveTask() {
 
-        EditText nameTask = findViewById(R.id.taskName);          // название задачи
-        EditText scoreEditText = findViewById(R.id.scoreEditText);    // оценка
-        EditText dateFrom = findViewById(R.id.dateTimeTaskFromDate);  // дата от
-        EditText timeFrom = findViewById(R.id.dateTimeTaskFromTime);  // время от
-        EditText dateTo = findViewById(R.id.dateTimeTaskToDate);      // дата до
-        EditText timeTo = findViewById(R.id.dateTimeTaskToTime);      // время до
-
-        ImageButton saveTaskBtn = findViewById(R.id.tickBtn);
         saveTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
