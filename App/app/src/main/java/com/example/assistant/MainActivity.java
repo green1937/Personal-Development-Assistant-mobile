@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     /*
         Определение текущей даты в формате ДЕНЬ.МЕСЯЦ.ГОД.
     */
-    protected String getCurrDate() {
+    protected static String getCurrDate(DateFormat formatForDate, String dateCurrStr) {
         Date currDate = new Date();
         dateCurrStr = formatForDate.format(currDate);
         return dateCurrStr;
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(itemDay.equals("Сегодня")) {
                     /* Отображение текущей даты */
-                    dateCurrStr = getCurrDate();
+                    dateCurrStr = getCurrDate(formatForDate, dateCurrStr);
                     dateTextView.setText(dateCurrStr);
                 }
                 if(itemDay.equals("Завтра")) {

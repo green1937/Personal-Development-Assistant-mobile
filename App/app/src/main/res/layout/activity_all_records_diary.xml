@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    tools:context=".AllRecordsDiaryActivity"
+    android:scrollbars="vertical">
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/backBtn"
+        android:src="@drawable/back"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/background_main"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPlans"
+        android:text="Дневник"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scroll"
+        android:layout_below="@+id/textPlans">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textLL"
+                android:textSize="20dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="Сплошной просмотр"
+                android:background="@drawable/image_btn_style"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="1dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="10dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/allRecordsDiaryRecyclerView"
+                android:layout_below="@+id/textLL"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="10dp"
+                android:visibility="visible"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/continuousViewingRecordsTextView"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:layout_below="@+id/textLL"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/image_btn_style"
+                android:layout_marginHorizontal="10dp"
+                android:visibility="gone"/>
+
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bottom_menu"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        app:itemIconTint="@color/black"
+
+
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_menu"
+
+        />
+
+</RelativeLayout>

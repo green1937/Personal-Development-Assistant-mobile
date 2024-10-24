@@ -1,38 +1,36 @@
 package com.example.assistant;
 
-import static com.example.assistant.MainActivity.getCurrDate;
-
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-public class DiaryActivity extends AppCompatActivity {
-    DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-    String dateCurrStr;
-    TextView dateCurrDiary;
+public class AllRecordsDiaryActivity extends AppCompatActivity {
+    RecyclerView allRecordRV;
+    TextView allRecordsTV, viewBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_diary);
+        setContentView(R.layout.activity_all_records_diary);
 
-        dateCurrDiary = findViewById(R.id.dateDiary);
+        allRecordRV = findViewById(R.id.allRecordsDiaryRecyclerView);
+        allRecordsTV = findViewById(R.id.continuousViewingRecordsTextView);
+        viewBtn = findViewById(R.id.textLL);
 
-        bottNavItem();                // Нижнее меню
-        dateCurrStr = seeCurrDate();  // Определение текущей даты
-        goToAllRecordsActivity();     // Переход на экран всех записей
-
+        bottNavItem();          // Нижнее меню
+        backToDiaryActivity();  // Переход на экран с сегодняшней записью
+        checkContViewRecords(); // Показ записей "сплошной просмотр"
 
     }
 
@@ -92,26 +90,48 @@ public class DiaryActivity extends AppCompatActivity {
 
 
     /*
-        Функция, отвечающая за показ на главной экране и получение текущей даты
+        Функция, осуществляющая переход на экран с сегодняшней записью
      */
-    protected String seeCurrDate() {
-        dateCurrStr = getCurrDate(formatForDate, dateCurrStr);  // Получение текущей даты
-        dateCurrDiary.setText(dateCurrStr);                     // Вывод текущей даты
-        return dateCurrStr;
+    protected void backToDiaryActivity() {
+        ImageButton backBtn = findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), DiaryActivity.class));
+            }
+        });
     }
 
 
     /*
-        Функция, осуществляющая переход на экран со всеми записями
+        Функция, отвечающая за показ всех записей при выборе "Сплошной просмотр"
      */
-    protected void goToAllRecordsActivity() {
-        TextView allRecordsBtn = findViewById(R.id.allRecordsBtn);
-        allRecordsBtn.setOnClickListener(new View.OnClickListener() {
+    protected void checkContViewRecords() {
+
+        viewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), AllRecordsDiaryActivity.class));
+
+                // Если выбран "Сплошной просмотр"
+                if (allRecordRV.getVisibility() == View.VISIBLE) {
+
+                    allRecordsTV.setVisibility(View.VISIBLE);
+                    allRecordRV.setVisibility(View.GONE);
+                    viewBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+
+                    allRecordsTV.setText("Это сплошной просмотр всех существующих в дневнике записей");  // Пример
+
+                } else {
+
+                    allRecordRV.setVisibility(View.VISIBLE);
+                    allRecordsTV.setVisibility(View.GONE);
+                    viewBtn.getBackground().setColorFilter(Color.parseColor("#FFF0F0F0"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                }
             }
         });
+
     }
 
 }
