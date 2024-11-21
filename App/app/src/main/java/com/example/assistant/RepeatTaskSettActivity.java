@@ -20,7 +20,7 @@ public class RepeatTaskSettActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repeat_task);
 
-        backToNewTask();  // Переход обратно на страни
+        backToNewTask();  // Переход обратно на экран создания задачи
 
         saveRepeatSettings();  // Сохранение настроек повтора задачи
 
@@ -30,6 +30,9 @@ public class RepeatTaskSettActivity extends AppCompatActivity {
     }
 
 
+    /*
+        Функция, отвечающая за переход на экран создания новой задачи (назад)
+     */
     protected void backToNewTask() {
         ImageButton backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +43,11 @@ public class RepeatTaskSettActivity extends AppCompatActivity {
         });
     }
 
+
+    /*
+        Сохранение настроек повтора задачи
+        и переход обратно на экран создания задачи
+     */
     protected void saveRepeatSettings() {
         ImageButton saveBtn = findViewById(R.id.tickBtn);
         saveBtn.setOnClickListener(new View.OnClickListener() {

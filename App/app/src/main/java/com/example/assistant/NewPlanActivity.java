@@ -68,6 +68,10 @@ public class NewPlanActivity extends AppCompatActivity {
         });
     }
 
+    /*
+        Функция, отвечающая за получение даты из календаря
+     */
+
     protected static void getDataFromCalendar(EditText dateFrom, EditText dateTo,
                                               LinearLayout calendarLL, CalendarView calendarView,
                                               TextView calendarBtn ) {

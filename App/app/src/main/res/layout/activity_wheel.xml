@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    tools:context=".MainActivity"
+    android:scrollbars="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textWheel"
+        android:text="Колесо баланса"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"/>
+
+    <com.github.mikephil.charting.charts.RadarChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/radarChart"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="60dp"
+        android:layout_below="@+id/textWheel"
+        />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bottom_menu"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        app:itemIconTint="@color/black"
+
+
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_menu"
+
+        />
+</RelativeLayout>

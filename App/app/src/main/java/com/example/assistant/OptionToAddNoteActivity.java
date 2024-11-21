@@ -16,19 +16,16 @@ public class OptionToAddNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_option_to_add_note);
 
-        bottNavItem();  // Нижнее меню
-
-        ImageButton newTaskBtn = findViewById(R.id.newTaskBtn);
-        newTaskBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OptionToAddNoteActivity.this, NewTaskActivity.class));
-            }
-        });
-
+        bottNavItem();          // Нижнее меню
+        goToNewTaskActivity();  // Переход на экран создания задачи
 
     }
 
+
+    /*
+        Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
+        колесо баланса, дневник, боковое/главное меню)
+    */
     protected void bottNavItem() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.bottom_home);
@@ -51,14 +48,12 @@ public class OptionToAddNoteActivity extends AppCompatActivity {
             }
 
             // Колесо баланса
-            /*
             if (item.getItemId() == R.id.bottom_wheel) {
                 startActivity(new Intent(getApplicationContext(), WheelActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
             }
-            */
 
             // Дневник
             if (item.getItemId() == R.id.bottom_diary) {
@@ -69,17 +64,29 @@ public class OptionToAddNoteActivity extends AppCompatActivity {
             }
 
             // Боковое меню
-            /*
             if (item.getItemId() == R.id.bottom_mainMenu) {
-                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+                startActivity(new Intent(getApplicationContext(), SideMenuActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
             }
-             */
+
             return false;
         });
 
     }
 
+
+    /*
+        Функция, отвечающая за переход на экран создания задачи
+     */
+    protected void goToNewTaskActivity() {
+        ImageButton newTaskBtn = findViewById(R.id.newTaskBtn);
+        newTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OptionToAddNoteActivity.this, NewTaskActivity.class));
+            }
+        });
+    }
 }

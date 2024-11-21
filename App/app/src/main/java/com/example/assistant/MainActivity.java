@@ -52,13 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         showHiddenElements();  // Показ скрытых элементов (расписание занятий, заметка)
 
-        ImageButton addTask = findViewById(R.id.addTaskBtn);
-        addTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, OptionToAddNoteActivity.class));
-            }
-        });
+        addTask(); // Добавление задачи
 
 
     }
@@ -87,14 +81,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Колесо баланса
-            /*
             if (item.getItemId() == R.id.bottom_wheel) {
                 startActivity(new Intent(getApplicationContext(), WheelActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
             }
-            */
 
             // Дневник
             if (item.getItemId() == R.id.bottom_diary) {
@@ -105,14 +97,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Боковое меню
-            /*
             if (item.getItemId() == R.id.bottom_mainMenu) {
-                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+                startActivity(new Intent(getApplicationContext(), SideMenuActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
             }
-             */
+
             return false;
         });
     }
@@ -225,6 +216,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    protected void addTask() {
+        ImageButton addTask = findViewById(R.id.addTaskBtn);
+        addTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, OptionToAddNoteActivity.class));
+            }
+        });
+    }
 
 
 }

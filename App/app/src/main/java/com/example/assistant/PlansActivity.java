@@ -59,14 +59,12 @@ public class PlansActivity extends AppCompatActivity {
                 return true;
             }
             // Колесо баланса
-            /*
             if (item.getItemId() == R.id.bottom_wheel) {
                 startActivity(new Intent(getApplicationContext(), WheelActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
             }
-            */
 
             // Дневник
             if (item.getItemId() == R.id.bottom_diary) {
@@ -77,14 +75,13 @@ public class PlansActivity extends AppCompatActivity {
             }
 
             // Боковое меню
-            /*
             if (item.getItemId() == R.id.bottom_mainMenu) {
-                startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
+                startActivity(new Intent(getApplicationContext(), SideMenuActivity.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
                 return true;
             }
-             */
+
             return false;
         });
 

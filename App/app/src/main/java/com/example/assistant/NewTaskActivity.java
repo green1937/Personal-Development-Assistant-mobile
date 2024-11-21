@@ -154,6 +154,9 @@ public class NewTaskActivity extends AppCompatActivity {
     }
 
 
+    /*
+        Функция, отвечающая за переход на экран настроек повтора задачи
+     */
     protected void openRepeatSettings() {
         TextView repeatTaskSettings = findViewById(R.id.repeatTaskText);
         repeatTaskSettings.setOnClickListener(new View.OnClickListener() {
@@ -164,6 +167,10 @@ public class NewTaskActivity extends AppCompatActivity {
         });
     }
 
+
+    /*
+        Функция, отвечающая за проверку даты или времени
+     */
     protected int checkDateTimeFormat(String param1, String param2) {
         int flag = 0;
         if (!param1.equals("")) {
