@@ -7,4 +7,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="filter_bcg">#FFF0EAE2</color>
+    <color name="red">#FFF45050</color>
+    <color name="green">#FF35EF3D</color>
 </resources>

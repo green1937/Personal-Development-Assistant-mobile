@@ -2,6 +2,8 @@ package com.example.assistant;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +17,7 @@ public class SideMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_side_menu);
 
         bottNavItem();  // Нижнее меню
+        getColor();     // Определение цвета из цветового круга и перенос его на layout
 
     }
 
@@ -66,6 +69,16 @@ public class SideMenuActivity extends AppCompatActivity {
             }
 
             return false;
+        });
+    }
+
+    protected void getColor() {
+        LinearLayout goCtgActivity = findViewById(R.id.goCtgActivity);
+        goCtgActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), CtgForWheelActivity.class));
+            }
         });
     }
 }
