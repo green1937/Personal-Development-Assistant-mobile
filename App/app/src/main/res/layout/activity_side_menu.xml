@@ -126,6 +126,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/goTimetableActivity"
                     android:orientation="horizontal"
                     android:background="@drawable/image_btn_style"
                     android:paddingVertical="10dp"

@@ -3,22 +3,25 @@ package com.example.assistant;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class SideMenuActivity extends AppCompatActivity {
+
+public class TimetableActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_side_menu);
+        setContentView(R.layout.activity_timetable);
 
-        bottNavItem();    // Нижнее меню
-        getColor();       // Переход на экран с категориями колеса баланса
-        showTimetable();  // Переход на экран с расписанием занятий
+
+        bottNavItem();           // Нижнее меню
+        backToSideMenu();        // Возвращение назад
+        addNewEvent();           // Сздание нового мероприятия - переход на новый экран
 
     }
 
@@ -29,7 +32,7 @@ public class SideMenuActivity extends AppCompatActivity {
     */
     protected void bottNavItem() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_mainMenu);
+        //bottomNavigationView.setSelectedItemId(R.id.bottom_wheel);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // Главная
@@ -66,6 +69,9 @@ public class SideMenuActivity extends AppCompatActivity {
 
             // Боковое меню
             if (item.getItemId() == R.id.bottom_mainMenu) {
+                startActivity(new Intent(getApplicationContext(), SideMenuActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
                 return true;
             }
 
@@ -73,25 +79,28 @@ public class SideMenuActivity extends AppCompatActivity {
         });
     }
 
-    protected void getColor() {
-        LinearLayout goCtgActivity = findViewById(R.id.goCtgActivity);
-        goCtgActivity.setOnClickListener(new View.OnClickListener() {
+
+    protected void backToSideMenu() {
+        ImageButton backBtn = findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), CtgForWheelActivity.class));
+                startActivity(new Intent(getApplicationContext(), SideMenuActivity.class));
             }
         });
     }
 
-    protected void showTimetable() {
-        LinearLayout goCtgActivity = findViewById(R.id.goTimetableActivity);
-        goCtgActivity.setOnClickListener(new View.OnClickListener() {
+    /*
+        Создание нового мероприятия
+     */
+    protected void addNewEvent() {
+        ImageButton addBtn = findViewById(R.id.addEventBtn);
+        addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
+                startActivity(new Intent(getApplicationContext(), NewEventActivity.class));
             }
         });
     }
 
 }
-

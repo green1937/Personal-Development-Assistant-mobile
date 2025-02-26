@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    tools:context=".NewEventActivity"
+    android:scrollbars="vertical">
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/backBtn"
+        android:src="@drawable/back"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/background_main"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textNewEvent"
+        android:text="Новое мероприятие"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"/>
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/saveEventBtn"
+        android:src="@drawable/tick"
+        android:scaleType="fitCenter"
+        android:padding="5dp"
+        android:background="@drawable/image_btn_style"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentEnd="true"
+        />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textNewEvent"
+        android:id="@+id/scroll">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameNewSubj"
+            android:hint="Название"
+            android:textSize="20dp"
+            android:textStyle="italic"
+            android:maxLength="30"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/placeNewSubj"
+            android:layout_below="@+id/nameNewSubj"
+            android:hint="Место проведения / ссылка"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:textSize="20dp"
+            android:maxLines="10"
+            android:gravity="start"
+            android:padding="10dp"
+            android:background="@drawable/image_btn_style"
+            android:textStyle="italic"
+            android:layout_marginVertical="10dp"
+            />
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/timeLL"
+            android:layout_below="@+id/placeNewSubj">
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/time_for_task"
+                android:scaleType="centerCrop"
+                android:background="@color/background_main"
+                android:layout_marginVertical="10dp"
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/timeTo"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:inputType="time"
+                android:hint="Время от"
+                android:layout_marginLeft="10dp"
+                android:onClick="setTime"/>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:id="@+id/timeFrom"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textStyle="italic"
+                android:inputType="time"
+                android:hint="Время до"
+                android:layout_marginLeft="10dp"
+                android:onClick="setTimeFrom"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/formatLL"
+            android:layout_below="@+id/timeLL">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Формат: "
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/formatSubjSpinner"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/repeatLL"
+            android:layout_below="@+id/formatLL"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Повтор: "
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                />
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/repeatSubjSpinner"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp" />
+
+        </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mondayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="ПН"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tuesdayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="ВТ"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wednesdayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="СР"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/background2"
+                    android:id="@+id/thursdayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="ЧТ"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fridayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="ПТ"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/saturdayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="СБ"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sundayBtn"
+                    android:background="@drawable/image_btn_style"
+                    android:textColor="@color/black"
+                    android:text="ВС"
+                    android:textAlignment="center"
+                    android:layout_weight="1"
+                    android:textSize="18dp"
+                    android:layout_marginHorizontal="3dp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>
