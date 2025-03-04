@@ -159,6 +159,9 @@ public class PlansActivity extends AppCompatActivity {
 
 
 
+    /*
+        Функция, проверяющая на то, является ли строка датой формата ДД.ММ.ГГГГ
+     */
     protected static int checkDateFormat(String param) {
         SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         int flag = 0;

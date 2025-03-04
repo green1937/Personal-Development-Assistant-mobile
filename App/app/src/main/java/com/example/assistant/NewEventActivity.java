@@ -103,7 +103,9 @@ public class NewEventActivity extends AppCompatActivity {
 
         showSpinnerFormat();    // Выпадающий список ФОРМАТ
         showSpinnerRepeat();    // Выпадающий список ПОВТОР
-        colorWeeksBtn();        // Смена цвета кнопок дне недели --- в дальнейшем отработка нажатия
+
+        // Смена цвета кнопок дне недели --- в дальнейшем отработка нажатия
+        colorWeeksBtn(monD, tuesD, wednesD, thursD, friD, saturD, sunD, flagWeek);
 
 
         saveEventBtn.setOnClickListener(new View.OnClickListener() {
@@ -211,7 +213,7 @@ public class NewEventActivity extends AppCompatActivity {
      Если есть хотя бы один выбранный день недели,
      то рассматривать дальше все дни не имеет смысла.
      */
-    protected int checkDaysWeek(int[] flagsForWeek) {
+    protected static int checkDaysWeek(int[] flagsForWeek) {
         int flag = 1;
         for (int i=0; i<7; i++) {
             if (flagsForWeek[i] == 1) {  // Проверка на выбранный день
@@ -221,6 +223,7 @@ public class NewEventActivity extends AppCompatActivity {
         }
         return flag;
     }
+
 
     protected void showSpinnerRepeat() {
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, repeat);
@@ -248,7 +251,8 @@ public class NewEventActivity extends AppCompatActivity {
     В дальнейшем также и передача выбранных дней
      Пока криво сделано --- переделать потом в дальнейшем
     */
-    protected void colorWeeksBtn() {
+    protected static void colorWeeksBtn(TextView monD, TextView tuesD, TextView wednesD, TextView thursD, TextView friD,
+                                        TextView saturD, TextView sunD, int[] flagWeek) {
         monD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
