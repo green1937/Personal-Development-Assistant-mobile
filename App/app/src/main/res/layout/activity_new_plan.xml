@@ -91,7 +91,8 @@
                         android:textStyle="italic"
                         android:inputType="date"
                         android:hint="От дд.мм.гггг"
-                        android:layout_marginLeft="10dp"/>
+                        android:layout_marginLeft="10dp"
+                        android:onClick="setDateFrom"/>
 
 
                 </LinearLayout>
@@ -110,7 +111,8 @@
                         android:textStyle="italic"
                         android:inputType="date"
                         android:hint="До дд.мм.гггг"
-                        android:layout_marginLeft="10dp"/>
+                        android:layout_marginLeft="10dp"
+                        android:onClick="setDateTo"/>
 
                 </LinearLayout>
 

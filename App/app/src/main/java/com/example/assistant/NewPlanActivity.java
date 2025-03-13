@@ -2,14 +2,19 @@ package com.example.assistant;
 
 import static com.example.assistant.PlansActivity.checkDateFormat;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,14 +23,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class NewPlanActivity extends AppCompatActivity {
+    Calendar dateToCld = Calendar.getInstance();
+    Calendar dateFromCld = Calendar.getInstance();
     SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     EditText namePlan, dateFrom, dateTo;
-
-    LinearLayout calendarLL;
-    CalendarView calendarView;
     TextView calendarBtn;
     ImageButton saveTaskBtn, backBtn;
 
@@ -40,8 +45,6 @@ public class NewPlanActivity extends AppCompatActivity {
         dateFrom = findViewById(R.id.datePlanFrom);  // дата от
         dateTo = findViewById(R.id.datePlanTo);      // дата до
 
-        calendarLL = findViewById(R.id.calendarLL);
-        calendarView = findViewById(R.id.calendarView);
         calendarBtn = findViewById(R.id.calendarBtn);
 
         saveTaskBtn = findViewById(R.id.tickBtn);
@@ -50,7 +53,6 @@ public class NewPlanActivity extends AppCompatActivity {
 
 
         backToOption();         // Возвращение назад
-        getDataFromCalendar(dateFrom, dateTo, calendarLL, calendarView, calendarBtn);  // Показ календаря при повторном нажатии
         savePlan();             // Сохранение задачи
 
     }
@@ -64,45 +66,6 @@ public class NewPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(NewPlanActivity.this, PlansActivity.class));
-            }
-        });
-    }
-
-    /*
-        Функция, отвечающая за получение даты из календаря
-     */
-
-    protected static void getDataFromCalendar(EditText dateFrom, EditText dateTo,
-                                              LinearLayout calendarLL, CalendarView calendarView,
-                                              TextView calendarBtn ) {
-
-        dateFrom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Показ календаря
-                calendarLL.setVisibility(View.VISIBLE);
-
-                // Выбор даты
-                dataFromCalendar(calendarView, dateFrom);
-            }
-        });
-
-        dateTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Показ календаря
-                calendarLL.setVisibility(View.VISIBLE);
-
-                // Выбор даты
-                dataFromCalendar(calendarView, dateTo);
-            }
-        });
-
-        calendarBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Сокрытие календаря по нажатию на кнопку выбора
-                calendarLL.setVisibility(View.GONE);
             }
         });
     }
@@ -203,5 +166,50 @@ public class NewPlanActivity extends AppCompatActivity {
         });
     }
 
+    /*
+        Вывод календарей и часов для дат и времени при создании задачи
+     */
+
+
+    public void setDateFrom(View v) {
+        new DatePickerDialog(NewPlanActivity.this, d1, dateFromCld.get(Calendar.YEAR),
+                dateFromCld.get(Calendar.MONTH), dateFromCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d1=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateFromCld.set(Calendar.YEAR, year);
+            dateFromCld.set(Calendar.MONTH, monthOfYear);
+            dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDateFrom(year, monthOfYear+1, dayOfMonth);
+        }
+    };
+
+    private void setInitialDateFrom( int year, int monthOfYear, int dayOfMonth) {
+        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+        dateFrom.setText(dateForEndStr);
+    }
+
+
+    public void setDateTo(View v) {
+        new DatePickerDialog(NewPlanActivity.this, d2, dateToCld.get(Calendar.YEAR),
+                dateToCld.get(Calendar.MONTH), dateToCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d2=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateToCld.set(Calendar.YEAR, year);
+            dateToCld.set(Calendar.MONTH, monthOfYear);
+            dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDateTo(year, monthOfYear+1, dayOfMonth);
+        }
+    };
+
+    private void setInitialDateTo( int year, int monthOfYear, int dayOfMonth) {
+        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+        dateTo.setText(dateForEndStr);
+    }
 
 }

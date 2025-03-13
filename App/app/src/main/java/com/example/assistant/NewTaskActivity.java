@@ -1,15 +1,18 @@
 package com.example.assistant;
 
-import static com.example.assistant.NewPlanActivity.getDataFromCalendar;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.CalendarView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,16 +20,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class NewTaskActivity extends AppCompatActivity {
+    Calendar dateToCld = Calendar.getInstance();
+    Calendar dateFromCld = Calendar.getInstance();
+    Calendar timeFromCld = Calendar.getInstance();
+    Calendar timeToCld = Calendar.getInstance();
     SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
     SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     EditText nameTask, scoreEditText, dateFrom, timeFrom, dateTo, timeTo;
-    LinearLayout calendarLL;
+
     CalendarView calendarView;
     TextView calendarBtn;
     ImageButton saveTaskBtn, backBtn;
@@ -43,22 +50,14 @@ public class NewTaskActivity extends AppCompatActivity {
         dateTo = findViewById(R.id.dateTimeTaskToDate);      // дата до
         timeTo = findViewById(R.id.dateTimeTaskToTime);      // время до
 
-        calendarLL = findViewById(R.id.calendarLL);
-        calendarView = findViewById(R.id.calendarView);
-        calendarBtn = findViewById(R.id.calendarBtn);
-
         saveTaskBtn = findViewById(R.id.tickBtn);
         backBtn = findViewById(R.id.backBtn);
 
         backToOption();  // Возвращение назад
 
-        getDataFromCalendar(dateFrom, dateTo, calendarLL, calendarView, calendarBtn);
-
         saveTask();  // Сохранение задачи
 
         openRepeatSettings();  // Переход на страницу настроек повтора
-
-
 
     }
 
@@ -200,4 +199,100 @@ public class NewTaskActivity extends AppCompatActivity {
         }
         return flag;
     }
+
+
+
+    /*
+        Вывод календарей и часов для дат и времени при создании задачи
+     */
+
+
+    public void setDateFrom(View v) {
+        new DatePickerDialog(NewTaskActivity.this, d1, dateFromCld.get(Calendar.YEAR),
+                dateFromCld.get(Calendar.MONTH), dateFromCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d1=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateFromCld.set(Calendar.YEAR, year);
+            dateFromCld.set(Calendar.MONTH, monthOfYear);
+            dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDateFrom(year, monthOfYear+1, dayOfMonth);
+        }
+    };
+
+    private void setInitialDateFrom( int year, int monthOfYear, int dayOfMonth) {
+        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+        dateFrom.setText(dateForEndStr);
+    }
+
+
+
+
+    public void setTimeFrom(View v) {
+        new TimePickerDialog(NewTaskActivity.this, t1, timeFromCld.get(Calendar.HOUR_OF_DAY),
+                timeFromCld.get(Calendar.MINUTE), true).show();
+    }
+
+    TimePickerDialog.OnTimeSetListener t1=new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet (TimePicker view, int hourOfDay, int minute) {
+            timeFromCld.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            timeFromCld.set(Calendar.MINUTE, minute);
+
+            setInitialTimeFrom();
+        }
+    };
+
+    private void setInitialTimeFrom() {
+        timeFrom.setText(DateUtils.formatDateTime(this, timeFromCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+    }
+
+
+
+    public void setDateTo(View v) {
+        new DatePickerDialog(NewTaskActivity.this, d2, dateToCld.get(Calendar.YEAR),
+                dateToCld.get(Calendar.MONTH), dateToCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d2=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateToCld.set(Calendar.YEAR, year);
+            dateToCld.set(Calendar.MONTH, monthOfYear);
+            dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDateTo(year, monthOfYear+1, dayOfMonth);
+        }
+    };
+
+    private void setInitialDateTo( int year, int monthOfYear, int dayOfMonth) {
+        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+        dateTo.setText(dateForEndStr);
+    }
+
+
+
+    public void setTimeTo(View v) {
+        new TimePickerDialog(NewTaskActivity.this, t2, timeToCld.get(Calendar.HOUR_OF_DAY),
+                timeToCld.get(Calendar.MINUTE), true).show();
+    }
+
+    TimePickerDialog.OnTimeSetListener t2=new TimePickerDialog.OnTimeSetListener() {
+        public void onTimeSet (TimePicker view, int hourOfDay, int minute) {
+            timeToCld.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            timeToCld.set(Calendar.MINUTE, minute);
+
+            setInitialTimeTo();
+        }
+    };
+
+    private void setInitialTimeTo() {
+        timeTo.setText(DateUtils.formatDateTime(this, timeToCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+    }
+
+
+
+
+
+
 }
