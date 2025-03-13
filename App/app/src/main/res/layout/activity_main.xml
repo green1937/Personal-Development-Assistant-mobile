@@ -136,8 +136,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/forDayLIST"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/image_btn_style"/>
 
 
             <TextView
@@ -149,8 +150,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/overdieLIST"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/image_btn_style"/>
 
             <TextView
                 android:id="@+id/openEndedTaskText"

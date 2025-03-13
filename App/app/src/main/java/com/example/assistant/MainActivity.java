@@ -1,10 +1,13 @@
 package com.example.assistant;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,14 +20,23 @@ import android.widget.TextView;
 import com.example.assistant.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
     String dateCurrStr, anotherDateStr;
     String itemDay;
     String[] days = { "Сегодня", "Завтра", "Вчера"};
+
+    RecyclerView taskRecyclerView, taskRecyclerView2;
+    ArrayList<String> nameTaskExample = new ArrayList<>();
+    TaskAdapter taskAdapter;
+    LinearLayoutManager linearLayoutManager;
 
 
     @Override
@@ -55,7 +72,54 @@ public class MainActivity extends AppCompatActivity {
         addTask(); // Добавление задачи
 
 
+        taskRecyclerView = findViewById(R.id.forDayLIST);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        taskRecyclerView.setLayoutManager(linearLayoutManager);
+
+        try {
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonTaskDataFromAssest("tasks_example.json")));
+            JSONArray jsonArray = jsonObject.getJSONArray("tasks");
+            for (int i=0; i<jsonArray.length(); i++) {
+                JSONObject taskExampleData = jsonArray.getJSONObject(i);
+                nameTaskExample.add(taskExampleData.getString("name"));
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        taskAdapter = new TaskAdapter(MainActivity.this, nameTaskExample);
+        taskRecyclerView.setAdapter(taskAdapter);
+
+
+
+
+        taskRecyclerView2 = findViewById(R.id.overdieLIST);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        taskRecyclerView2.setLayoutManager(linearLayoutManager);
+
+        taskAdapter = new TaskAdapter(MainActivity.this, nameTaskExample);
+        taskRecyclerView2.setAdapter(taskAdapter);
+
     }
+
+    private String JsonTaskDataFromAssest(String fileName) {
+        String json = null;
+        try {
+            InputStream inputStream = getAssets().open(fileName);
+            int sizeOfFile = inputStream.available();
+            byte[] bufferData = new byte[sizeOfFile];
+            inputStream.read(bufferData);
+            inputStream.close();
+            json = new String(bufferData, StandardCharsets.UTF_8);
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return json;
+
+    }
+
 
 
     /*

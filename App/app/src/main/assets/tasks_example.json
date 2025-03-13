@@ -1,0 +1,37 @@
+{
+  "tasks":[
+    {
+      "id": 101,
+      "name": "Сделать лабораторную",
+      "description": "Выполнить лабораторную по OLAP",
+      "start_date": "17.03.2025",
+      "start_time": "08:30",
+      "stop_date": "24.03.2025",
+      "stop_time": "12:00",
+      "category_name": "Учёба",
+      "estimate": 50
+    },
+    {
+      "id": 102,
+      "name": "Купить подарки",
+      "description": "Какое-то описание...",
+      "start_date": "31.03.2025",
+      "start_time": "12:25",
+      "stop_date": "31.03.2025",
+      "stop_time": "12:25",
+      "category_name": "Семья",
+      "estimate": 30
+    },
+    {
+      "id": 103,
+      "name": "Созвон",
+      "description": "Созвон по командному проекту",
+      "start_date": "27.03.2025",
+      "start_time": "11:30",
+      "stop_date": "27.03.2025",
+      "stop_time": "11:50",
+      "category_name": "Учёба",
+      "estimate": 50
+    }
+  ]
+}
