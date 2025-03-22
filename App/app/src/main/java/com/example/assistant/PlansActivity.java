@@ -1,9 +1,11 @@
 package com.example.assistant;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -15,12 +17,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class PlansActivity extends AppCompatActivity {
-    LinearLayout filterBtn;
-    LinearLayout filterView;
+    LinearLayout filterBtn, filterView;
     ImageButton filterPlansBtn;
+    Calendar dateCld = Calendar.getInstance();
+    EditText dateForFilterED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +133,7 @@ public class PlansActivity extends AppCompatActivity {
     protected void filterAllPlans() {
 
         CheckBox dateCheck = findViewById(R.id.checkBoxDateF);
-        EditText dateForFilterED = findViewById(R.id.addDateFilter);
+        dateForFilterED = findViewById(R.id.addDateFilter);
 
         filterPlansBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -140,7 +144,7 @@ public class PlansActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Вы не ввели дату! Фильтрация невозможна", Toast.LENGTH_SHORT).show();
                     }
                     // Поскольку поле не пустое, проверяем дату на корректность
-                    else if (checkDateFormat(dateForFilter) == 0 && dateForFilter.length() == 10) {
+                    else if (checkDateFormat(dateForFilter) == 0) {
                         Toast.makeText(getApplicationContext(), "Планы были отфильтрованы успешно!", Toast.LENGTH_SHORT).show();
                     }
                     else {
@@ -180,5 +184,30 @@ public class PlansActivity extends AppCompatActivity {
         }
         return flag;
     }
+
+
+    /*
+        Вывод календаря при фильтрации планов
+     */
+    public void setDate(View v) {
+        new DatePickerDialog(PlansActivity.this, d, dateCld.get(Calendar.YEAR),
+                dateCld.get(Calendar.MONTH), dateCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateCld.set(Calendar.YEAR, year);
+            dateCld.set(Calendar.MONTH, monthOfYear);
+            dateCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDateFrom(year, monthOfYear+1, dayOfMonth);
+        }
+    };
+
+    private void setInitialDateFrom( int year, int monthOfYear, int dayOfMonth) {
+        String dateForFilterStr = dayOfMonth + "." + monthOfYear + "." + year;
+        dateForFilterED.setText(dateForFilterStr);
+    }
+
 
 }

@@ -13,8 +13,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/timeSubjText"
-            android:text="00:00 - 23:59"
+            android:id="@+id/startTimeEventTextOut"
+            android:text="00:00"
             android:textSize="16dp"
             android:textColor="@color/black"
             />
@@ -22,9 +22,29 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/timeSubjText"
+            android:id="@+id/somethingText"
+            android:layout_toRightOf="@+id/startTimeEventTextOut"
+            android:text=" - "
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stopTimeEventTextOut"
+            android:layout_toRightOf="@+id/somethingText"
+            android:text="23:59"
+            android:textSize="16dp"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/stopTimeEventTextOut"
             android:layout_alignParentEnd="true"
-            android:id="@+id/placeSubj"
+            android:id="@+id/placeEventTextOut"
             android:textSize="16dp"
             android:layout_gravity="end"
             android:gravity="end"
@@ -34,12 +54,24 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/timeSubjText"
+            android:id="@+id/nameEventTextOut"
+            android:layout_below="@+id/startTimeEventTextOut"
             android:text="Team Project"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/formatEventTextOut"
+            android:layout_below="@+id/nameEventTextOut"
+            android:text="offline/online"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
     </RelativeLayout>
 
 

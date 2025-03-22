@@ -1,0 +1,18 @@
+{
+  "study_classes": [
+    {
+      "name": "Экономика",
+      "start_time": "08:30",
+      "stop_time": "10:05",
+      "place": "Корпус 17, 4-20",
+      "format": "оффлайн"
+    },
+    {
+      "name": "OLAP",
+      "start_time": "10:15",
+      "stop_time": "12:00",
+      "place": "Корпус 17, 4-02",
+      "format": "оффлайн"
+    }
+  ]
+}

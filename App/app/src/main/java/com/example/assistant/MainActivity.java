@@ -35,6 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -49,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
     String itemDay;
     String[] days = { "Сегодня", "Завтра", "Вчера"};
 
-    RecyclerView taskRecyclerView, taskRecyclerView2;
+    RecyclerView taskRecyclerView, taskRecyclerView2, timetableRecyclerView;
     ArrayList<String> nameTaskExample = new ArrayList<>();
     TaskAdapter taskAdapter;
     LinearLayoutManager linearLayoutManager;
 
+    List<ArrayList<String>> allEvents =new ArrayList();
+    TimetableMainAdapter timetableMainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,32 +75,11 @@ public class MainActivity extends AppCompatActivity {
         addTask(); // Добавление задачи
 
 
-        taskRecyclerView = findViewById(R.id.forDayLIST);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        taskRecyclerView.setLayoutManager(linearLayoutManager);
-
-        try {
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonTaskDataFromAssest("tasks_example.json")));
-            JSONArray jsonArray = jsonObject.getJSONArray("tasks");
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject taskExampleData = jsonArray.getJSONObject(i);
-                nameTaskExample.add(taskExampleData.getString("name"));
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        taskAdapter = new TaskAdapter(MainActivity.this, nameTaskExample);
-        taskRecyclerView.setAdapter(taskAdapter);
+        outputTasksFromJSONtoRecyclerView();  //
+        outputTimetableFromJSONtoRecyclerView();  // РАСПИСАНИЕ
 
 
 
-
-        taskRecyclerView2 = findViewById(R.id.overdieLIST);
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        taskRecyclerView2.setLayoutManager(linearLayoutManager);
-
-        taskAdapter = new TaskAdapter(MainActivity.this, nameTaskExample);
-        taskRecyclerView2.setAdapter(taskAdapter);
 
     }
 
@@ -118,6 +100,63 @@ public class MainActivity extends AppCompatActivity {
         }
         return json;
 
+    }
+
+    /*
+        Вывод задач из JSON в ReyclerView (пока только выводятся в раздел "На день")
+    */
+    protected void outputTasksFromJSONtoRecyclerView() {
+        taskRecyclerView = findViewById(R.id.forDayLIST);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        taskRecyclerView.setLayoutManager(linearLayoutManager);
+
+        try {
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonTaskDataFromAssest("tasks_example.json")));
+            JSONArray jsonArray = jsonObject.getJSONArray("tasks");
+            for (int i=0; i<jsonArray.length(); i++) {
+                JSONObject taskExampleData = jsonArray.getJSONObject(i);
+                nameTaskExample.add(taskExampleData.getString("name"));
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        taskAdapter = new TaskAdapter(MainActivity.this, nameTaskExample);
+        taskRecyclerView.setAdapter(taskAdapter);
+    }
+
+
+    /*
+        Вывод расписания мероприятий из JSON в ReyclerView
+     */
+    protected void outputTimetableFromJSONtoRecyclerView() {
+        timetableRecyclerView = findViewById(R.id.timetableRecyclerView);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        timetableRecyclerView.setLayoutManager(linearLayoutManager);
+
+        try {
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonTaskDataFromAssest("timetable_example.json")));
+            JSONArray jsonArray = jsonObject.getJSONArray("study_classes");
+            for (int i=0; i<jsonArray.length(); i++) {
+                JSONObject eventExampleData = jsonArray.getJSONObject(i);
+
+                /* Получение всех полей мероприятия */
+                ArrayList<String> eventExample = new ArrayList<>();
+                eventExample.add(eventExampleData.getString("name"));
+                eventExample.add(eventExampleData.getString("start_time"));
+                eventExample.add(eventExampleData.getString("stop_time"));
+                eventExample.add(eventExampleData.getString("place"));
+                eventExample.add(eventExampleData.getString("format"));
+
+                /* Добавление мероприятия ко всем мероприятиям */
+                allEvents.add(eventExample);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("SEEEEEEEEEEEEEEEEEEEEEEEEEE  ----------- " + allEvents);
+        timetableMainAdapter = new TimetableMainAdapter(MainActivity.this, allEvents);
+        timetableRecyclerView.setAdapter(timetableMainAdapter);
     }
 
 
