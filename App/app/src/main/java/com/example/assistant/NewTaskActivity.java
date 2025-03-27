@@ -29,7 +29,7 @@ public class NewTaskActivity extends AppCompatActivity {
     Calendar dateFromCld = Calendar.getInstance();
     Calendar timeFromCld = Calendar.getInstance();
     Calendar timeToCld = Calendar.getInstance();
-    SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
+    SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     EditText nameTask, scoreEditText, dateFrom, timeFrom, dateTo, timeTo;
@@ -69,7 +69,7 @@ public class NewTaskActivity extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NewTaskActivity.this, OptionToAddNoteActivity.class));
+                startActivity(new Intent(NewTaskActivity.this, MainActivity.class));
             }
         });
     }

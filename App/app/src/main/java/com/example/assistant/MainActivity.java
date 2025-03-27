@@ -4,10 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.assistant.databinding.ActivityMainBinding;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -30,8 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
     String itemDay;
     String[] days = { "Сегодня", "Завтра", "Вчера"};
 
-    RecyclerView taskRecyclerView, taskRecyclerView2, timetableRecyclerView;
+    RecyclerView taskRecyclerView, timetableRecyclerView;
     ArrayList<String> nameTaskExample = new ArrayList<>();
     TaskAdapter taskAdapter;
     LinearLayoutManager linearLayoutManager;
 
     List<ArrayList<String>> allEvents =new ArrayList();
-    TimetableMainAdapter timetableMainAdapter;
+    TimetableAdapter timetableMainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,22 +65,22 @@ public class MainActivity extends AppCompatActivity {
         dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
 
 
-        showSpinnerDays();  // Выпадающий список дней
+        showSpinnerDays();      // Выпадающий список дней
 
         showHiddenElements();  // Показ скрытых элементов (расписание занятий, заметка)
 
-        addTask(); // Добавление задачи
+        goToNewTaskActivity(); // Добавление задачи
 
 
-        outputTasksFromJSONtoRecyclerView();  //
-        outputTimetableFromJSONtoRecyclerView();  // РАСПИСАНИЕ
+        outputTasksFromJSONtoRecyclerView();        // ЗАДАЧИ из json
+        outputTimetableFromJSONtoRecyclerView();    // РАСПИСАНИЕ из json
 
 
 
 
     }
 
-    private String JsonTaskDataFromAssest(String fileName) {
+    private String JsonDataFromAssest(String fileName) {
         String json = null;
         try {
             InputStream inputStream = getAssets().open(fileName);
@@ -111,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         taskRecyclerView.setLayoutManager(linearLayoutManager);
 
         try {
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonTaskDataFromAssest("tasks_example.json")));
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonDataFromAssest("tasks_example.json")));
             JSONArray jsonArray = jsonObject.getJSONArray("tasks");
             for (int i=0; i<jsonArray.length(); i++) {
                 JSONObject taskExampleData = jsonArray.getJSONObject(i);
@@ -134,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         timetableRecyclerView.setLayoutManager(linearLayoutManager);
 
         try {
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonTaskDataFromAssest("timetable_example.json")));
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonDataFromAssest("timetable_example.json")));
             JSONArray jsonArray = jsonObject.getJSONArray("study_classes");
             for (int i=0; i<jsonArray.length(); i++) {
                 JSONObject eventExampleData = jsonArray.getJSONObject(i);
@@ -146,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 eventExample.add(eventExampleData.getString("stop_time"));
                 eventExample.add(eventExampleData.getString("place"));
                 eventExample.add(eventExampleData.getString("format"));
-
+                System.out.println(" eventExample  " + eventExample);
                 /* Добавление мероприятия ко всем мероприятиям */
                 allEvents.add(eventExample);
             }
@@ -154,8 +151,7 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        System.out.println("SEEEEEEEEEEEEEEEEEEEEEEEEEE  ----------- " + allEvents);
-        timetableMainAdapter = new TimetableMainAdapter(MainActivity.this, allEvents);
+        timetableMainAdapter = new TimetableAdapter(MainActivity.this, allEvents);
         timetableRecyclerView.setAdapter(timetableMainAdapter);
     }
 
@@ -320,12 +316,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    protected void addTask() {
-        ImageButton addTask = findViewById(R.id.addTaskBtn);
-        addTask.setOnClickListener(new View.OnClickListener() {
+    /*
+        Функция, отвечающая за переход на экран создания задачи
+     */
+    protected void goToNewTaskActivity() {
+        ImageButton newTaskBtn = findViewById(R.id.newTaskBtn);
+        newTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, OptionToAddNoteActivity.class));
+                startActivity(new Intent(MainActivity.this, NewTaskActivity.class));
             }
         });
     }

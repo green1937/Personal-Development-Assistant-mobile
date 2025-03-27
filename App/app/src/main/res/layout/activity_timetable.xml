@@ -35,17 +35,27 @@
         android:layout_height="match_parent"
         android:id="@+id/scroll"
         android:layout_below="@+id/textTt">
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <!-- <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/allTimetableRecyclerView"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="10dp"/> -->
+                android:id="@+id/textLL"
+                android:textSize="20dp"
+                android:layout_gravity="end"
+                android:textColor="@color/black"
+                android:text="Нечетная неделя"
+                android:background="@drawable/image_btn_style"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="10dp"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,58 +65,11 @@
                 android:background="@color/bottom_menu"
                 android:textSize="18dp"
                 android:textAlignment="center"/>
-            <!-- android:layout_below="@+id/addSubjectRelativeLayout" -->
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/mondayTL"
-            android:layout_below="@+id/mondayText"
-            android:stretchColumns="1,2,3,4">
-
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_monday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
-        </TableLayout>
 
 
 
@@ -114,306 +77,87 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tuesdayText"
-            android:layout_below="@+id/mondayTL"
             android:text="Вторник"
             android:textColor="@color/black"
             android:background="@color/bottom_menu"
             android:textSize="18dp"
             android:textAlignment="center"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/tuesdayTL"
-            android:layout_below="@+id/tuesdayText"
-            android:stretchColumns="1,2,3,4">
-
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_tuesday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </TableLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/wednesdayText"
-            android:layout_below="@+id/tuesdayTL"
-            android:text="Среда"
-            android:textColor="@color/black"
-            android:background="@color/bottom_menu"
-            android:textSize="18dp"
-            android:textAlignment="center"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/wednesdayTL"
-            android:layout_below="@+id/wednesdayText"
-            android:stretchColumns="1,2,3,4">
 
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/wednesdayText"
+                android:text="Среда"
+                android:textColor="@color/black"
+                android:background="@color/bottom_menu"
+                android:textSize="18dp"
+                android:textAlignment="center"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_wednesday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </TableLayout>
 
-        <TextView
+
+
+            <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/thursdayText"
-            android:layout_below="@+id/wednesdayTL"
             android:text="Четверг"
             android:textColor="@color/black"
             android:background="@color/bottom_menu"
             android:textSize="18dp"
             android:textAlignment="center"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/thursdayTL"
-            android:layout_below="@+id/thursdayText"
-            android:stretchColumns="1,2,3,4">
-
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_thursday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </TableLayout>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fridayText"
             android:text="Пятница"
-            android:layout_below="@+id/thursdayTL"
             android:textColor="@color/black"
             android:background="@color/bottom_menu"
             android:textSize="18dp"
             android:textAlignment="center"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fridayTL"
-            android:layout_below="@+id/fridayText"
-            android:stretchColumns="1,2,3,4">
-
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_friday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </TableLayout>
+
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/saturdayText"
             android:text="Суббота"
-            android:layout_below="@+id/fridayTL"
             android:textColor="@color/black"
             android:background="@color/bottom_menu"
             android:textSize="18dp"
             android:textAlignment="center"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/saturdayTL"
-            android:layout_below="@+id/saturdayText"
-            android:stretchColumns="1,2,3,4">
-
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_saturday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </TableLayout>
+
 
 
         <TextView
@@ -421,63 +165,18 @@
             android:layout_height="wrap_content"
             android:id="@+id/sundayText"
             android:text="Воскресенье"
-            android:layout_below="@+id/saturdayTL"
             android:textColor="@color/black"
             android:background="@color/bottom_menu"
             android:textSize="18dp"
             android:textAlignment="center"/>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/sundayTL"
-            android:layout_below="@+id/sundayText"
-            android:stretchColumns="1,2,3,4">
-
-            <TableRow>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="1"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Четная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="2"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Время"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="3"
-                    android:gravity="center"/>
-                <TextView
-                    android:text="Нечетная неделя"
-                    android:textSize="13dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:padding="10dp"
-                    android:layout_column="4"
-                    android:gravity="center"/>
-
-            </TableRow>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_sunday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-        </TableLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </ScrollView>
 
@@ -496,7 +195,7 @@
         />
 
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView
     android:id="@+id/bottomNavigationView"
     android:layout_width="match_parent"
     android:layout_height="50dp"
@@ -504,6 +203,6 @@
     style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
     app:itemIconTint="@color/black"
     android:layout_alignParentBottom="true"
-    app:menu="@menu/bottom_menu"/>
+    app:menu="@menu/bottom_menu"/> -->
 
 </RelativeLayout>

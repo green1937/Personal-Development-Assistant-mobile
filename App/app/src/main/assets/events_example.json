@@ -1,0 +1,404 @@
+{
+  "days": [
+    {
+      "day_by_num_order": 0,
+      "odd_week": [
+        {
+          "id": 46,
+          "place": "https://docs.google.com/document/d/12rSvQKD4YVe68nMkOVaklUZjxYxBi5Sbg2eStU6tscw/edit?tab=t.0",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 0,
+          "name": "проект",
+          "format": "Онлайн",
+          "start_time": "08:00:00",
+          "stop_time": "17:00:00"
+        }
+      ],
+      "even_week": [
+        {
+          "id": 27,
+          "place": "https://e.sfu-kras.ru/mod/assign/view.php?id=1866104",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 0,
+          "name": "1232",
+          "format": "Онлайн",
+          "start_time": "11:11:00",
+          "stop_time": "22:22:00"
+        },
+        {
+          "id": 43,
+          "place": "https://docs.google.com/document/d/12rSvQKD4YVe68nMkOVaklUZjxYxBi5Sbg2eStU6tscw/edit?tab=t.0",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 0,
+          "name": "проект",
+          "format": "Онлайн",
+          "start_time": "08:00:00",
+          "stop_time": "17:00:00"
+        }
+      ]
+    },
+    {
+      "day_by_num_order": 1,
+      "odd_week": [
+        {
+          "id": 35,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 1,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        },
+        {
+          "id": 45,
+          "place": "https://docs.google.com/document/d/12rSvQKD4YVe68nMkOVaklUZjxYxBi5Sbg2eStU6tscw/edit?tab=t.0",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 1,
+          "name": "проект",
+          "format": "Онлайн",
+          "start_time": "08:00:00",
+          "stop_time": "17:00:00"
+        },
+        {
+          "id": 51,
+          "place": "dcdc",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 1,
+          "name": "qweeeq",
+          "format": "Офлайн",
+          "start_time": "11:11:00",
+          "stop_time": "12:00:00"
+        }
+      ],
+      "even_week": [
+        {
+          "id": 37,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 1,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        },
+        {
+          "id": 49,
+          "place": "https://docs.google.com/document/d/12rSvQKD4YVe68nMkOVaklUZjxYxBi5Sbg2eStU6tscw/edit?tab=t.0",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 1,
+          "name": "проект",
+          "format": "Онлайн",
+          "start_time": "08:00:00",
+          "stop_time": "17:00:00"
+        },
+        {
+          "id": 50,
+          "place": "dcdc",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 1,
+          "name": "qweeeq",
+          "format": "Офлайн",
+          "start_time": "11:11:00",
+          "stop_time": "12:00:00"
+        },
+        {
+          "id": 100,
+          "place": "институт",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 1,
+          "name": "практическое занятие",
+          "format": "Офлайн",
+          "start_time": "14:10:00",
+          "stop_time": "15:45:00"
+        },
+        {
+          "id": 102,
+          "place": "спортзал",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 1,
+          "name": "физ.-культура",
+          "format": "Офлайн",
+          "start_time": "10:10:00",
+          "stop_time": "11:00:00"
+        }
+      ]
+    },
+    {
+      "day_by_num_order": 2,
+      "odd_week": [
+        {
+          "id": 53,
+          "place": "dcdc",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 2,
+          "name": "qweeeq",
+          "format": "Офлайн",
+          "start_time": "11:11:00",
+          "stop_time": "12:00:00"
+        },
+        {
+          "id": 55,
+          "place": "wqw",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 2,
+          "name": "1212",
+          "format": "Онлайн",
+          "start_time": "11:11:00",
+          "stop_time": "12:12:00"
+        },
+        {
+          "id": 58,
+          "place": "12222",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 2,
+          "name": "1212",
+          "format": "Онлайн",
+          "start_time": "09:00:00",
+          "stop_time": "13:00:00"
+        },
+        {
+          "id": 63,
+          "place": "placeeee",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 2,
+          "name": "event1",
+          "format": "Офлайн",
+          "start_time": "12:03:00",
+          "stop_time": "16:03:00"
+        }
+      ],
+      "even_week": [
+        {
+          "id": 52,
+          "place": "dcdc",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 2,
+          "name": "qweeeq",
+          "format": "Офлайн",
+          "start_time": "11:11:00",
+          "stop_time": "12:00:00"
+        },
+        {
+          "id": 56,
+          "place": "wqw",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 2,
+          "name": "1212",
+          "format": "Онлайн",
+          "start_time": "11:11:00",
+          "stop_time": "12:12:00"
+        },
+        {
+          "id": 57,
+          "place": "12222",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 2,
+          "name": "1212",
+          "format": "Онлайн",
+          "start_time": "09:00:00",
+          "stop_time": "13:00:00"
+        },
+        {
+          "id": 61,
+          "place": "placeeee",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 2,
+          "name": "event1",
+          "format": "Офлайн",
+          "start_time": "12:03:00",
+          "stop_time": "16:03:00"
+        }
+      ]
+    },
+    {
+      "day_by_num_order": 3,
+      "odd_week": [
+        {
+          "id": 34,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 3,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        }
+      ],
+      "even_week": [
+        {
+          "id": 38,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 3,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        }
+      ]
+    },
+    {
+      "day_by_num_order": 4,
+      "odd_week": [
+        {
+          "id": 33,
+          "place": "https://e.sfu-kras.ru/mod/assign/view.php?id=1866104",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 4,
+          "name": "онлайн занятие",
+          "format": "Онлайн",
+          "start_time": "12:00:00",
+          "stop_time": "13:00:00"
+        },
+        {
+          "id": 36,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 4,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        }
+      ],
+      "even_week": [
+        {
+          "id": 32,
+          "place": "https://e.sfu-kras.ru/mod/assign/view.php?id=1866104",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 4,
+          "name": "онлайн занятие",
+          "format": "Онлайн",
+          "start_time": "12:00:00",
+          "stop_time": "13:00:00"
+        },
+        {
+          "id": 41,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 4,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        }
+      ]
+    },
+    {
+      "day_by_num_order": 5,
+      "odd_week": [
+        {
+          "id": 30,
+          "place": "https://trello.com/b/ieJk6kOH/%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9-%D0%B0%D1%81%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BD%D1%82-%D0%B4%D0%BB%D1%8F-%D1%81%D0%B0%D0%BC%D0%BE%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D1%82%D0%B8%D1%8F",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 5,
+          "name": "fdgg",
+          "format": "Онлайн",
+          "start_time": "12:03:00",
+          "stop_time": "18:18:00"
+        }
+      ],
+      "even_week": null
+    },
+    {
+      "day_by_num_order": 6,
+      "odd_week": [
+        {
+          "id": 39,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 6,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        },
+        {
+          "id": 48,
+          "place": "https://docs.google.com/document/d/12rSvQKD4YVe68nMkOVaklUZjxYxBi5Sbg2eStU6tscw/edit?tab=t.0",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 6,
+          "name": "проект",
+          "format": "Онлайн",
+          "start_time": "08:00:00",
+          "stop_time": "17:00:00"
+        },
+        {
+          "id": 60,
+          "place": "placeeee",
+          "user_id": 1,
+          "week_num": 1,
+          "day_of_week": 6,
+          "name": "event1",
+          "format": "Офлайн",
+          "start_time": "12:03:00",
+          "stop_time": "16:03:00"
+        }
+      ],
+      "even_week": [
+        {
+          "id": 40,
+          "place": "место",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 6,
+          "name": "какой-то ивент",
+          "format": "Офлайн",
+          "start_time": "09:00:00",
+          "stop_time": "15:00:00"
+        },
+        {
+          "id": 47,
+          "place": "https://docs.google.com/document/d/12rSvQKD4YVe68nMkOVaklUZjxYxBi5Sbg2eStU6tscw/edit?tab=t.0",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 6,
+          "name": "проект",
+          "format": "Онлайн",
+          "start_time": "08:00:00",
+          "stop_time": "17:00:00"
+        },
+        {
+          "id": 64,
+          "place": "placeeee",
+          "user_id": 1,
+          "week_num": 2,
+          "day_of_week": 6,
+          "name": "event1",
+          "format": "Офлайн",
+          "start_time": "12:03:00",
+          "stop_time": "16:03:00"
+        }
+      ]
+    }
+  ]
+}

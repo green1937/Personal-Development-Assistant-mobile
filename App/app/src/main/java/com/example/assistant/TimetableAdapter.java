@@ -17,24 +17,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TimetableMainAdapter extends RecyclerView.Adapter<TimetableMainAdapter.MyViewTimetableHolder> {
+public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyViewTimetableHolder> {
 
     Context context;
     List<ArrayList<String>> eventData;
 
-    public TimetableMainAdapter(Context context, List<ArrayList<String>> eventData) {
+    public TimetableAdapter(Context context, List<ArrayList<String>> eventData) {
         this.context = context;
         this.eventData = eventData;
     }
 
     @NonNull
     @Override
-    public TimetableMainAdapter.MyViewTimetableHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TimetableMainAdapter.MyViewTimetableHolder(LayoutInflater.from(context).inflate(R.layout.timetable_item_view, parent, false));
+    public TimetableAdapter.MyViewTimetableHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new TimetableAdapter.MyViewTimetableHolder(LayoutInflater.from(context).inflate(R.layout.timetable_item_view, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TimetableMainAdapter.MyViewTimetableHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TimetableAdapter.MyViewTimetableHolder holder, int position) {
 
         holder.taskEventTextOutput.setText(eventData.get(position).get(0));
         holder.startTimeEventTextOutput.setText(eventData.get(position).get(1));

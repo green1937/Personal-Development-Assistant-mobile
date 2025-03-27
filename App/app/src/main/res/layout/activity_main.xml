@@ -185,7 +185,7 @@
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/addTaskBtn"
+        android:id="@+id/newTaskBtn"
         android:src="@drawable/add_plus3"
         android:scaleType="fitCenter"
         android:padding="10dp"
