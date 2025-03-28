@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +209,14 @@ public class TimetableActivity extends AppCompatActivity {
                 eventExample.add(eventExampleData.getString("name"));
                 eventExample.add(eventExampleData.getString("start_time"));
                 eventExample.add(eventExampleData.getString("stop_time"));
-                eventExample.add(eventExampleData.getString("place"));
+
+
+                String placeEvent = eventExampleData.getString("place");
+                if (placeEvent.length() > 5 && placeEvent.substring(0,4).equals("http")) {
+                    placeEvent = "ссылка на мероприятие";
+                }
+
+                eventExample.add(placeEvent);
                 eventExample.add(eventExampleData.getString("format"));
                 fullEvent.add(eventExample);
             }
