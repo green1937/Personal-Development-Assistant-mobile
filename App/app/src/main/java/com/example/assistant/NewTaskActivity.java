@@ -1,5 +1,6 @@
 package com.example.assistant;
 
+import static com.example.assistant.NewPlanActivity.setInitialDate;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -7,10 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,6 +29,10 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class NewTaskActivity extends AppCompatActivity {
+    String[] ctgExamples = { "Учеба", "Семья", "Здоровье", "Спорт", "Работа"};
+    String itemCtg;
+
+
     Calendar dateToCld = Calendar.getInstance();
     Calendar dateFromCld = Calendar.getInstance();
     Calendar timeFromCld = Calendar.getInstance();
@@ -53,11 +61,13 @@ public class NewTaskActivity extends AppCompatActivity {
         saveTaskBtn = findViewById(R.id.tickBtn);
         backBtn = findViewById(R.id.backBtn);
 
-        backToOption();  // Возвращение назад
+        showSpinnerCtg();       // Отображение в выпадающем списке примеров категорий
 
-        saveTask();  // Сохранение задачи
+        backToOption();         // Возвращение назад
 
-        openRepeatSettings();  // Переход на страницу настроек повтора
+        saveTask();             // Сохранение задачи
+
+        openRepeatSettings();   // Переход на страницу настроек повтора
 
     }
 
@@ -218,16 +228,9 @@ public class NewTaskActivity extends AppCompatActivity {
             dateFromCld.set(Calendar.MONTH, monthOfYear);
             dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            setInitialDateFrom(year, monthOfYear+1, dayOfMonth);
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateFrom);
         }
     };
-
-    private void setInitialDateFrom( int year, int monthOfYear, int dayOfMonth) {
-        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
-        dateFrom.setText(dateForEndStr);
-    }
-
-
 
 
     public void setTimeFrom(View v) {
@@ -240,13 +243,9 @@ public class NewTaskActivity extends AppCompatActivity {
             timeFromCld.set(Calendar.HOUR_OF_DAY, hourOfDay);
             timeFromCld.set(Calendar.MINUTE, minute);
 
-            setInitialTimeFrom();
+            setInitialTime(timeFrom, timeFromCld);
         }
     };
-
-    private void setInitialTimeFrom() {
-        timeFrom.setText(DateUtils.formatDateTime(this, timeFromCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
-    }
 
 
 
@@ -261,15 +260,9 @@ public class NewTaskActivity extends AppCompatActivity {
             dateToCld.set(Calendar.MONTH, monthOfYear);
             dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            setInitialDateTo(year, monthOfYear+1, dayOfMonth);
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateTo);
         }
     };
-
-    private void setInitialDateTo( int year, int monthOfYear, int dayOfMonth) {
-        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
-        dateTo.setText(dateForEndStr);
-    }
-
 
 
     public void setTimeTo(View v) {
@@ -282,17 +275,38 @@ public class NewTaskActivity extends AppCompatActivity {
             timeToCld.set(Calendar.HOUR_OF_DAY, hourOfDay);
             timeToCld.set(Calendar.MINUTE, minute);
 
-            setInitialTimeTo();
+            setInitialTime(timeTo, timeToCld);
         }
     };
 
-    private void setInitialTimeTo() {
-        timeTo.setText(DateUtils.formatDateTime(this, timeToCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+
+    private void setInitialTime(EditText editTime, Calendar timeCld) {
+        editTime.setText(DateUtils.formatDateTime(this, timeCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
     }
 
 
 
 
+    /*
+        Выпадающий список с примерами категорий (сфер жизни).
+    */
+    protected void showSpinnerCtg() {
+        Spinner spinner = findViewById(R.id.ctgSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, ctgExamples);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Получаем выбранный объект
+                itemCtg = (String)parent.getItemAtPosition(position);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+        spinner.setOnItemSelectedListener(itemSelectedListener);
+    }
 }

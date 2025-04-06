@@ -34,10 +34,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scroll"
-        android:layout_below="@+id/textTt">
+        android:layout_below="@+id/textTt"
+        android:layout_marginBottom="50dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
@@ -103,7 +104,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_timetable_wednesday"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
 
 
 
@@ -188,6 +190,7 @@
         android:scaleType="fitCenter"
         android:padding="10dp"
         android:background="@drawable/image_btn_style"
+        android:backgroundTint="@color/filter_bcg"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="70dp"
         android:layout_marginRight="10dp"
@@ -195,7 +198,7 @@
         />
 
 
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
     android:id="@+id/bottomNavigationView"
     android:layout_width="match_parent"
     android:layout_height="50dp"
@@ -203,6 +206,6 @@
     style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
     app:itemIconTint="@color/black"
     android:layout_alignParentBottom="true"
-    app:menu="@menu/bottom_menu"/> -->
+    app:menu="@menu/bottom_menu"/>
 
 </RelativeLayout>

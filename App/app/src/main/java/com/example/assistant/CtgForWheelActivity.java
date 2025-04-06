@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -137,13 +138,19 @@ public class CtgForWheelActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openLayout.setVisibility(View.VISIBLE);
-                windowNewCtg.setVisibility(View.GONE);
 
                 /* Получение названия категории и ее цвета */
                 String name = String.valueOf(nameNewCtg.getText());
                 String color = colorNewCtgView.getBackground().toString();
 
+                if (name.equals("")) {
+                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! Поле Название не заполнено!", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Категория сохранена", Toast.LENGTH_SHORT).show();
+                    openLayout.setVisibility(View.VISIBLE);
+                    windowNewCtg.setVisibility(View.GONE);
+                }
                 System.out.println("NAME = " + name + ", COLOR = " + color);
 
 

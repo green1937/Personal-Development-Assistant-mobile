@@ -1,5 +1,8 @@
 package com.example.assistant;
 
+import static com.example.assistant.NewPlanActivity.setInitialDate;
+
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,8 +34,8 @@ public class PlansActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plans);
 
-        bottNavItem();  // Нижнее меню
-        addPlan();  // Переход на страницу добавления плана
+        bottNavItem();           // Нижнее меню
+        addPlan();               // Переход на страницу добавления плана
 
         filterBtn = findViewById(R.id.filterBtnView);
         filterView = findViewById(R.id.filterView);
@@ -132,7 +135,8 @@ public class PlansActivity extends AppCompatActivity {
      */
     protected void filterAllPlans() {
 
-        CheckBox dateCheck = findViewById(R.id.checkBoxDateF);
+        CheckBox dateCheck = findViewById(R.id.checkBoxDateF);          // По дате
+        CheckBox lastDateCheck = findViewById(R.id.checkBoxChangesF);   // По дате последних изм-ий
         dateForFilterED = findViewById(R.id.addDateFilter);
 
         filterPlansBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,10 +150,18 @@ public class PlansActivity extends AppCompatActivity {
                     // Поскольку поле не пустое, проверяем дату на корректность
                     else if (checkDateFormat(dateForFilter) == 0) {
                         Toast.makeText(getApplicationContext(), "Планы были отфильтрованы успешно!", Toast.LENGTH_SHORT).show();
+                        filterView.setVisibility(View.GONE);
+                        filterPlansBtn.setVisibility(View.GONE);
                     }
                     else {
                         Toast.makeText(getApplicationContext(), "Фильтрация невозможна. Формат даты неверный", Toast.LENGTH_SHORT).show();
                     }
+
+                }
+                else if (lastDateCheck.isChecked()) {
+                    Toast.makeText(getApplicationContext(), "Планы были отфильтрованы успешно!", Toast.LENGTH_SHORT).show();
+                    filterView.setVisibility(View.GONE);
+                    filterPlansBtn.setVisibility(View.GONE);
 
                 }
                 else {
@@ -200,14 +212,9 @@ public class PlansActivity extends AppCompatActivity {
             dateCld.set(Calendar.MONTH, monthOfYear);
             dateCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            setInitialDateFrom(year, monthOfYear+1, dayOfMonth);
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateForFilterED);
         }
     };
-
-    private void setInitialDateFrom( int year, int monthOfYear, int dayOfMonth) {
-        String dateForFilterStr = dayOfMonth + "." + monthOfYear + "." + year;
-        dateForFilterED.setText(dateForFilterStr);
-    }
 
 
 }

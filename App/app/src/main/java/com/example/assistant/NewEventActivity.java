@@ -25,6 +25,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -73,7 +76,6 @@ public class NewEventActivity extends AppCompatActivity {
         flagWeek = new int[] {3, 3, 3, 3, 3, 3, 3};
         backToSideMenu();        // Возвращение назад
         saveEvent();             // Сохранение мероприятия
-        setInitialDateTime();
 
     }
 
@@ -117,52 +119,43 @@ public class NewEventActivity extends AppCompatActivity {
                 String timeFromStr = timeFrom.getText().toString();
 
 
-                //Проверка на пустоту название
-                if (eventNameStr.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
-                            "Поле Название мероприятия должно быть заполнено!",
-                            Toast.LENGTH_SHORT).show();
+                // Если все поля не пустые и выбран хотя бы один день недели
+                if (!eventNameStr.equals("") && !placeStr.equals("") && !timeToStr.equals("")
+                        && !timeFromStr.equals("") && checkDaysWeek(flagWeek) != 1) {
 
-                }
+                    // Если формат времени правильный mm:hh
+                    if (checkTimeFormat(timeToStr) != 1 && checkTimeFormat(timeFromStr) != 1) {
 
-                //Проверка на пустоту поля место проведения
-                if (placeStr.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
-                                    "Поле Место/ссылка должно быть заполнено!",
-                            Toast.LENGTH_SHORT).show();
-                }
+                        // Если время ОТ меньше времени ДО
+                        DateTimeFormatter dtfTIME = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
+                        LocalTime timeFromLD = LocalTime.parse(timeFromStr, dtfTIME);
+                        LocalTime timeToLD = LocalTime.parse(timeToStr, dtfTIME);
 
-                //Проверка на пустоту времени
-                if (timeToStr.equals("") || timeFromStr.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
-                                    "Поля Время должны быть заполнены!",
-                            Toast.LENGTH_SHORT).show();
-                }
+                        // Проверка на то, что дата ОТ наступает раньше даты ДО
+                        if (timeToLD.isAfter(timeFromLD)) {
+                            Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
+                                            "Время ОТ должно наступать раньше времени ДО!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
-                // Проверка на то, что выбран хотя бы один день недели
-                if (checkDaysWeek(flagWeek) == 1) {
-                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
-                                    "Не выбран ни один день недели!",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                else {
-
-                    // В случае если все заполнено --- проверяем формат времени
-                    if (checkTimeFormat(timeToStr) == 1 || checkTimeFormat(timeFromStr) == 1) {
-                        Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
-                                        "Поля Время не соответсвует формату ВРЕМЯ!",
-                                Toast.LENGTH_SHORT).show();
+                        // Сохранение мероприятия
+                        else {
+                            Toast.makeText(getApplicationContext(), "Мероприятие сохранено успешно!",
+                                    Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(NewEventActivity.this, TimetableActivity.class));
+                        }
                     }
 
-                    // Если все ок --- сохраняем
+                    // Ошибка - неверный формат времени
                     else {
-                        startActivity(new Intent(NewEventActivity.this, TimetableActivity.class));
-                        System.out.println("ВРЕМЯ ОТ = " + timeToStr + " ВРЕМЯ ДО = " + timeFromStr);
-                        Toast.makeText(getApplicationContext(), "Мероприятие успешно сохранено!",
+                        Toast.makeText(getApplicationContext(), "Ошибка сохранения! Неверный формат времени час:мин.",
                                 Toast.LENGTH_SHORT).show();
                     }
 
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! Заполните поля.",
+                            Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -383,13 +376,9 @@ public class NewEventActivity extends AppCompatActivity {
             dateAndTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
             dateAndTime.set(Calendar.MINUTE, minute);
 
-            setInitialDateTime();
+            setInitialDateTime(timeTo, dateAndTime);
         }
     };
-
-    private void setInitialDateTime() {
-        timeTo.setText(DateUtils.formatDateTime(this, dateAndTime.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
-    }
 
     public void setTimeFrom(View v) {
         new TimePickerDialog(NewEventActivity.this, t2, dateAndTimeFrom.get(Calendar.HOUR_OF_DAY),
@@ -401,12 +390,12 @@ public class NewEventActivity extends AppCompatActivity {
             dateAndTimeFrom.set(Calendar.HOUR_OF_DAY, hourOfDay);
             dateAndTimeFrom.set(Calendar.MINUTE, minute);
 
-            setInitialDateTimeFrom();
+            setInitialDateTime(timeFrom, dateAndTimeFrom);
         }
     };
 
-    private void setInitialDateTimeFrom() {
-        timeFrom.setText(DateUtils.formatDateTime(this, dateAndTimeFrom.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
+    private void setInitialDateTime(EditText timeEdit, Calendar timeCld) {
+        timeEdit.setText(DateUtils.formatDateTime(this, timeCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
 
     }
 

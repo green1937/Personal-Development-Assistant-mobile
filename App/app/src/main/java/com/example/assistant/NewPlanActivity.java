@@ -72,33 +72,6 @@ public class NewPlanActivity extends AppCompatActivity {
 
 
     /*
-        Функция, отвечающая за вывод даты
-        в поле EditText при нажатии на любую дату в календаре (CalendarView)
-     */
-    protected static void dataFromCalendar(CalendarView calendarView, EditText dateED) {
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                if ((month + 1 < 10) &&(dayOfMonth >= 10)) {
-                    dateED.setText(dayOfMonth + ".0" + (month + 1) + "." + year);
-                }
-                if ((dayOfMonth < 10) && (month + 1 < 10)) {
-                    dateED.setText("0" + dayOfMonth + ".0" + (month + 1) + "." + year);
-                }
-                if ((month + 1 >= 10) && (dayOfMonth < 10)) {
-                    dateED.setText("0" + dayOfMonth + "." + (month + 1) + "." + year);
-                }
-                if ((month + 1 >= 10) && (dayOfMonth >= 10)) {
-                    dateED.setText(dayOfMonth + "." + (month + 1) + "." + year);
-                }
-            }
-
-        });
-    }
-
-
-    /*
         Функция, отвечающая за сохранение созданного плана.
 
         1. В случае, если ошибок никаких нет, то план успешно сохраняется,
@@ -182,14 +155,9 @@ public class NewPlanActivity extends AppCompatActivity {
             dateFromCld.set(Calendar.MONTH, monthOfYear);
             dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            setInitialDateFrom(year, monthOfYear+1, dayOfMonth);
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateFrom);
         }
     };
-
-    private void setInitialDateFrom( int year, int monthOfYear, int dayOfMonth) {
-        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
-        dateFrom.setText(dateForEndStr);
-    }
 
 
     public void setDateTo(View v) {
@@ -203,13 +171,26 @@ public class NewPlanActivity extends AppCompatActivity {
             dateToCld.set(Calendar.MONTH, monthOfYear);
             dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            setInitialDateTo(year, monthOfYear+1, dayOfMonth);
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateTo);
         }
     };
 
-    private void setInitialDateTo( int year, int monthOfYear, int dayOfMonth) {
-        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
-        dateTo.setText(dateForEndStr);
+    static void setInitialDate(int year, int monthOfYear, int dayOfMonth, EditText editDate) {
+        String dateForEndStr;
+        if (dayOfMonth < 10 && monthOfYear < 10) {
+            dateForEndStr = "0" + dayOfMonth + "." + "0" + monthOfYear + "." + year;
+        }
+        else {
+            if (dayOfMonth > 9 && monthOfYear < 10) {
+                dateForEndStr = dayOfMonth + "." + "0" + monthOfYear + "." + year;
+            } else if (dayOfMonth < 10 && monthOfYear > 9) {
+                dateForEndStr = "0" + dayOfMonth + "." + monthOfYear + "." + year;
+            } else {
+                dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+            }
+        }
+
+        editDate.setText(dateForEndStr);
     }
 
 }

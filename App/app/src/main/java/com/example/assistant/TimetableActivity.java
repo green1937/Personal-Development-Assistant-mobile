@@ -51,7 +51,7 @@ public class TimetableActivity extends AppCompatActivity {
         textParameterOddEvenWeek = findViewById(R.id.textLL);
 
 
-        //bottNavItem();           // Нижнее меню
+        bottNavItem();           // Нижнее меню
         backToSideMenu();        // Возвращение назад
         addNewEvent();           // Сздание нового мероприятия - переход на новый экран
 
