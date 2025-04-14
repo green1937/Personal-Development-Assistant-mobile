@@ -2,9 +2,11 @@ package com.example.assistant;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,8 +18,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -53,13 +58,34 @@ public class TimetableActivity extends AppCompatActivity {
 
         bottNavItem();           // Нижнее меню
         backToSideMenu();        // Возвращение назад
-        addNewEvent();           // Сздание нового мероприятия - переход на новый экран
+        addNewEvent();           // Создание нового мероприятия - переход на новый экран
+
+        loadJsonFromUrl();       // Получение расписания
+
+    }
 
 
-        getTimetableFromJSON();             // Получение расписания из JSON
-        outputTimetableToRecyclerView();    // Передача расписания в RecyclerView
+    private void loadJsonFromUrl() {
+        new Thread(() -> {
+            try {
+                // ссылка меняется
+                String url = "https://mald3m-217-144-175-34.ru.tuna.am/assistant/api/events";
 
+                String json = getJsonFromUrl(url);
 
+                if (json != null) {
+                    runOnUiThread(() -> {
+                        getTimetableFromJSON(json);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+            }
+        }).start();
     }
 
 
@@ -141,23 +167,52 @@ public class TimetableActivity extends AppCompatActivity {
     }
 
 
-    private String JsonDataFromAssest(String fileName) {
+    /// получение данных из джейсон
+    private String getJsonFromUrl(String urlString) {
         String json = null;
-        try {
-            InputStream inputStream = getAssets().open(fileName);
-            int sizeOfFile = inputStream.available();
-            byte[] bufferData = new byte[sizeOfFile];
-            inputStream.read(bufferData);
-            inputStream.close();
-            json = new String(bufferData, StandardCharsets.UTF_8);
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
 
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        try {
+            URL url = new URL(urlString);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+
+            // если нужен заголовок для обхода tuna browser warning - не работает все равно нужно нажимать на галочку у новой ссылки
+            urlConnection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+            urlConnection.connect();
+
+            InputStream inputStream = urlConnection.getInputStream();
+            StringBuilder buffer = new StringBuilder();
+
+            if (inputStream == null) {
+                Log.d("DEBUG", "inputStream == null");
+                return null;
+            }
+
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line);
+            }
+
+            if (buffer.length() == 0) return null;
+            json = buffer.toString();
+
+        } catch (IOException e) {
+            Log.e("DEBUG", "IOException при получении JSON", e);
+        } finally {
+            if (urlConnection != null) urlConnection.disconnect();
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    Log.e("DEBUG", "Ошибка закрытия reader", e);
+                }
+            }
         }
         return json;
-
     }
 
 
@@ -165,13 +220,11 @@ public class TimetableActivity extends AppCompatActivity {
         Получение расписания мероприятий из JSON в виде трехмерного массива
         (разбиение на дни недели и четность/нечетность недели)
      */
-    protected void getTimetableFromJSON() {
-
+    protected void getTimetableFromJSON(String json) {
         try {
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonDataFromAssest("events_example.json")));
+            JSONObject jsonObject = new JSONObject(json);
             JSONArray jsonArray = jsonObject.getJSONArray("days");
-            for (int i=0; i<jsonArray.length(); i++) {
-                // Массив, хранящий мероприятия одного дня (пн, вт, ср, ...) с четной и с нечетной недели
+            for (int i = 0; i < jsonArray.length(); i++) {
                 fullWeek = new ArrayList<>();
 
                 JSONObject weekData = jsonArray.getJSONObject(i);
@@ -184,10 +237,11 @@ public class TimetableActivity extends AppCompatActivity {
 
                 allEvents.add(fullWeek);
             }
+            outputTimetableToRecyclerView();    // Передача расписания в RecyclerView
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            Log.d("DEBUG", "ошибка в getTimetableFromJSON: " + json);
         }
-
     }
 
 
@@ -258,7 +312,6 @@ public class TimetableActivity extends AppCompatActivity {
      */
     protected void cycleByWeek(int param) {
         for (int i=0; i<7; i++) {
-
             List<ArrayList<String>> eventData = allEvents.get(i).get(param);
 
             timetableRecyclerView = findViewById(nameOfRecyclerView[i]);
@@ -270,6 +323,5 @@ public class TimetableActivity extends AppCompatActivity {
 
         }
     }
-
 
 }
