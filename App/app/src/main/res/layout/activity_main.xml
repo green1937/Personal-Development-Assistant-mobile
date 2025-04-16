@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
 
-        <TextView
+        <EditText
             android:id="@+id/dateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +27,12 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="22dp"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:onClick="setDate"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:editable="false"
+            android:backgroundTint="@color/background_main"/>
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/daySpinner"
@@ -62,17 +67,6 @@
             android:visibility="gone"
             android:background="@color/background2"
             android:orientation="vertical" >
-
-            <!--<TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Понедельник"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:layout_marginHorizontal="30dp"
-                android:background="@drawable/days_style_for_timetable"
-                /> -->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"

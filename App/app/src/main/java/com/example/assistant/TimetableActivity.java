@@ -1,6 +1,7 @@
 package com.example.assistant;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +34,8 @@ import java.util.Objects;
 
 
 public class TimetableActivity extends AppCompatActivity {
-    String url = ".../assistant/api/events";
+    String url;// = ".../assistant/api/events";
+
     TextView textParameterOddEvenWeek;
     List<ArrayList<String>> fullEvent = new ArrayList<>();
     List<List<ArrayList<String>>> fullWeek = new ArrayList<>();
@@ -52,19 +54,20 @@ public class TimetableActivity extends AppCompatActivity {
 
         // Кнопка определения того, какая неделя отображается (нечетная, четная)
         textParameterOddEvenWeek = findViewById(R.id.textLL);
-
+        Resources res = getResources();
+        url = res.getString(R.string.urlTuna) + "events";
 
         bottNavItem();           // Нижнее меню
         backToSideMenu();        // Возвращение назад
         addNewEvent();           // Создание нового мероприятия - переход на новый экран
 
-        loadJsonFromUrl();       // Получение расписания
+        loadJsonFromUrl(url);       // Получение расписания
 
     }
 
 
 
-    private void loadJsonFromUrl() {
+    private void loadJsonFromUrl(String url) {
         new Thread(() -> {
             try {
                 // ссылка
@@ -169,7 +172,7 @@ public class TimetableActivity extends AppCompatActivity {
     /*
         Получение данных из JSON
      */
-    private String getJsonFromUrl(String urlString) {
+    static String getJsonFromUrl(String urlString) {
         String json = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -249,7 +252,7 @@ public class TimetableActivity extends AppCompatActivity {
         Получение в массив данных каждого мероприятия нечетной/четной недели
      */
     protected List<ArrayList<String>> addEventInWeek(JSONObject weekData, String weekName) throws JSONException {
-        fullEvent = new ArrayList();
+       fullEvent = new ArrayList<>();
 
         if (!weekData.get(weekName).toString().equals("null")) {
 

@@ -64,9 +64,6 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
                 break;
         }
 
-
-
-
     }
 
     @Override
@@ -77,11 +74,9 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     @Override
     public int getItemViewType(int position) {
         if (eventData.get(position).size() == 1) {
-            System.out.println("dayOfWeek " + position);
             return TYPE_ITEM1;
         }
         else {
-            System.out.println("events " + position);
             return TYPE_ITEM2;
         }
 

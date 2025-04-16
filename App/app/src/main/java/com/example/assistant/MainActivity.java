@@ -1,19 +1,30 @@
 package com.example.assistant;
 
+
+import static com.example.assistant.NewPlanActivity.setInitialDate;
+import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.NewPlanActivity.setInitialDate;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -29,8 +40,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -38,8 +55,15 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    Calendar dateCld = Calendar.getInstance();
+    String [] weeksDay = {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" };
+
+    String urlEvents, paramWeek, nameDayOfWeek;
+    int valueDayOfWeek;
+    List<ArrayList<String>> fullEvent = new ArrayList<>();
     DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-    TextView dateTextView, notesBtn, timetableBtn;
+    EditText dateTextView;
+    TextView notesBtn, timetableBtn;
     EditText notesEditText;
     LinearLayout timetableView;
 
@@ -53,31 +77,147 @@ public class MainActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
 
     List<ArrayList<String>> allEvents =new ArrayList();
-    TimetableAdapter timetableMainAdapter;
+    TimetableAdapter timetableAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottNavItem();  // Нижнее меню
-
         dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
 
+        bottNavItem();  // Нижнее меню
 
         showSpinnerDays();      // Выпадающий список дней
 
+        Resources res = getResources();
+        urlEvents = res.getString(R.string.urlTuna) + "events";  // Ссылка на распсиание
+
+
         showHiddenElements();  // Показ скрытых элементов (расписание занятий, заметка)
-
         goToNewTaskActivity(); // Добавление задачи
-
-
         outputTasksFromJSONtoRecyclerView();        // ЗАДАЧИ из json
-        outputTimetableFromJSONtoRecyclerView();    // РАСПИСАНИЕ из json
+
+    }
+
+
+    /*
+        Загрузка данных расписания мероприятий в JSON через Tuna
+     */
+    private void loadJsonFromUrlEvents(String url, String paramWeek, String nameDayOfWeek, int valueDayOfWeek) {
+        new Thread(() -> {
+            try {
+                // ссылка
+                String json = getJsonFromUrl(url);
+
+                if (json != null) {
+                    runOnUiThread(() -> {
+                        getTimetableFromJSON(json, paramWeek, nameDayOfWeek, valueDayOfWeek);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+            }
+        }).start();
+    }
+
+
+    /*
+        Получение параметров даты (день недели, номер дня недели, неделя)
+        из EditText, в который поступает дата из выпадающего списка или из календаря
+     */
+    private void getDataParameters() {
+        String somethindDate = String.valueOf(dateTextView.getText());  // Получение даты
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        formatter = formatter.withLocale(Locale.getDefault());  // Locale specifies human language for translating, and cultural norms for lowercase/uppercase and abbreviations and such. Example: Locale.US or Locale.CANADA_FRENCH
+        LocalDate date = LocalDate.parse(somethindDate, formatter);
+
+        DayOfWeek day = date.getDayOfWeek();
+        valueDayOfWeek = day.getValue() - 1;  // Порядковый номер дня недели (отсчет начинается с 0)
+        nameDayOfWeek = weeksDay[valueDayOfWeek];
+
+        WeekFields wf = WeekFields.of(Locale.getDefault());
+        TemporalField weekNum = wf.weekOfWeekBasedYear();
+        @SuppressLint("DefaultLocale") int weekRemainder = Integer.parseInt(String.format("%02d",date.get(weekNum))) % 2; // если четная, то 0
+
+        if (weekRemainder == 0) {
+            paramWeek = "even_week";
+        }
+        else {
+            paramWeek = "odd_week";
+        }
+    }
+
+    /*
+        Получение расписания мероприятий из JSON в виде трехмерного массива
+        (разбиение на дни недели и четность/нечетность недели)
+
+        paramWeek = odd_week/even_week
+     */
+    protected void getTimetableFromJSON(String json, String paramWeek, String nameDayOfWeek, int valueDayOfWeek) {
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jsonArray = jsonObject.getJSONArray("days");
+
+            JSONObject weekData = jsonArray.getJSONObject(valueDayOfWeek);
+            fullEvent = addEventInWeek(weekData, paramWeek);  // Все мероприятия Нечетная/Четная недели в зависимости от параметра
+
+            ArrayList<String> dd = new ArrayList<>(Collections.singleton(nameDayOfWeek)); //День недели
+            fullEvent.add(0, dd);
+
+            // Передача данных для отрисовки RecyclerView
+            timetableRecyclerView = findViewById(R.id.timetableRecyclerView);
+            linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+            timetableRecyclerView.setLayoutManager(linearLayoutManager);
+
+            timetableAdapter = new TimetableAdapter(MainActivity.this, fullEvent);
+            timetableRecyclerView.setAdapter(timetableAdapter);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
+    /*
+        Получение мероприятий на определенный день в определенную неделю
+     */
 
+    protected List<ArrayList<String>> addEventInWeek(JSONObject weekData, String weekName) throws JSONException {
+        fullEvent = new ArrayList();
+
+        if (!weekData.get(weekName).toString().equals("null")) {
+
+            JSONArray jsonArray2 = (JSONArray) weekData.get(weekName);
+
+
+            for (int j = 0; j < jsonArray2.length(); j++) {
+                ArrayList<String> eventExample = new ArrayList<>();
+                JSONObject eventExampleData = jsonArray2.getJSONObject(j);
+                //eventExample.add(eventExampleData.getString("id"));
+                eventExample.add(eventExampleData.getString("name"));
+                eventExample.add(eventExampleData.getString("start_time"));
+                eventExample.add(eventExampleData.getString("stop_time"));
+
+
+                String placeEvent = eventExampleData.getString("place");
+                if (placeEvent.length() > 5 && placeEvent.substring(0,4).equals("http")) {
+                    placeEvent = "ссылка на мероприятие";
+                }
+
+                eventExample.add(placeEvent);
+                eventExample.add(eventExampleData.getString("format"));
+                fullEvent.add(eventExample);
+            }
+        }
+
+        return fullEvent;
     }
 
     private String JsonDataFromAssest(String fileName) {
@@ -122,38 +262,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
-        Вывод расписания мероприятий из JSON в ReyclerView
-     */
-    protected void outputTimetableFromJSONtoRecyclerView() {
-        timetableRecyclerView = findViewById(R.id.timetableRecyclerView);
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        timetableRecyclerView.setLayoutManager(linearLayoutManager);
-
-        try {
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonDataFromAssest("timetable_example.json")));
-            JSONArray jsonArray = jsonObject.getJSONArray("study_classes");
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject eventExampleData = jsonArray.getJSONObject(i);
-
-                /* Получение всех полей мероприятия */
-                ArrayList<String> eventExample = new ArrayList<>();
-                eventExample.add(eventExampleData.getString("name"));
-                eventExample.add(eventExampleData.getString("start_time"));
-                eventExample.add(eventExampleData.getString("stop_time"));
-                eventExample.add(eventExampleData.getString("place"));
-                eventExample.add(eventExampleData.getString("format"));
-                System.out.println(" eventExample  " + eventExample);
-                /* Добавление мероприятия ко всем мероприятиям */
-                allEvents.add(eventExample);
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        //timetableMainAdapter = new TimetableAdapter(MainActivity.this, "День недели", allEvents);
-        timetableRecyclerView.setAdapter(timetableMainAdapter);
-    }
 
 
 
@@ -261,6 +369,7 @@ public class MainActivity extends AppCompatActivity {
                     dateCurrStr = getCurrDate(formatForDate, dateCurrStr);
                     dateTextView.setText(dateCurrStr);
                 }
+
                 if(itemDay.equals("Завтра")) {
                     anotherDateStr = getAnotherDate(1);
                     dateTextView.setText(anotherDateStr);
@@ -269,6 +378,10 @@ public class MainActivity extends AppCompatActivity {
                     anotherDateStr = getAnotherDate(-1);
                     dateTextView.setText(anotherDateStr);
                 }
+
+                getDataParameters();
+                loadJsonFromUrlEvents(urlEvents, paramWeek, nameDayOfWeek, valueDayOfWeek);  // Загрузка расписания Мероприятий
+
             }
 
             @Override
@@ -328,6 +441,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    /*
+     Вывод календаря для выбора даты Главного Экрана
+  */
+    public void setDate(View v) {
+        new DatePickerDialog(MainActivity.this, d, dateCld.get(Calendar.YEAR),
+                dateCld.get(Calendar.MONTH), dateCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateCld.set(Calendar.YEAR, year);
+            dateCld.set(Calendar.MONTH, monthOfYear);
+            dateCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateTextView);
+
+            getDataParameters();
+            loadJsonFromUrlEvents(urlEvents, paramWeek, nameDayOfWeek, valueDayOfWeek);  // Загрузка расписания Мероприятий
+
+        }
+    };
 
 
 }
