@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        timetableMainAdapter = new TimetableAdapter(MainActivity.this, allEvents);
+        //timetableMainAdapter = new TimetableAdapter(MainActivity.this, "День недели", allEvents);
         timetableRecyclerView.setAdapter(timetableMainAdapter);
     }
 

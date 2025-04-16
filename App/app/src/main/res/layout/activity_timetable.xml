@@ -28,159 +28,32 @@
         android:paddingVertical="10dp"/>
 
 
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scroll"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textLL"
         android:layout_below="@+id/textTt"
-        android:layout_marginBottom="50dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textLL"
-                android:textSize="20dp"
-                android:layout_gravity="end"
-                android:textColor="@color/black"
-                android:text="Нечетная неделя"
-                android:background="@drawable/image_btn_style"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="1dp"
-                android:layout_marginBottom="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginHorizontal="10dp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/mondayText"
-                android:text="Понедельник"
-                android:textColor="@color/black"
-                android:background="@color/bottom_menu"
-                android:textSize="18dp"
-                android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_monday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        android:textSize="20dp"
+        android:layout_gravity="end"
+        android:textColor="@color/black"
+        android:text="Нечетная неделя"
+        android:background="@drawable/image_btn_style"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="1dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginHorizontal="10dp"/>
 
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tuesdayText"
-            android:text="Вторник"
-            android:textColor="@color/black"
-            android:background="@color/bottom_menu"
-            android:textSize="18dp"
-            android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_tuesday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view_timetable_monday"
+        android:layout_below="@+id/textLL"
+        android:layout_marginBottom="60dp"/>
 
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/wednesdayText"
-                android:text="Среда"
-                android:textColor="@color/black"
-                android:background="@color/bottom_menu"
-                android:textSize="18dp"
-                android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_wednesday"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none" />
-
-
-
-
-            <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/thursdayText"
-            android:text="Четверг"
-            android:textColor="@color/black"
-            android:background="@color/bottom_menu"
-            android:textSize="18dp"
-            android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_thursday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fridayText"
-            android:text="Пятница"
-            android:textColor="@color/black"
-            android:background="@color/bottom_menu"
-            android:textSize="18dp"
-            android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_friday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/saturdayText"
-            android:text="Суббота"
-            android:textColor="@color/black"
-            android:background="@color/bottom_menu"
-            android:textSize="18dp"
-            android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_saturday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/sundayText"
-            android:text="Воскресенье"
-            android:textColor="@color/black"
-            android:background="@color/bottom_menu"
-            android:textSize="18dp"
-            android:textAlignment="center"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_timetable_sunday"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-    </LinearLayout>
-
-</ScrollView>
 
     <ImageButton
         android:layout_width="50dp"
@@ -190,7 +63,7 @@
         android:scaleType="fitCenter"
         android:padding="10dp"
         android:background="@drawable/image_btn_style"
-        android:backgroundTint="@color/filter_bcg"
+        android:backgroundTint="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="70dp"
         android:layout_marginRight="10dp"

@@ -27,11 +27,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 
 public class TimetableActivity extends AppCompatActivity {
+    String url = ".../assistant/api/events";
     TextView textParameterOddEvenWeek;
     List<ArrayList<String>> fullEvent = new ArrayList<>();
     List<List<ArrayList<String>>> fullWeek = new ArrayList<>();
@@ -42,10 +44,6 @@ public class TimetableActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     TimetableAdapter timetableAdapter;
 
-    int[] nameOfRecyclerView = { R.id.recycler_view_timetable_monday,
-            R.id.recycler_view_timetable_tuesday, R.id.recycler_view_timetable_wednesday,
-            R.id.recycler_view_timetable_thursday, R.id.recycler_view_timetable_friday,
-            R.id.recycler_view_timetable_saturday, R.id.recycler_view_timetable_sunday };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +63,11 @@ public class TimetableActivity extends AppCompatActivity {
     }
 
 
+
     private void loadJsonFromUrl() {
         new Thread(() -> {
             try {
-                // ссылка меняется
-                String url = "https://mald3m-217-144-175-34.ru.tuna.am/assistant/api/events";
-
+                // ссылка
                 String json = getJsonFromUrl(url);
 
                 if (json != null) {
@@ -95,7 +92,6 @@ public class TimetableActivity extends AppCompatActivity {
     */
     protected void bottNavItem() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        //bottomNavigationView.setSelectedItemId(R.id.bottom_wheel);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // Главная
@@ -143,6 +139,9 @@ public class TimetableActivity extends AppCompatActivity {
     }
 
 
+    /*
+        Возврат на боковое меню
+     */
     protected void backToSideMenu() {
         ImageButton backBtn = findViewById(R.id.backBtn);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +166,9 @@ public class TimetableActivity extends AppCompatActivity {
     }
 
 
-    /// получение данных из джейсон
+    /*
+        Получение данных из JSON
+     */
     private String getJsonFromUrl(String urlString) {
         String json = null;
         HttpURLConnection urlConnection = null;
@@ -178,7 +179,7 @@ public class TimetableActivity extends AppCompatActivity {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
 
-            // если нужен заголовок для обхода tuna browser warning - не работает все равно нужно нажимать на галочку у новой ссылки
+            // Заголовок для обхода tuna browser warning
             urlConnection.setRequestProperty("tuna-skip-browser-warning", "true");
 
             urlConnection.connect();
@@ -240,7 +241,6 @@ public class TimetableActivity extends AppCompatActivity {
             outputTimetableToRecyclerView();    // Передача расписания в RecyclerView
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.d("DEBUG", "ошибка в getTimetableFromJSON: " + json);
         }
     }
 
@@ -311,17 +311,25 @@ public class TimetableActivity extends AppCompatActivity {
         Цикл по всем дням недели (пн, вт, ср ...) отдельно для нечетной/четной
      */
     protected void cycleByWeek(int param) {
+        String [] weeksDay = {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" };
+
+        List<ArrayList<String>> fullWeekWithDayOfWeekForRV = new ArrayList<>();
         for (int i=0; i<7; i++) {
-            List<ArrayList<String>> eventData = allEvents.get(i).get(param);
-
-            timetableRecyclerView = findViewById(nameOfRecyclerView[i]);
-            linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-            timetableRecyclerView.setLayoutManager(linearLayoutManager);
-
-            timetableAdapter = new TimetableAdapter(TimetableActivity.this, eventData);
-            timetableRecyclerView.setAdapter(timetableAdapter);
+            ArrayList<String> dd = new ArrayList<>(Collections.singleton(weeksDay[i])); //День недели
+            fullWeekWithDayOfWeekForRV.add(dd);
+            List<ArrayList<String>> eventData = allEvents.get(i).get(param);  // Мероприятия
+            fullWeekWithDayOfWeekForRV.addAll(eventData);  // Добавление мероприятия по одному
 
         }
+
+        // Передача данных для отрисовки RecyclerView
+        timetableRecyclerView = findViewById(R.id.recycler_view_timetable_monday);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        timetableRecyclerView.setLayoutManager(linearLayoutManager);
+
+        timetableAdapter = new TimetableAdapter(TimetableActivity.this, fullWeekWithDayOfWeekForRV);
+        timetableRecyclerView.setAdapter(timetableAdapter);
+
     }
 
 }
