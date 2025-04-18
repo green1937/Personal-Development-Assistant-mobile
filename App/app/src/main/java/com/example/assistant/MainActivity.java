@@ -42,7 +42,9 @@ import java.text.SimpleDateFormat;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -58,9 +60,12 @@ public class MainActivity extends AppCompatActivity {
     Calendar dateCld = Calendar.getInstance();
     String [] weeksDay = {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" };
 
-    String urlEvents, paramWeek, nameDayOfWeek;
+    String urlEvents, paramWeek, nameDayOfWeek, urlTasks;
     int valueDayOfWeek;
     List<ArrayList<String>> fullEvent = new ArrayList<>();
+    List<ArrayList<String>> allTasks = new ArrayList<>();
+    RecyclerView tasksRecyclerView, timetableRecyclerView;;
+
     DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
     EditText dateTextView;
     TextView notesBtn, timetableBtn;
@@ -71,12 +76,8 @@ public class MainActivity extends AppCompatActivity {
     String itemDay;
     String[] days = { "Сегодня", "Завтра", "Вчера"};
 
-    RecyclerView taskRecyclerView, timetableRecyclerView;
-    ArrayList<String> nameTaskExample = new ArrayList<>();
     TaskAdapter taskAdapter;
     LinearLayoutManager linearLayoutManager;
-
-    List<ArrayList<String>> allEvents =new ArrayList();
     TimetableAdapter timetableAdapter;
 
     @Override
@@ -91,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
         showSpinnerDays();      // Выпадающий список дней
 
         Resources res = getResources();
-        urlEvents = res.getString(R.string.urlTuna) + "events";  // Ссылка на распсиание
+        urlEvents = res.getString(R.string.urlTuna) + "events";  // Ссылка на расписание
+        urlTasks = res.getString(R.string.urlTuna) + "tasks";    // Сслыка на все задачи
 
 
         showHiddenElements();  // Показ скрытых элементов (расписание занятий, заметка)
         goToNewTaskActivity(); // Добавление задачи
-        outputTasksFromJSONtoRecyclerView();        // ЗАДАЧИ из json
 
     }
 
@@ -116,7 +117,33 @@ public class MainActivity extends AppCompatActivity {
                     });
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных",
+                                Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+            }
+        }).start();
+    }
+
+    /*
+       Загрузка данных задачи в JSON через Tuna
+    */
+    private void loadJsonFromUrlTasks(String url, String date) {
+        new Thread(() -> {
+            try {
+                // ссылка
+                String json = getJsonFromUrl(url);
+
+                if (json != null) {
+                    runOnUiThread(() -> {
+                        getTasksFromJSON(json, date);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных",
+                                Toast.LENGTH_SHORT).show();
                     });
                 }
             } catch (Exception e) {
@@ -134,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         String somethindDate = String.valueOf(dateTextView.getText());  // Получение даты
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        formatter = formatter.withLocale(Locale.getDefault());  // Locale specifies human language for translating, and cultural norms for lowercase/uppercase and abbreviations and such. Example: Locale.US or Locale.CANADA_FRENCH
+        formatter = formatter.withLocale(Locale.getDefault());
         LocalDate date = LocalDate.parse(somethindDate, formatter);
 
         DayOfWeek day = date.getDayOfWeek();
@@ -143,7 +170,8 @@ public class MainActivity extends AppCompatActivity {
 
         WeekFields wf = WeekFields.of(Locale.getDefault());
         TemporalField weekNum = wf.weekOfWeekBasedYear();
-        @SuppressLint("DefaultLocale") int weekRemainder = Integer.parseInt(String.format("%02d",date.get(weekNum))) % 2; // если четная, то 0
+        @SuppressLint("DefaultLocale")
+        int weekRemainder = Integer.parseInt(String.format("%02d",date.get(weekNum))) % 2; // если четная, то 0
 
         if (weekRemainder == 0) {
             paramWeek = "even_week";
@@ -154,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*
-        Получение расписания мероприятий из JSON в виде трехмерного массива
-        (разбиение на дни недели и четность/нечетность недели)
+        Получение расписания мероприятий из JSON в виде массива
+        и передача данных для отрисовки в RecyclerView
 
         paramWeek = odd_week/even_week
      */
@@ -181,6 +209,136 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /*
+        Получение всех задач из JSON в зависимости от выбранной даты
+     */
+    protected void getTasksFromJSON (String json, String date) {
+        allTasks = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i=0; i<jsonArray.length(); i++) {
+                JSONObject taskExampleData = jsonArray.getJSONObject(i);
+                ArrayList<String> oneTask = new ArrayList<>();
+
+                oneTask.add(taskExampleData.getString("name"));
+                oneTask.add(taskExampleData.getString("start_date"));
+                oneTask.add(taskExampleData.getString("stop_date"));
+
+                oneTask.add(taskExampleData.getString("status"));
+
+                if (!taskExampleData.getString("done_by").equals("null")) {
+                    oneTask.add(taskExampleData.getString("done_by").substring(0, 10));
+                }
+                else {
+                    oneTask.add(taskExampleData.getString("done_by"));
+                }
+
+
+                allTasks.add(oneTask);
+            }
+            outputTasksToRecyclerView(allTasks, date);
+        } catch (JSONException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /*
+        Функция считает кол-во дней между двумя датами
+        (Применяется для группы "Скоро дедлайн")
+     */
+    public static long calculateDaysBetween(Date date1, Date date2) {
+        LocalDate localDate1 = date1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate localDate2 = date2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return java.time.temporal.ChronoUnit.DAYS.between(localDate1, localDate2);
+    }
+
+
+    /*
+        Функция показа задач на Главном Экране (разбиение на группы,
+        передача в RecyclerView, отрисовка)
+     */
+    protected void outputTasksToRecyclerView(List<ArrayList<String>> allTasks, String dateStr) throws ParseException {
+        String[] tasksCtgForMainPage = { "На день", "Просрочено", "Бессрочно", "Скоро дедлайн" };
+        Date date = formatForDate.parse(dateStr);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        formatter = formatter.withLocale(Locale.getDefault());
+
+        List<ArrayList<String>> allTasksWithCtgForRV = new ArrayList<>();  // Все задачи с разделами
+
+
+        List<ArrayList<String>> tasks1 = new ArrayList<>();
+        List<ArrayList<String>> tasks2 = new ArrayList<>();
+        List<ArrayList<String>> tasks3 = new ArrayList<>();
+        List<ArrayList<String>> tasks4 = new ArrayList<>();
+
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        for(int i = 0; i < allTasks.size(); i++) {
+            Date firstDate = null;    // Начало
+            Date lastDate = null;     // Конец
+            Date doneByDate = null;   // Дата завершения задачи
+
+            /* Преобразуем в дату формата ДД.ММ.ГГГГ */
+            if (!allTasks.get(i).get(1).equals("null")) {
+                firstDate = formatForDate.parse(formatForDate.format(Objects.requireNonNull(inputFormat.parse(allTasks.get(i).get(1)))));
+            }
+            if (!allTasks.get(i).get(2).equals("null")) {
+                lastDate = formatForDate.parse(formatForDate.format(Objects.requireNonNull(inputFormat.parse(allTasks.get(i).get(2)))));
+
+            }
+            if (!allTasks.get(i).get(4).equals("null")) {
+                doneByDate = formatForDate.parse(formatForDate.format(Objects.requireNonNull(inputFormat.parse(allTasks.get(i).get(4)))));
+            }
+
+
+
+            /* Теперь разбиваем задачи на 4 категории */
+
+            // На день
+            if ( (firstDate != null && firstDate.compareTo(date) == 0) ||  ( lastDate != null && lastDate.compareTo(date) == 0) || (doneByDate != null && doneByDate.compareTo(date) == 0)) {
+                tasks1.add(allTasks.get(i));
+
+            } else if (lastDate != null && lastDate.before(date) && allTasks.get(i).get(3).equals("0")) {  // Просрочено
+                tasks2.add(allTasks.get(i));
+            }
+
+            else {
+                if ( ((firstDate == null && lastDate == null) || (firstDate != null && lastDate == null)) && allTasks.get(i).get(3).equals("0")) {  // Бессрочно
+                    tasks3.add(allTasks.get(i));
+                }
+                else if (lastDate != null && calculateDaysBetween(date, lastDate) > 0 && calculateDaysBetween(date, lastDate) <= 3 && allTasks.get(i).get(3).equals("0")) {  // Скоро дедлайн
+                    tasks4.add(allTasks.get(i));
+                }
+            }
+        }
+
+
+        /* Собираем все в один массив для отрисовки */
+        allTasksWithCtgForRV.add(new ArrayList<>(Collections.singleton(tasksCtgForMainPage[0])));
+        allTasksWithCtgForRV.addAll(tasks1);
+        allTasksWithCtgForRV.add(new ArrayList<>(Collections.singleton(tasksCtgForMainPage[1])));
+        allTasksWithCtgForRV.addAll(tasks2);
+        allTasksWithCtgForRV.add(new ArrayList<>(Collections.singleton(tasksCtgForMainPage[2])));
+        allTasksWithCtgForRV.addAll(tasks3);
+        allTasksWithCtgForRV.add(new ArrayList<>(Collections.singleton(tasksCtgForMainPage[3])));
+        allTasksWithCtgForRV.addAll(tasks4);
+
+
+        /* Передаем данные в RecyclerView */
+        tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        tasksRecyclerView.setLayoutManager(linearLayoutManager);
+
+        taskAdapter = new TaskAdapter(MainActivity.this, allTasksWithCtgForRV);
+        tasksRecyclerView.setAdapter(taskAdapter);
+
+
     }
 
 
@@ -219,50 +377,6 @@ public class MainActivity extends AppCompatActivity {
 
         return fullEvent;
     }
-
-    private String JsonDataFromAssest(String fileName) {
-        String json = null;
-        try {
-            InputStream inputStream = getAssets().open(fileName);
-            int sizeOfFile = inputStream.available();
-            byte[] bufferData = new byte[sizeOfFile];
-            inputStream.read(bufferData);
-            inputStream.close();
-            json = new String(bufferData, StandardCharsets.UTF_8);
-
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return json;
-
-    }
-
-    /*
-        Вывод задач из JSON в ReyclerView (пока только выводятся в раздел "На день")
-    */
-    protected void outputTasksFromJSONtoRecyclerView() {
-        taskRecyclerView = findViewById(R.id.forDayLIST);
-        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        taskRecyclerView.setLayoutManager(linearLayoutManager);
-
-        try {
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(JsonDataFromAssest("tasks_example.json")));
-            JSONArray jsonArray = jsonObject.getJSONArray("tasks");
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject taskExampleData = jsonArray.getJSONObject(i);
-                nameTaskExample.add(taskExampleData.getString("name"));
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-        taskAdapter = new TaskAdapter(MainActivity.this, nameTaskExample);
-        taskRecyclerView.setAdapter(taskAdapter);
-    }
-
-
-
 
 
     /*
@@ -381,6 +495,8 @@ public class MainActivity extends AppCompatActivity {
 
                 getDataParameters();
                 loadJsonFromUrlEvents(urlEvents, paramWeek, nameDayOfWeek, valueDayOfWeek);  // Загрузка расписания Мероприятий
+                loadJsonFromUrlTasks(urlTasks, dateTextView.getText().toString());
+
 
             }
 
@@ -443,10 +559,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     /*
      Вывод календаря для выбора даты Главного Экрана
-  */
+    */
     public void setDate(View v) {
         new DatePickerDialog(MainActivity.this, d, dateCld.get(Calendar.YEAR),
                 dateCld.get(Calendar.MONTH), dateCld.get(Calendar.DAY_OF_MONTH)).show();
@@ -462,6 +577,7 @@ public class MainActivity extends AppCompatActivity {
 
             getDataParameters();
             loadJsonFromUrlEvents(urlEvents, paramWeek, nameDayOfWeek, valueDayOfWeek);  // Загрузка расписания Мероприятий
+            loadJsonFromUrlTasks(urlTasks, dateTextView.getText().toString());
 
         }
     };

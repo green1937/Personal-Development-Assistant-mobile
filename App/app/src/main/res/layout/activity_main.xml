@@ -114,65 +114,18 @@
             android:textAlignment="center"
             android:textSize="24dp"
             android:textStyle="bold"
-            android:textColor="@color/black" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/TasksText"
-            android:layout_marginHorizontal="20dp"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/forDayTaskText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="На день"
-                android:textSize="22dp" />
+            android:textColor="@color/black"
+            android:layout_marginTop="10dp"/>
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/forDayLIST"
+                android:id="@+id/tasksRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/image_btn_style"/>
+                android:layout_marginBottom="60dp"
+                android:background="@drawable/image_btn_style"
+                android:layout_below="@+id/TasksText"
+                android:layout_marginHorizontal="20dp"/>
 
-
-            <TextView
-                android:id="@+id/overdieTaskText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Просрочено"
-                android:textSize="22dp" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/overdieLIST"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/image_btn_style"/>
-
-            <TextView
-                android:id="@+id/openEndedTaskText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Бессрочно"
-                android:textSize="22dp" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/openEndedLIST"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="10dp"/>
-
-            <TextView
-                android:id="@+id/soonDeadlineTaskText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Скоро дедлайн"
-                android:textSize="22dp" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/soonDeadlineLIST"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginBottom="10dp"/>
-
-        </LinearLayout>
     </RelativeLayout>
     </ScrollView>
 
