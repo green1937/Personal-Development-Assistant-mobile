@@ -221,7 +221,7 @@ public class TimetableActivity extends AppCompatActivity {
 
 
     /*
-        Получение расписания мероприятий из JSON в виде трехмерного массива
+        Получение расписания мероприятий из JSON в массива
         (разбиение на дни недели и четность/нечетность недели)
      */
     protected void getTimetableFromJSON(String json) {
@@ -262,7 +262,8 @@ public class TimetableActivity extends AppCompatActivity {
             for (int j = 0; j < jsonArray2.length(); j++) {
                 ArrayList<String> eventExample = new ArrayList<>();
                 JSONObject eventExampleData = jsonArray2.getJSONObject(j);
-                //eventExample.add(eventExampleData.getString("id"));
+
+                eventExample.add(eventExampleData.getString("id"));
                 eventExample.add(eventExampleData.getString("name"));
                 eventExample.add(eventExampleData.getString("start_time"));
                 eventExample.add(eventExampleData.getString("stop_time"));

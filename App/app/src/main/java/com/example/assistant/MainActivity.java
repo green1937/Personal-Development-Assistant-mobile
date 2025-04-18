@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < jsonArray2.length(); j++) {
                 ArrayList<String> eventExample = new ArrayList<>();
                 JSONObject eventExampleData = jsonArray2.getJSONObject(j);
-                //eventExample.add(eventExampleData.getString("id"));
+                eventExample.add(eventExampleData.getString("id"));
                 eventExample.add(eventExampleData.getString("name"));
                 eventExample.add(eventExampleData.getString("start_time"));
                 eventExample.add(eventExampleData.getString("stop_time"));

@@ -4,16 +4,28 @@
 
 package com.example.assistant;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +58,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewTimetableHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewTimetableHolder holder, @SuppressLint("RecyclerView") int position) {
         int type = getItemViewType(position);
 
         switch (type) {
@@ -56,15 +68,89 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
                 break;
 
             case TYPE_ITEM2:
-                holder.taskEventTextOutput.setText(eventData.get(position).get(0));
-                holder.startTimeEventTextOutput.setText(eventData.get(position).get(1));
-                holder.stopTimeEventTextOutput.setText(eventData.get(position).get(2));
-                holder.placeEventTextOutput.setText(eventData.get(position).get(3));
-                holder.formatEventTextOutput.setText(eventData.get(position).get(4));
+                holder.taskEventTextOutput.setText(eventData.get(position).get(1));
+                holder.startTimeEventTextOutput.setText(eventData.get(position).get(2));
+                holder.stopTimeEventTextOutput.setText(eventData.get(position).get(3));
+                holder.placeEventTextOutput.setText(eventData.get(position).get(4));
+                holder.formatEventTextOutput.setText(eventData.get(position).get(5));
                 break;
+        }
+        if (type == 1) {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    PopupMenu menu = new PopupMenu(context, v);
+                    menu.getMenu().add("Удалить");
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("Удалить")) {
+                                // удаление мероприятия
+                                Resources res = context.getResources();
+                                String urlString = res.getString(R.string.urlTuna) + "events/" + eventData.get(position).get(0);
+
+                                // Тут удаление по ссылке через Tuna
+                                // Запускаем удаление в отдельном потоке
+                                new Thread(() -> {
+                                    try {
+                                        String result = deleteFromUrl(urlString);
+
+                                        if (result != null && result.equals("SUCCESS")) {
+                                            // Показываем тост через контекст
+                                            Toast.makeText(context, "Мероприятие удалено", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(context, "Ошибка удаления объекта", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (Exception e) {
+                                        Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+                                    }
+                                }).start();
+
+                                Toast.makeText(context, "Мероприятие удалено", Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
+                        }
+                    });
+                    menu.show();
+                    return true;
+                }
+            });
+
         }
 
     }
+
+
+    static String deleteFromUrl(String urlString) {
+        String result = null;
+        HttpURLConnection urlConnection = null;
+
+        try {
+            URL url = new URL(urlString);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("DELETE");
+
+            // Заголовок для обхода tuna browser warning
+            urlConnection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+            urlConnection.setDoOutput(true);
+            urlConnection.connect();
+
+            int responseCode = urlConnection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                result = "SUCCESS";
+            }
+
+        } catch (IOException e) {
+            Log.e("DEBUG", "IOException при удалении", e);
+        } finally {
+            if (urlConnection != null) urlConnection.disconnect();
+        }
+        return result;
+    }
+
 
     @Override
     public int getItemCount() {
