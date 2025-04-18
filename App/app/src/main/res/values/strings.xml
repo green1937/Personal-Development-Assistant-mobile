@@ -2,5 +2,5 @@
     <string name="app_name">Assistant</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="urlTuna"> https://r7hg56-176-116-179-129.ru.tuna.am/assistant/api/</string>
+    <string name="urlTuna">  .../assistant/api/</string>
 </resources>

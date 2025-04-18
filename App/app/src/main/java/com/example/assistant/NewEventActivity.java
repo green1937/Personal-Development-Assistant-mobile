@@ -1,7 +1,10 @@
 package com.example.assistant;
 
+import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
@@ -9,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,12 +26,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -49,6 +59,9 @@ public class NewEventActivity extends AppCompatActivity {
 
     String[] format = { "Онлайн", "Офлайн"};
     String[] repeat = { "Каждую неделю", "Четную неделю", "Нечетную неделю"};
+    String urlEvents;
+    LocalTime timeFromLD;
+    LocalTime timeToLD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +86,12 @@ public class NewEventActivity extends AppCompatActivity {
         friD = findViewById(R.id.fridayBtn);
         saturD = findViewById(R.id.saturdayBtn);
         sunD = findViewById(R.id.sundayBtn);
+
         flagWeek = new int[] {3, 3, 3, 3, 3, 3, 3};
+
+        Resources res = getResources();
+        urlEvents = res.getString(R.string.urlTuna) + "events";  // Ссылка на расписание
+
         backToSideMenu();        // Возвращение назад
         saveEvent();             // Сохранение мероприятия
 
@@ -128,8 +146,8 @@ public class NewEventActivity extends AppCompatActivity {
 
                         // Если время ОТ меньше времени ДО
                         DateTimeFormatter dtfTIME = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
-                        LocalTime timeFromLD = LocalTime.parse(timeFromStr, dtfTIME);
-                        LocalTime timeToLD = LocalTime.parse(timeToStr, dtfTIME);
+                        timeFromLD = LocalTime.parse(timeFromStr, dtfTIME);
+                        timeToLD = LocalTime.parse(timeToStr, dtfTIME);
 
                         // Проверка на то, что дата ОТ наступает раньше даты ДО
                         if (timeToLD.isAfter(timeFromLD)) {
@@ -140,8 +158,33 @@ public class NewEventActivity extends AppCompatActivity {
 
                         // Сохранение мероприятия
                         else {
-                            Toast.makeText(getApplicationContext(), "Мероприятие сохранено успешно!",
-                                    Toast.LENGTH_SHORT).show();
+
+                            for (int i=0; i< 7; i++) {
+                                Event event;
+                                if (flagWeek[i] == 1) {
+                                    if (itemRepeat.equals("Четную неделю")) {
+                                        event = new Event(1, 2, i, eventNameStr, placeStr, itemFormat, timeToStr, timeFromStr);
+                                        String json = new Gson().toJson(event);
+                                        System.out.println("ЧЕТНАЯЯ  " + json);
+                                        sendDataToServer(urlEvents, json);
+                                    } else if (itemRepeat.equals("Нечетную неделю")) {
+                                        event = new Event(1, 1, i, eventNameStr, placeStr, itemFormat, timeToStr, timeFromStr);
+                                        String json = new Gson().toJson(event);
+                                        sendDataToServer(urlEvents, json);
+                                    } else {
+                                        for (int j =1; j<3; j++) {
+                                            event = new Event(1, j, i, eventNameStr, placeStr, itemFormat, timeToStr, timeFromStr);
+                                            String json = new Gson().toJson(event);
+                                            sendDataToServer(urlEvents, json);
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                            /*Toast.makeText(getApplicationContext(), "Мероприятие сохранено успешно!",
+                                    Toast.LENGTH_SHORT).show(); */
                             startActivity(new Intent(NewEventActivity.this, TimetableActivity.class));
                         }
                     }
@@ -162,6 +205,55 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+
+    private void sendDataToServer(String url, String jsonData) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                // Создаем URL и соединение
+                URL serverUrl = new URL(url);
+                connection = (HttpURLConnection) serverUrl.openConnection();
+
+                // Настраиваем запрос
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+                // Отправляем JSON данные
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonData.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+
+                // Получаем ответ
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Данные успешно отправлены", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка отправки данных: " + responseCode, Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+            } catch (IOException e) {
+                Log.e("SEND_ERROR", "Ошибка при отправке данных", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), "Произошла ошибка при отправке данных", Toast.LENGTH_SHORT).show();
+                });
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
     }
 
 
