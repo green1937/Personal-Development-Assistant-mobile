@@ -40,7 +40,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/decrPlanEditText"
+            android:id="@+id/todayRecordEditText"
             android:hint="Описание"
             android:inputType="textMultiLine"
             android:lines="25"

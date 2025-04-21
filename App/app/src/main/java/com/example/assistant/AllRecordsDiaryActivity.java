@@ -1,21 +1,39 @@
 package com.example.assistant;
 
+import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class AllRecordsDiaryActivity extends AppCompatActivity {
+    String urlDiary;
     RecyclerView allRecordRV;
     TextView allRecordsTV, viewBtn;
+    ArrayList<String> recordData = new ArrayList<>();
+    List<ArrayList<String>> allRecords = new ArrayList<>();
+
+    String allRecordsDataInText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +44,40 @@ public class AllRecordsDiaryActivity extends AppCompatActivity {
         allRecordsTV = findViewById(R.id.continuousViewingRecordsTextView);
         viewBtn = findViewById(R.id.textLL);
 
+        Bundle bundle = getIntent().getExtras();
+        allRecords = (List<ArrayList<String>>) bundle.getSerializable("allRecords");
+        System.out.println("DATA = " + allRecords);
+        outputDiaryToRecyclerView();    // Передача записей в дневнике в RecyclerView
+        allRecordsDataInText = getRecordsText();
+
         bottNavItem();          // Нижнее меню
         backToDiaryActivity();  // Переход на экран с сегодняшней записью
         checkContViewRecords(); // Показ записей "сплошной просмотр"
 
     }
 
+
+    protected String getRecordsText() {
+        allRecordsDataInText = "";
+        if (allRecords.size() != 0) {
+            for (int i = 0; i < allRecords.size(); i++) {
+                String oneRecordText = "";
+                oneRecordText = allRecords.get(i).get(1).toString() + "\n" + allRecords.get(i).get(0).toString() + "\n\n";
+                allRecordsDataInText = allRecordsDataInText + oneRecordText;
+            }
+        }
+
+        return allRecordsDataInText;
+    }
+    protected void outputDiaryToRecyclerView() {
+        // Передача данных для отрисовки RecyclerView
+        RecyclerView allRecordsRecyclerView = findViewById(R.id.allRecordsDiaryRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        allRecordsRecyclerView.setLayoutManager(linearLayoutManager);
+
+        AllRecordsAdapter allRecordsAdapterAdapter = new AllRecordsAdapter(AllRecordsDiaryActivity.this, allRecords);
+        allRecordsRecyclerView.setAdapter(allRecordsAdapterAdapter);
+    }
 
     /*
         Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
@@ -116,6 +162,8 @@ public class AllRecordsDiaryActivity extends AppCompatActivity {
                             PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
 
                     allRecordsTV.setText("Это сплошной просмотр всех существующих в дневнике записей");  // Пример
+                    allRecordsTV.setText(allRecordsDataInText);
+
 
                 } else {
 

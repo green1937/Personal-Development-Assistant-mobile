@@ -2,7 +2,6 @@ package com.example.assistant;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.LocalTime;
 
 public class Event {
     //private Long id;
