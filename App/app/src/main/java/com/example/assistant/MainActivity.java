@@ -28,14 +28,12 @@ import android.widget.Toast;
 
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +42,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -158,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
         из EditText, в который поступает дата из выпадающего списка или из календаря
      */
     private void getDataParameters() {
-        String somethindDate = String.valueOf(dateTextView.getText());  // Получение даты
+        String somethingDate = String.valueOf(dateTextView.getText());  // Получение даты
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         formatter = formatter.withLocale(Locale.getDefault());
-        LocalDate date = LocalDate.parse(somethindDate, formatter);
+        LocalDate date = LocalDate.parse(somethingDate, formatter);
 
         DayOfWeek day = date.getDayOfWeek();
         valueDayOfWeek = day.getValue() - 1;  // Порядковый номер дня недели (отсчет начинается с 0)
@@ -235,6 +232,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     oneTask.add(taskExampleData.getString("done_by"));
                 }
+                oneTask.add(taskExampleData.getString("id"));
 
 
                 allTasks.add(oneTask);
@@ -335,9 +333,23 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         tasksRecyclerView.setLayoutManager(linearLayoutManager);
 
-        taskAdapter = new TaskAdapter(MainActivity.this, allTasksWithCtgForRV);
-        tasksRecyclerView.setAdapter(taskAdapter);
+        /*taskAdapter = new TaskAdapter(MainActivity.this, allTasksWithCtgForRV);
+        tasksRecyclerView.setAdapter(taskAdapter); */
 
+        TaskAdapter adapter = new TaskAdapter(this, allTasksWithCtgForRV);
+        tasksRecyclerView.setAdapter(adapter);
+        adapter.setOnTaskStatusChangeListener((position, isChecked) -> {
+            if (isChecked) {
+                int taskId = Integer.parseInt(allTasksWithCtgForRV.get(position).get(5));
+                //Toast.makeText(this, "Задача '" + taskName + "' выполнена", Toast.LENGTH_SHORT).show();
+                // Здесь можно сохранить изменения в базу данных или обновить статус в списке
+                String urlTasks1 = urlTasks + "/" + taskId;
+                // Сделать джейсон, потом в бд
+
+
+            }
+
+        });
 
     }
 

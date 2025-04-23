@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +28,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         this.context = context;
         this.taskData = taskData;
     }
+
+    // Добавляем интерфейс для обработки изменений
+    public interface OnTaskStatusChangeListener {
+        void onStatusChanged(int position, boolean isChecked);
+    }
+
+    private OnTaskStatusChangeListener listener;
+
+    public void setOnTaskStatusChangeListener(OnTaskStatusChangeListener listener) {
+        this.listener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -54,7 +68,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 break;
 
             case TYPE_ITEM2:
+                if (taskData.get(position).get(3).equals("1")) {
+                    holder.taskStatus.setChecked(true);
+                }
                 holder.taskNameTextOutput.setText(taskData.get(position).get(0));
+
+                // Добавляем обработчик для CheckBox
+                holder.taskStatus.setOnClickListener(v -> {
+                    if (listener != null) {
+                        boolean isChecked = holder.taskStatus.isChecked();
+                        listener.onStatusChanged(position, isChecked);
+                    }
+                });
                 break;
         }
 
@@ -95,10 +120,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
         TextView tasksGroupTextOutput;
         TextView taskNameTextOutput;
 
+        CheckBox taskStatus;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tasksGroupTextOutput = itemView.findViewById(R.id.tasksGroupTextOut);
             taskNameTextOutput = itemView.findViewById(R.id.taskNameTextOut);
+            taskStatus = itemView.findViewById(R.id.checkBoxTask);
         }
 
     }

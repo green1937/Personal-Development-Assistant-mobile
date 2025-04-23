@@ -1,12 +1,17 @@
 package com.example.assistant;
 
 import static com.example.assistant.NewPlanActivity.setInitialDate;
+import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+
+import static java.lang.Integer.parseInt;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,16 +26,34 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class NewTaskActivity extends AppCompatActivity {
     String[] ctgExamples = { "Учеба", "Семья", "Здоровье", "Спорт", "Работа"};
     String itemCtg;
+    String urlCategories, urlTask;
+    List<ArrayList<String>> allCategories = new ArrayList<>();
+    ArrayList<String> nameAllCategories = new ArrayList<>();
 
 
     Calendar dateToCld = Calendar.getInstance();
@@ -38,13 +61,16 @@ public class NewTaskActivity extends AppCompatActivity {
     Calendar timeFromCld = Calendar.getInstance();
     Calendar timeToCld = Calendar.getInstance();
     SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    DateFormat formatForDateVariant2 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
-    EditText nameTask, scoreEditText, dateFrom, timeFrom, dateTo, timeTo;
+    EditText nameTask, scoreEditText, descriptionEditText, dateFrom, timeFrom, dateTo, timeTo;
 
     CalendarView calendarView;
     TextView calendarBtn;
     ImageButton saveTaskBtn, backBtn;
+
+    int score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +79,7 @@ public class NewTaskActivity extends AppCompatActivity {
 
         nameTask = findViewById(R.id.taskName);              // название задачи
         scoreEditText = findViewById(R.id.scoreEditText);    // оценка
+        descriptionEditText = findViewById(R.id.decrTaskEditText);  // Описание задачи
         dateFrom = findViewById(R.id.dateTimeTaskFromDate);  // дата от
         timeFrom = findViewById(R.id.dateTimeTaskFromTime);  // время от
         dateTo = findViewById(R.id.dateTimeTaskToDate);      // дата до
@@ -61,7 +88,12 @@ public class NewTaskActivity extends AppCompatActivity {
         saveTaskBtn = findViewById(R.id.tickBtn);
         backBtn = findViewById(R.id.backBtn);
 
-        showSpinnerCtg();       // Отображение в выпадающем списке примеров категорий
+        Resources res = getResources();
+        urlCategories = res.getString(R.string.urlTuna) + "categories";
+        urlTask = res.getString(R.string.urlTuna) + "tasks";
+        loadJsonFromUrlCategories(urlCategories); // Загрузка категорий колеса баланса
+
+        //showSpinnerCtg();       // Отображение в выпадающем списке примеров категорий
 
         backToOption();         // Возвращение назад
 
@@ -101,6 +133,7 @@ public class NewTaskActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String taskNameStr = nameTask.getText().toString();
                 String scoreStr = scoreEditText.getText().toString();
+                String descriptionTask = descriptionEditText.getText().toString();
 
                 String dateToStr = dateTo.getText().toString();
                 String timeToStr = timeTo.getText().toString();
@@ -114,7 +147,7 @@ public class NewTaskActivity extends AppCompatActivity {
 
 
                 else {
-                    int score = Integer.parseInt(scoreEditText.getText().toString());
+                    score = parseInt(scoreEditText.getText().toString());
 
                     /*
                         Если оценка НЕ в диапазоне от 1 до 100 и введенные даты
@@ -147,9 +180,40 @@ public class NewTaskActivity extends AppCompatActivity {
                                                     "Дата ОТ должна наступать раньше даты ДО!",
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+                                    try {
+                                        dateFromStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateFromStr)));
+                                        dateToStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateToStr)));
+                                        Category ctgTask = new Category(getIdCtg(itemCtg));
+                                        Task taskData = new Task(taskNameStr, descriptionTask, score, ctgTask, dateFromStr, dateToStr, timeFromStr, timeToStr);
+                                        String jsonData = new Gson().toJson(taskData);
+                                        sendDataToServer("POST", jsonData);
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                     startActivity(new Intent(NewTaskActivity.this, MainActivity.class));
                                 }
+
+
                             } else {
+                                if (!dateFromStr.equals("")) {
+                                    try {
+                                        dateFromStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateFromStr)));
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                                if (!dateToStr.equals("")) {
+                                    try {
+                                        dateFromStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateFromStr)));
+                                    } catch (ParseException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+
+                                Category ctgTask = new Category(getIdCtg(itemCtg));
+                                Task taskData = new Task(taskNameStr, descriptionTask, score, ctgTask, dateFromStr, dateToStr, timeFromStr, timeToStr);
+                                String jsonData = new Gson().toJson(taskData);
+                                sendDataToServer("POST", jsonData);
                                 startActivity(new Intent(NewTaskActivity.this, MainActivity.class));
                             }
                         }
@@ -162,6 +226,61 @@ public class NewTaskActivity extends AppCompatActivity {
         });
     }
 
+    protected void sendDataToServer(String requestMethod, String jsonData) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                // Создаем URL и соединение
+                URL serverUrl = new URL(urlTask);
+                connection = (HttpURLConnection) serverUrl.openConnection();
+
+                // Настраиваем запрос
+                connection.setRequestMethod(requestMethod);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+                // Отправляем JSON данные
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonData.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+
+                // Получаем ответ
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    runOnUiThread(() -> {
+                        //Toast.makeText(getApplicationContext(), "Данные успешно отправлены", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка отправки данных: " + responseCode, Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+            } catch (IOException e) {
+                Log.e("SEND_ERROR", "Ошибка при отправке данных", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), "Произошла ошибка при отправке данных", Toast.LENGTH_SHORT).show();
+                });
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+    protected int getIdCtg(String nameCtg) {
+        for (int i=0; i<allCategories.size(); i++) {
+            if (allCategories.get(i).get(1).equals(nameCtg)) {
+                return parseInt(allCategories.get(i).get(0));
+            }
+        }
+        return 0;
+    }
 
     /*
         Функция, отвечающая за переход на экран настроек повтора задачи
@@ -285,14 +404,64 @@ public class NewTaskActivity extends AppCompatActivity {
     }
 
 
+    /*
+            Загрузка данных расписания мероприятий в JSON через Tuna
+         */
+    private void loadJsonFromUrlCategories(String url) {
+        new Thread(() -> {
+            try {
+                // ссылка
+                String json = getJsonFromUrl(url);
+
+                if (json != null) {
+                    runOnUiThread(() -> {
+                        getCategoriesFromJSON(json);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных",
+                                Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+            }
+        }).start();
+    }
+
+    /*
+
+     */
+    private void getCategoriesFromJSON(String json) {
+        allCategories = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i=0; i<jsonArray.length(); i++) {
+                JSONObject ctgData = jsonArray.getJSONObject(i);
+                ArrayList<String> oneCategory = new ArrayList<>();
+
+                oneCategory.add(ctgData.getString("id"));
+                oneCategory.add(ctgData.getString("title"));
+
+
+                nameAllCategories.add(ctgData.getString("title"));
+
+
+                allCategories.add(oneCategory);
+            }
+            showSpinnerCtg(nameAllCategories);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     /*
         Выпадающий список с примерами категорий (сфер жизни).
     */
-    protected void showSpinnerCtg() {
+    protected void showSpinnerCtg(ArrayList<String> nameAllCategories) {
         Spinner spinner = findViewById(R.id.ctgSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, ctgExamples);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nameAllCategories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
