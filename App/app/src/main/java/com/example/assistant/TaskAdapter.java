@@ -1,6 +1,10 @@
 package com.example.assistant;
 
+import static java.lang.Integer.parseInt;
+
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +15,23 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.json.JSONArray;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> {
 
+    int flag = 3;
     private final int TYPE_ITEM1 = 0;
     private final int TYPE_ITEM2 = 1;
 
@@ -68,10 +82,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 break;
 
             case TYPE_ITEM2:
+                String nameTask = taskData.get(position).get(0);
+                int idTask = parseInt(taskData.get(position).get(4));
+
+
                 if (taskData.get(position).get(3).equals("1")) {
                     holder.taskStatus.setChecked(true);
                 }
-                holder.taskNameTextOutput.setText(taskData.get(position).get(0));
+                holder.taskNameTextOutput.setText(nameTask);
 
                 // Добавляем обработчик для CheckBox
                 holder.taskStatus.setOnClickListener(v -> {
@@ -80,6 +98,47 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                         listener.onStatusChanged(position, isChecked);
                     }
                 });
+
+                flag = 3;
+                holder.taskStatus.setOnClickListener(v -> {
+                    if (taskData.get(position).get(3).equals("0") && holder.taskStatus.isChecked()) {
+                        Toast.makeText(context, "Нажата у НЕвыполненной задачи",
+                                Toast.LENGTH_SHORT).show();
+                        flag = 1;
+                    }
+                    if (taskData.get(position).get(3).equals("1") && !holder.taskStatus.isChecked()) {
+                        Toast.makeText(context, "Нажата у выполненной задачи",
+                                Toast.LENGTH_SHORT).show();
+                        flag = 0;
+                    }
+
+                    if (flag==0 || flag==1) {
+
+                        ObjectMapper mapper = new ObjectMapper();
+                        ArrayNode array = mapper.createArrayNode();
+                        ObjectNode json = mapper.createObjectNode()
+                                .put("op", "replace")
+                                .put("path", "/status")
+                                .put("value", flag);
+                        array.add(json);
+
+                        String jsonString = null;
+                        try {
+                            jsonString = mapper.writeValueAsString(array);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                        System.out.println(jsonString); // Выводим сформированный JSON.
+
+                        Resources res = context.getResources();
+                        String urlUpdStatus = res.getString(R.string.urlTuna) + "tasks/" + idTask;
+
+                        sendUpdateTasksStatusToServer(urlUpdStatus, jsonString);
+                    }
+                });
+
+
+
                 break;
         }
 
@@ -96,6 +155,43 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             }
         });*/
 
+    }
+
+
+    private void sendUpdateTasksStatusToServer(String url, String jsonData) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                // Создаем URL и соединение
+                URL serverUrl = new URL(url);
+                connection = (HttpURLConnection) serverUrl.openConnection();
+
+                // Настраиваем запрос
+                connection.setRequestMethod("PATCH");
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+                // Отправляем JSON данные
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonData.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+
+                // Получаем ответ
+                int responseCode = connection.getResponseCode();
+
+            } catch (IOException e) {
+                Log.e("SEND_ERROR", "Ошибка при отправке данных", e);
+                Toast.makeText(context, "Произошла ошибка при отправке данных", Toast.LENGTH_SHORT).show();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
     }
 
     @Override

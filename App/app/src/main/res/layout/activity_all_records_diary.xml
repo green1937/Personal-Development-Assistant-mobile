@@ -31,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scroll"
-        android:layout_below="@+id/textPlans">
+        android:layout_below="@+id/textPlans"
+        android:layout_marginBottom="55dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
