@@ -1,14 +1,18 @@
 package com.example.assistant;
 
+import static com.example.assistant.TimetableAdapter.deleteFromUrl;
 import static java.lang.Integer.parseInt;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,6 +89,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 String nameTask = taskData.get(position).get(0);
                 int idTask = parseInt(taskData.get(position).get(4));
 
+                Resources res = context.getResources();
+                String urlTasksId = res.getString(R.string.urlTuna) + "tasks/" + idTask;
+
 
                 if (taskData.get(position).get(3).equals("1")) {
                     holder.taskStatus.setChecked(true);
@@ -99,16 +106,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                     }
                 });
 
-                flag = 3;
+                /*
+                    Смена статуса у задачи (отображение чекбокс),
+                    отправка на сервер нового статуса
+                 */
+                flag = 3;  // Для статуса
                 holder.taskStatus.setOnClickListener(v -> {
                     if (taskData.get(position).get(3).equals("0") && holder.taskStatus.isChecked()) {
-                        Toast.makeText(context, "Нажата у НЕвыполненной задачи",
-                                Toast.LENGTH_SHORT).show();
                         flag = 1;
                     }
                     if (taskData.get(position).get(3).equals("1") && !holder.taskStatus.isChecked()) {
-                        Toast.makeText(context, "Нажата у выполненной задачи",
-                                Toast.LENGTH_SHORT).show();
                         flag = 0;
                     }
 
@@ -130,30 +137,64 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                         }
                         System.out.println(jsonString); // Выводим сформированный JSON.
 
-                        Resources res = context.getResources();
-                        String urlUpdStatus = res.getString(R.string.urlTuna) + "tasks/" + idTask;
-
-                        sendUpdateTasksStatusToServer(urlUpdStatus, jsonString);
+                        sendUpdateTasksStatusToServer(urlTasksId, jsonString);
                     }
                 });
 
 
+                /*
+                    Удаление задачи по id
+                 */
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
 
+                        PopupMenu menu = new PopupMenu(context, v);
+                        menu.getMenu().add("Удалить");
+                        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                if (item.getTitle().equals("Удалить")) {
+
+                                    // Запускаем удаление в отдельном потоке
+                                    new Thread(() -> {
+                                        try {
+                                            String result = deleteFromUrl(urlTasksId);
+
+                                            if (result != null && result.equals("SUCCESS")) {
+                                                // Показываем тост через контекст
+                                                Toast.makeText(context, "Задача удалена", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(context, "Ошибка удаления!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (Exception e) {
+                                            Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+                                        }
+                                    }).start();
+                                }
+                                return true;
+                            }
+                        });
+                        menu.show();
+                        return true;
+                    }
+                });
+
+                /*
+                    Переход на экран редактирвоания и просмотра всей задачи с полями:название, категория, дата, время, описание и прочее.
+                */
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, EditTaskActivity.class);
+                        intent.putExtra("id", idTask);  // Отправка id задачи в активити редактирования и просмотра содержимого задачи
+                        context.startActivity(intent);
+                    }
+                });
                 break;
         }
 
-        /*
-            Переход на экран редактирвоания и просмотра всей задачи с полями:название, категория, дата, время, описание и прочее.
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, EditTaskActivity.class);
-                intent.putExtra("name", name);  //?
-                //Для остальных переменных также
-                context.startActivity(intent);
-            }
-        });*/
 
     }
 

@@ -183,11 +183,25 @@
                         android:onClick="setTimeTo"/>
                 </LinearLayout>
 
-
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/decrTaskEditText"
+                    android:hint="Описание"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:maxLines="10"
+                    android:gravity="start"
+                    android:padding="10dp"
+                    android:background="@drawable/image_btn_style"
+                    android:textStyle="italic"
+                    android:layout_marginTop="10dp"
+                    />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/repeatOrNotRepeatLL"
                     android:orientation="horizontal">
 
                     <ImageButton
@@ -201,7 +215,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:id="@+id/repeatTaskText"
+                        android:id="@+id/repeatOrNotRepeatText"
                         android:layout_gravity="center"
                         android:gravity="center_vertical"
                         android:textSize="18dp"
@@ -212,20 +226,231 @@
 
                 </LinearLayout>
 
-                <EditText
+
+                <!-- ПОВТОР ЗАДАЧИ  -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/decrTaskEditText"
-                    android:hint="Описание"
-                    android:inputType="textMultiLine"
-                    android:lines="5"
-                    android:maxLines="10"
-                    android:gravity="start"
-                    android:padding="10dp"
-                    android:background="@drawable/image_btn_style"
-                    android:textStyle="italic"
-                    android:layout_marginVertical="30dp"
-                    />
+                    android:layout_height="match_parent"
+                    android:id="@+id/taskRepeatLL"
+                    android:layout_marginHorizontal="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Начало повторов"
+                            android:textSize="20dp"
+                            android:gravity="center_vertical"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/black"
+                            android:layout_marginHorizontal="20dp"/>
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:id="@+id/dateStart"
+                            android:textSize="20dp"
+                            android:inputType="date"
+                            android:hint="дата"
+                            android:textColor="@color/black"
+                            android:onClick="setDate"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Повторяется раз в"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginHorizontal="20dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:layout_width="70dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/count"
+                            android:hint="кол-во"
+                            android:inputType="number"
+                            android:textAlignment="center"
+                            android:layout_marginVertical="10dp"
+                            />
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:id="@+id/repeatSpinner"
+                            android:hint="кол-во"
+                            android:textAlignment="center"
+                            android:layout_marginVertical="10dp"
+                            android:layout_marginLeft="20dp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textDayRepeat"
+                        android:text="Когда повторяется"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="20dp"
+                        android:visibility="visible"/>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/linearWeek"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/mondayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="ПН"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tuesdayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="ВТ"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/wednesdayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="СР"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/background2"
+                            android:id="@+id/thursdayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="ЧТ"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/fridayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="ПТ"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/saturdayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="СБ"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/sundayBtn"
+                            android:background="@drawable/image_btn_style"
+                            android:textColor="@color/black"
+                            android:text="ВС"
+                            android:textAlignment="center"
+                            android:layout_weight="1"
+                            android:textSize="18dp"
+                            android:layout_marginHorizontal="3dp"/>
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Когда заканчивается"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"
+                        android:layout_marginVertical="10dp"
+                        android:layout_marginHorizontal="20dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Spinner
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:id="@+id/whenEndSpinner"
+                            android:hint="конец"
+                            android:textAlignment="center"
+                            android:paddingHorizontal="30dp"/>
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/dateEnd"
+                            android:textSize="20dp"
+                            android:inputType="date"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:visibility="gone"
+                            android:onClick="setDate"/>
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/countEnd"
+                            android:textSize="20dp"
+                            android:inputType="number"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

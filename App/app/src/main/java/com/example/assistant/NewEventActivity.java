@@ -62,6 +62,7 @@ public class NewEventActivity extends AppCompatActivity {
     String urlEvents;
     LocalTime timeFromLD;
     LocalTime timeToLD;
+    ArrayList<Integer> daysRepeat = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +121,7 @@ public class NewEventActivity extends AppCompatActivity {
 
      */
     protected void saveEvent() {
+        daysRepeat = new ArrayList<>();
 
         showSpinnerFormat();    // Выпадающий список ФОРМАТ
         showSpinnerRepeat();    // Выпадающий список ПОВТОР

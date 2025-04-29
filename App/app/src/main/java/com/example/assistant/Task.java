@@ -7,16 +7,14 @@ public class Task {
     @SerializedName("plan_id")
     Long planId;
 
-    @SerializedName("repeat")
-    Repeat repeat;
-
 
     @SerializedName("name")
     String name;
     @SerializedName("estimate")
     int estimate;
 
-
+    @SerializedName("repeat")
+    Repeat repeat;
 
     @SerializedName("status")
     int status;
@@ -67,6 +65,43 @@ public class Task {
         this.planId = null;
         this.repeat = null;
     }
+
+
+
+    /*  Задача с повтором */
+    public Task(String name, String description, int estimate, Category taskCategory, String startDate, String stopDate, String startTime, String stopTime, Repeat repeat) {
+        this.userId = 1;
+        this.name = name;
+        this.description = description;
+        this.estimate = estimate;
+        this.taskCategory = taskCategory;
+        this.startDate = startDate;
+        this.stopDate = stopDate;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.timezone = "Asia/Krasnoyarsk";
+        this.status = 0;
+        this.planId = null;
+        this.repeat = repeat;
+    }
+
+
+    /*  Задача с планом */
+    public Task(String name, String description, int estimate, Category taskCategory, String startDate, String stopDate, String startTime, String stopTime, long planId) {
+        this.userId = 1;
+        this.name = name;
+        this.description = description;
+        this.estimate = estimate;
+        this.taskCategory = taskCategory;
+        this.startDate = startDate;
+        this.stopDate = stopDate;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
+        this.timezone = "Asia/Krasnoyarsk";
+        this.status = 0;
+        this.planId = planId;
+    }
+
     /*
 
 
