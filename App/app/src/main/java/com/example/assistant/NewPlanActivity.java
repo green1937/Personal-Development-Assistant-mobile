@@ -1,12 +1,15 @@
 package com.example.assistant;
 
+import static com.example.assistant.NewTaskActivity.changeDateFormat;
 import static com.example.assistant.PlansActivity.checkDateFormat;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
@@ -19,6 +22,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,10 +36,16 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class NewPlanActivity extends AppCompatActivity {
+    String urlPlan;
+
+    SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy");
+    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    String planNameStr, detailsStr, dateFromStr, dateToStr;
     Calendar dateToCld = Calendar.getInstance();
     Calendar dateFromCld = Calendar.getInstance();
     SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-    EditText namePlan, dateFrom, dateTo;
+    EditText namePlan, detailsPlan, dateFrom, dateTo;
     TextView calendarBtn;
     ImageButton saveTaskBtn, backBtn;
 
@@ -41,9 +56,13 @@ public class NewPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_plan);
 
-        namePlan = findViewById(R.id.planName);      // название плана
-        dateFrom = findViewById(R.id.datePlanFrom);  // дата от
-        dateTo = findViewById(R.id.datePlanTo);      // дата до
+        Resources res = getResources();
+        urlPlan = res.getString(R.string.urlTuna) + "plans";
+
+        namePlan = findViewById(R.id.planName);                 // название плана
+        detailsPlan = findViewById(R.id.decrPlanEditText);      // описание плана
+        dateFrom = findViewById(R.id.datePlanFrom);             // дата от
+        dateTo = findViewById(R.id.datePlanTo);                 // дата до
 
         calendarBtn = findViewById(R.id.calendarBtn);
 
@@ -85,13 +104,14 @@ public class NewPlanActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String taskNameStr = namePlan.getText().toString();
-                String dateFromStr = dateFrom.getText().toString();
-                String dateToStr = dateTo.getText().toString();
+                planNameStr = namePlan.getText().toString();
+                detailsStr = detailsPlan.getText().toString();
+                dateFromStr = dateFrom.getText().toString();
+                dateToStr = dateTo.getText().toString();
 
 
                 // Оценка не может быть пустой и нельзя указывать только время без даты
-                if ( taskNameStr.equals("") || dateFromStr.equals("") || dateToStr.equals("") ) {
+                if ( planNameStr.equals("") || dateFromStr.equals("") || dateToStr.equals("") ) {
                     Toast.makeText(getApplicationContext(), "Ошибка сохранения! Поля не могут быть пустыми!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -124,9 +144,11 @@ public class NewPlanActivity extends AppCompatActivity {
                                                     "Дата ОТ должна наступать раньше даты ДО!",
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+                                    saveNewPlan();
                                     startActivity(new Intent(NewPlanActivity.this, PlansActivity.class));
                                 }
                             } else {
+                                saveNewPlan();
                                 startActivity(new Intent(NewPlanActivity.this, PlansActivity.class));
                             }
                         }
@@ -139,10 +161,64 @@ public class NewPlanActivity extends AppCompatActivity {
         });
     }
 
+    protected void saveNewPlan() {
+        Plan plan = new Plan(1, planNameStr, detailsStr, changeDateFormat(dateFromStr, inputFormat, outputFormat), changeDateFormat(dateToStr, inputFormat, outputFormat));
+        String jsonData = new Gson().toJson(plan);
+        System.out.println("DATA TASK = " + jsonData);
+        sendDataToServer("POST", jsonData);
+    }
+
+    protected void sendDataToServer(String requestMethod, String jsonData) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            try {
+                // Создаем URL и соединение
+                URL serverUrl = new URL(urlPlan);
+                connection = (HttpURLConnection) serverUrl.openConnection();
+
+                // Настраиваем запрос
+                connection.setRequestMethod(requestMethod);
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+                // Отправляем JSON данные
+
+                try (OutputStream os = connection.getOutputStream()) {
+                    byte[] input = jsonData.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+
+                // Получаем ответ
+                int responseCode = connection.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    runOnUiThread(() -> {
+                        //Toast.makeText(getApplicationContext(), "Данные успешно отправлены", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка отправки данных: " + responseCode, Toast.LENGTH_SHORT).show();
+                    });
+                }
+
+            } catch (IOException e) {
+                Log.e("SEND_ERROR", "Ошибка при отправке данных", e);
+                runOnUiThread(() -> {
+                    Toast.makeText(getApplicationContext(), "Произошла ошибка при отправке данных", Toast.LENGTH_SHORT).show();
+                });
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
+        }).start();
+    }
+
+
     /*
         Вывод календарей и часов для дат и времени при создании задачи
      */
-
 
     public void setDateFrom(View v) {
         new DatePickerDialog(NewPlanActivity.this, d1, dateFromCld.get(Calendar.YEAR),

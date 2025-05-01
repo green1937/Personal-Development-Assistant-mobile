@@ -34,7 +34,7 @@ import java.util.Objects;
 
 
 public class TimetableActivity extends AppCompatActivity {
-    String url;// = ".../assistant/api/events";
+    String url;
 
     TextView textParameterOddEvenWeek;
     List<ArrayList<String>> fullEvent = new ArrayList<>();

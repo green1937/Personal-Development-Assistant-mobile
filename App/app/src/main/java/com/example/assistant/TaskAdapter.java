@@ -137,7 +137,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                         }
                         System.out.println(jsonString); // Выводим сформированный JSON.
 
-                        sendUpdateTasksStatusToServer(urlTasksId, jsonString);
+                        sendUpdateObjectStatusToServer(context, urlTasksId, jsonString);
+
+                        //is it work? (update page???)
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
                     }
                 });
 
@@ -162,7 +166,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                                             String result = deleteFromUrl(urlTasksId);
 
                                             if (result != null && result.equals("SUCCESS")) {
-                                                // Показываем тост через контекст
                                                 Toast.makeText(context, "Задача удалена", Toast.LENGTH_SHORT).show();
                                             } else {
                                                 Toast.makeText(context, "Ошибка удаления!", Toast.LENGTH_SHORT).show();
@@ -199,7 +202,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     }
 
 
-    private void sendUpdateTasksStatusToServer(String url, String jsonData) {
+
+    public void updateAdapter(List<ArrayList<String>> data){
+        this.taskData.clear();
+        this.taskData.addAll(data);
+        notifyDataSetChanged();
+    }
+
+
+
+    static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
@@ -223,6 +235,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
                 // Получаем ответ
                 int responseCode = connection.getResponseCode();
+                System.out.println("response CODE update status  " + responseCode);
 
             } catch (IOException e) {
                 Log.e("SEND_ERROR", "Ошибка при отправке данных", e);

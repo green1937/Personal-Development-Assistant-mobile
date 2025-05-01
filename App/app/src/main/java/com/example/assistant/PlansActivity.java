@@ -1,11 +1,14 @@
 package com.example.assistant;
 
 import static com.example.assistant.NewPlanActivity.setInitialDate;
+import static com.example.assistant.TimetableActivity.getJsonFromUrl;
 
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -15,19 +18,36 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class PlansActivity extends AppCompatActivity {
+    String urlAllPlans;
+    List<ArrayList<String>> allPlans;
+    ArrayList<String> plansActive = new ArrayList<>();
+    ArrayList<String> plansArchive = new ArrayList<>();
     LinearLayout filterBtn, filterView;
     ImageButton filterPlansBtn;
     Calendar dateCld = Calendar.getInstance();
     EditText dateForFilterED;
+
+    RecyclerView planRecyclerView;
+    LinearLayoutManager linearLayoutManager;
+    PlanAdapter planAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +61,74 @@ public class PlansActivity extends AppCompatActivity {
         filterView = findViewById(R.id.filterView);
         filterPlansBtn = findViewById(R.id.filterPlansBtn);
 
+        Resources res = getResources();
+        urlAllPlans = res.getString(R.string.urlTuna) + "plans/full";
+
+        loadJsonFromUrl();       // Получение планов
+
         showHiddenFilterSett();  // Показ настроек фильтрации планов
         filterAllPlans();
     }
 
+    private void loadJsonFromUrl() {
+        new Thread(() -> {
+            try {
+                String jsonActive = getJsonFromUrl(urlAllPlans + "?status=0");
+                String jsonArchive = getJsonFromUrl(urlAllPlans + "?status=1");
+
+                if (jsonActive != null && jsonArchive != null) {
+                    runOnUiThread(() -> {
+                        showPlans(jsonActive, jsonArchive);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+            }
+        }).start();
+    }
+
+    protected void showPlans(String jsonActive, String jsonArchive) {
+        allPlans = new ArrayList<>();
+
+        allPlans.add(new ArrayList<>(Collections.singleton("Активные планы")));
+        getPlansFromJSON(jsonActive);
+
+        allPlans.add(new ArrayList<>(Collections.singleton("Архивные планы")));
+        getPlansFromJSON(jsonArchive);
+
+        System.out.println("all plans ========  " + allPlans);
+
+        // Передача данных планов для отрисовки RecyclerView
+        planRecyclerView = findViewById(R.id.allPlansRecyclerView);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        planRecyclerView.setLayoutManager(linearLayoutManager);
+
+        planAdapter = new PlanAdapter(PlansActivity.this, allPlans);
+        planRecyclerView.setAdapter(planAdapter);
+
+    }
+
+
+    protected void getPlansFromJSON(String json) {
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ArrayList<String> planData = new ArrayList<>();
+                JSONObject planObject = jsonArray.getJSONObject(i);
+                planData.add(planObject.getString("id"));
+                planData.add(planObject.getString("name"));
+                planData.add(planObject.getString("status"));
+
+                allPlans.add(planData);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     /*
         Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
