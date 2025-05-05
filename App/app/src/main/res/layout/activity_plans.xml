@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/allPlansRecyclerView"
                 android:layout_below="@+id/filterView"
-                android:layout_marginTop="30dp" />
+                android:layout_marginTop="3dp" />
 
 
         </RelativeLayout>

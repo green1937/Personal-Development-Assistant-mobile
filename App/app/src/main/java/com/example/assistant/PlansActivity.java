@@ -93,14 +93,11 @@ public class PlansActivity extends AppCompatActivity {
 
     protected void showPlans(String jsonActive, String jsonArchive) {
         allPlans = new ArrayList<>();
-
-        allPlans.add(new ArrayList<>(Collections.singleton("Активные планы")));
+        
         getPlansFromJSON(jsonActive);
 
         allPlans.add(new ArrayList<>(Collections.singleton("Архивные планы")));
         getPlansFromJSON(jsonArchive);
-
-        System.out.println("all plans ========  " + allPlans);
 
         // Передача данных планов для отрисовки RecyclerView
         planRecyclerView = findViewById(R.id.allPlansRecyclerView);

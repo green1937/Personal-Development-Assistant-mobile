@@ -301,6 +301,7 @@ public class EditTaskActivity extends AppCompatActivity {
         if (!timeFromStr.equals("null")) timeFrom.setText(timeFromStr);
         if (!timeToStr.equals("null")) timeTo.setText(timeToStr);
         scoreEditText.setText(String.valueOf(score));
+
         //plan
 
 

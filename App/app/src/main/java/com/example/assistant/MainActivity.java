@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dateTextView = findViewById(R.id.dateText);  // вывод даты текущей (либо выбранной)
-
+        allTasks = new ArrayList<>();
+        allEvents = new ArrayList<>();
         bottNavItem();  // Нижнее меню
 
         showSpinnerDays();      // Выпадающий список дней
@@ -150,11 +151,9 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject taskExampleData = tasksArray.getJSONObject(j);
                     ArrayList<String> oneTask = new ArrayList<>();
 
-                    oneTask.add(taskExampleData.getString("name"));
-                    oneTask.add(taskExampleData.getString("start_time"));
-                    oneTask.add(taskExampleData.getString("stop_time"));
-                    oneTask.add(taskExampleData.getString("status"));
                     oneTask.add(taskExampleData.getString("id"));
+                    oneTask.add(taskExampleData.getString("name"));
+                    oneTask.add(taskExampleData.getString("status"));
 
                     allTasks.add(oneTask);
                 }
@@ -200,11 +199,9 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject taskExampleData = tasksArray.getJSONObject(j);
                     ArrayList<String> oneTask = new ArrayList<>();
 
-                    oneTask.add(taskExampleData.getString("name"));
-                    oneTask.add(taskExampleData.getString("start_time"));
-                    oneTask.add(taskExampleData.getString("stop_time"));
-                    oneTask.add(taskExampleData.getString("status"));
                     oneTask.add(taskExampleData.getString("id"));
+                    oneTask.add(taskExampleData.getString("name"));
+                    oneTask.add(taskExampleData.getString("status"));
 
                     allTasks.add(oneTask);
                 }
@@ -214,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
             linearLayoutManager = new LinearLayoutManager(getApplicationContext());
             tasksRecyclerView.setLayoutManager(linearLayoutManager);
-            TaskAdapter adapter = new TaskAdapter(this, allTasks);
+            TaskAdapter adapter = new TaskAdapter(this, allTasks, "com.example.assistant.MainActivity");
             tasksRecyclerView.setAdapter(adapter);
 
         } catch (JSONException e) {

@@ -41,10 +41,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
     Context context;
     List<ArrayList<String>> taskData;
+    String activityName;
 
-    public TaskAdapter(Context context, List<ArrayList<String>> taskData) {
+    public TaskAdapter(Context context, List<ArrayList<String>> taskData, String activityName) {
         this.context = context;
         this.taskData = taskData;
+        this.activityName = activityName;
+
     }
 
     // Добавляем интерфейс для обработки изменений
@@ -86,14 +89,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 break;
 
             case TYPE_ITEM2:
-                String nameTask = taskData.get(position).get(0);
-                int idTask = parseInt(taskData.get(position).get(4));
+                System.out.println(taskData.get(position).get(0) + " " + taskData.get(position).get(1) + "  " + taskData.get(position).get(2));
+                int idTask = parseInt(taskData.get(position).get(0));
+                String nameTask = taskData.get(position).get(1);
 
                 Resources res = context.getResources();
                 String urlTasksId = res.getString(R.string.urlTuna) + "tasks/" + idTask;
 
 
-                if (taskData.get(position).get(3).equals("1")) {
+                if (taskData.get(position).get(2).equals("1")) {
                     holder.taskStatus.setChecked(true);
                 }
                 holder.taskNameTextOutput.setText(nameTask);
@@ -112,10 +116,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                  */
                 flag = 3;  // Для статуса
                 holder.taskStatus.setOnClickListener(v -> {
-                    if (taskData.get(position).get(3).equals("0") && holder.taskStatus.isChecked()) {
+                    if (taskData.get(position).get(2).equals("0") && holder.taskStatus.isChecked()) {
                         flag = 1;
                     }
-                    if (taskData.get(position).get(3).equals("1") && !holder.taskStatus.isChecked()) {
+                    if (taskData.get(position).get(2).equals("1") && !holder.taskStatus.isChecked()) {
                         flag = 0;
                     }
 
@@ -137,11 +141,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                         }
                         System.out.println(jsonString); // Выводим сформированный JSON.
 
-                        sendUpdateObjectStatusToServer(context, urlTasksId, jsonString);
+                        sendUpdateObjectStatusToServer(context, urlTasksId, jsonString, activityName);
 
-                        //is it work? (update page???)
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
+                        //update page
+                        /*
+                        try {
+                            Class<?> activityClass = Class.forName(activityName);
+                            Intent intent = new Intent(context, activityClass);
+                            context.startActivity(intent);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                         */
+
                     }
                 });
 
@@ -166,7 +178,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                                             String result = deleteFromUrl(urlTasksId);
 
                                             if (result != null && result.equals("SUCCESS")) {
-                                                Toast.makeText(context, "Задача удалена", Toast.LENGTH_SHORT).show();
+                                                //update page
+                                                Intent intent2 = new Intent(context, Class.forName(activityName));
+                                                context.startActivity(intent2);
                                             } else {
                                                 Toast.makeText(context, "Ошибка удаления!", Toast.LENGTH_SHORT).show();
                                             }
@@ -211,7 +225,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
 
 
-    static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData) {
+    static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData, String activityName) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
@@ -236,8 +250,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 // Получаем ответ
                 int responseCode = connection.getResponseCode();
                 System.out.println("response CODE update status  " + responseCode);
+                if (responseCode == 200) {
+                    Intent intent2 = new Intent(context, Class.forName(activityName));
+                    context.startActivity(intent2);
+                }
 
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 Log.e("SEND_ERROR", "Ошибка при отправке данных", e);
                 Toast.makeText(context, "Произошла ошибка при отправке данных", Toast.LENGTH_SHORT).show();
             } finally {

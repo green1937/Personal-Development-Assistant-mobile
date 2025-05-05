@@ -139,7 +139,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                             }
                             System.out.println(jsonString); // Выводим сформированный JSON.
 
-                            sendUpdateObjectStatusToServer(context, urlPlanId, jsonString);
+                            sendUpdateObjectStatusToServer(context, urlPlanId, jsonString, "com.example.PlanActivity");
                         }
                     });
 
@@ -183,7 +183,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
 
                 /*
                     Переход на экран редактирвоания и просмотра всего плана
-
+                */
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -191,12 +191,9 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                         intent.putExtra("id", idPlan);  // Отправка id плана в активити редактирования и просмотра содержимого плана
                         context.startActivity(intent);
                     }
-                });*/
+                });
                 break;
-                }
-
-
-
+        }
 
     }
 

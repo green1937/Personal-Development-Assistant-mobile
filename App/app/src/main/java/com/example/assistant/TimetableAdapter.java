@@ -6,6 +6,7 @@ package com.example.assistant;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,8 +98,10 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
                                         String result = deleteFromUrl(urlString);
 
                                         if (result != null && result.equals("SUCCESS")) {
-                                            // Показываем тост через контекст
                                             Toast.makeText(context, "Мероприятие удалено", Toast.LENGTH_SHORT).show();
+                                            //update page
+                                            Intent intent = new Intent(context, TimetableActivity.class);
+                                            context.startActivity(intent);
                                         } else {
                                             Toast.makeText(context, "Ошибка удаления объекта", Toast.LENGTH_SHORT).show();
                                         }
