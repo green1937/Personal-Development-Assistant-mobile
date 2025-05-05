@@ -103,7 +103,7 @@
                         android:inputType="date"
                         android:hint="От дд.мм.гггг"
                         android:layout_marginLeft="10dp"
-                        android:onClick="setTimeFrom"/>
+                        android:onClick="setDateTo"/>
 
                 </LinearLayout>
 

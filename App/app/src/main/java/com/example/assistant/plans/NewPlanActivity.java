@@ -157,7 +157,7 @@ public class NewPlanActivity extends AppCompatActivity {
     }
 
     protected void saveNewPlan() {
-        Plan plan = new Plan(1, planNameStr, detailsStr, changeDateFormat(dateFromStr, inputFormat, outputFormat), changeDateFormat(dateToStr, inputFormat, outputFormat));
+        NewPlan plan = new NewPlan(1, planNameStr, detailsStr, changeDateFormat(dateFromStr, inputFormat, outputFormat), changeDateFormat(dateToStr, inputFormat, outputFormat));
         String jsonData = new Gson().toJson(plan);
         System.out.println("DATA TASK = " + jsonData);
         sendDataToServer("POST", jsonData);

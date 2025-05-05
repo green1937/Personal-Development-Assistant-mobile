@@ -2,9 +2,8 @@ package com.example.assistant.plans;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Plan {
-    @SerializedName("id")
-    private int id;
+public class NewPlan {
+
     @SerializedName("user_id")
     private int userId;
 
@@ -23,13 +22,13 @@ public class Plan {
     @SerializedName("status")
     private int status;
 
-    public Plan(int id, int userId, String name, String details, String startDate, String stopDate, int status) {
-        this.id = id;
+    public NewPlan(int userId, String name, String details, String startDate, String stopDate) {
         this.userId = userId;
         this.name = name;
         this.details = details;
         this.startDate = startDate;
         this.stopDate = stopDate;
-        this.status = status;
+        this.status = 0;
     }
 }
+
