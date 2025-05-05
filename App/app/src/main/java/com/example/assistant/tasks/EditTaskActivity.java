@@ -1,7 +1,7 @@
-package com.example.assistant;
+package com.example.assistant.tasks;
 
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
-import static com.example.assistant.NewTaskActivity.changeDateFormat;
+import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
 import static java.lang.Integer.parseInt;
 
 import android.content.Intent;
@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,11 +33,9 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 
 public class EditTaskActivity extends AppCompatActivity {

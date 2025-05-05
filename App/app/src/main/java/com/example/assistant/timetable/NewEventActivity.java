@@ -1,15 +1,10 @@
-package com.example.assistant;
-
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+package com.example.assistant.timetable;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -25,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.R;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -298,7 +294,7 @@ public class NewEventActivity extends AppCompatActivity {
      Если есть хотя бы один выбранный день недели,
      то рассматривать дальше все дни не имеет смысла.
      */
-    protected static int checkDaysWeek(int[] flagsForWeek) {
+    public static int checkDaysWeek(int[] flagsForWeek) {
         int flag = 1;
         for (int i=0; i<7; i++) {
             if (flagsForWeek[i] == 1) {  // Проверка на выбранный день
@@ -336,7 +332,7 @@ public class NewEventActivity extends AppCompatActivity {
     В дальнейшем также и передача выбранных дней
      Пока криво сделано --- переделать потом в дальнейшем
     */
-    protected static void colorWeeksBtn(TextView monD, TextView tuesD, TextView wednesD, TextView thursD, TextView friD,
+    public static void colorWeeksBtn(TextView monD, TextView tuesD, TextView wednesD, TextView thursD, TextView friD,
                                         TextView saturD, TextView sunD, int[] flagWeek) {
         monD.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,6 +7,11 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.timetable.TimetableActivity;
+import com.example.assistant.wheel.CtgForWheelActivity;
+import com.example.assistant.wheel.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SideMenuActivity extends AppCompatActivity {

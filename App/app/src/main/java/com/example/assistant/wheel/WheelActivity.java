@@ -1,19 +1,17 @@
-package com.example.assistant;
+package com.example.assistant.wheel;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+import com.example.assistant.SideMenuActivity;
+import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.plans.PlansActivity;
 import com.github.mikephil.charting.charts.RadarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.LimitLine;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -30,7 +28,6 @@ import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 //import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 
 public class WheelActivity extends AppCompatActivity {

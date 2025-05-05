@@ -1,7 +1,7 @@
-package com.example.assistant;
+package com.example.assistant.plans;
 
-import static com.example.assistant.NewPlanActivity.setInitialDate;
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
+import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
 
 
 import android.app.DatePickerDialog;
@@ -21,6 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+import com.example.assistant.SideMenuActivity;
+import com.example.assistant.wheel.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -259,7 +264,7 @@ public class PlansActivity extends AppCompatActivity {
     /*
         Функция, проверяющая на то, является ли строка датой формата ДД.ММ.ГГГГ
      */
-    protected static int checkDateFormat(String param) {
+    public static int checkDateFormat(String param) {
         SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         int flag = 0;
         if (!param.equals("")) {

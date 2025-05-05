@@ -1,7 +1,7 @@
-package com.example.assistant;
+package com.example.assistant.diary;
 
 import static com.example.assistant.MainActivity.getCurrDate;
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -16,6 +16,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+import com.example.assistant.SideMenuActivity;
+import com.example.assistant.wheel.WheelActivity;
+import com.example.assistant.plans.PlansActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 

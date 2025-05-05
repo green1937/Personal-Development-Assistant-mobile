@@ -1,4 +1,4 @@
-package com.example.assistant;
+package com.example.assistant.timetable;
 
 import com.google.gson.annotations.SerializedName;
 

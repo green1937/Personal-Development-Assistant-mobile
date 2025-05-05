@@ -1,27 +1,23 @@
-package com.example.assistant;
-
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+package com.example.assistant.diary;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+import com.example.assistant.SideMenuActivity;
+import com.example.assistant.wheel.WheelActivity;
+import com.example.assistant.plans.PlansActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

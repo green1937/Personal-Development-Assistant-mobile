@@ -1,12 +1,9 @@
-package com.example.assistant;
+package com.example.assistant.wheel;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -15,11 +12,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+import com.example.assistant.SideMenuActivity;
+import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.plans.PlansActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skydoves.colorpickerview.ColorPickerView;
 import com.skydoves.colorpickerview.listeners.ColorListener;
-
-import org.w3c.dom.Text;
 
 
 public class CtgForWheelActivity extends AppCompatActivity {

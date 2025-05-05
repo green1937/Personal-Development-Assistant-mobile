@@ -1,4 +1,4 @@
-package com.example.assistant;
+package com.example.assistant.timetable;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -13,6 +13,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.assistant.MainActivity;
+import com.example.assistant.R;
+import com.example.assistant.SideMenuActivity;
+import com.example.assistant.wheel.WheelActivity;
+import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.plans.PlansActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -24,13 +30,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 
 public class TimetableActivity extends AppCompatActivity {
@@ -172,7 +175,7 @@ public class TimetableActivity extends AppCompatActivity {
     /*
         Получение данных из JSON
      */
-    static String getJsonFromUrl(String urlString) {
+    public static String getJsonFromUrl(String urlString) {
         String json = null;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;

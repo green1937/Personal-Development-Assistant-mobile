@@ -1,6 +1,6 @@
-package com.example.assistant;
+package com.example.assistant.tasks;
 
-import static com.example.assistant.TimetableAdapter.deleteFromUrl;
+import static com.example.assistant.timetable.TimetableAdapter.deleteFromUrl;
 import static java.lang.Integer.parseInt;
 
 import android.content.Context;
@@ -19,12 +19,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.assistant.R;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -225,7 +224,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
 
 
-    static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData, String activityName) {
+    public static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData, String activityName) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {

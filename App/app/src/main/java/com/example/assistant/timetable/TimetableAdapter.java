@@ -2,7 +2,7 @@
     Адаптер для работы с расписанием мероприятий на главном экране
  */
 
-package com.example.assistant;
+package com.example.assistant.timetable;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,10 +21,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import java.io.BufferedReader;
+import com.example.assistant.R;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -125,7 +124,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     }
 
 
-    static String deleteFromUrl(String urlString) {
+    public static String deleteFromUrl(String urlString) {
         String result = null;
         HttpURLConnection urlConnection = null;
 

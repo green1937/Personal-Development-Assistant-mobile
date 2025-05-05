@@ -1,34 +1,29 @@
-package com.example.assistant;
+package com.example.assistant.plans;
 
-import static com.example.assistant.NewTaskActivity.changeDateFormat;
-import static com.example.assistant.PlansActivity.checkDateFormat;
+import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
+import static com.example.assistant.plans.PlansActivity.checkDateFormat;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.assistant.R;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -251,7 +246,7 @@ public class NewPlanActivity extends AppCompatActivity {
         }
     };
 
-    static void setInitialDate(int year, int monthOfYear, int dayOfMonth, EditText editDate) {
+    public static void setInitialDate(int year, int monthOfYear, int dayOfMonth, EditText editDate) {
         String dateForEndStr;
         if (dayOfMonth < 10 && monthOfYear < 10) {
             dateForEndStr = "0" + dayOfMonth + "." + "0" + monthOfYear + "." + year;

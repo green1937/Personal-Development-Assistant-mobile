@@ -1,7 +1,7 @@
-package com.example.assistant;
+package com.example.assistant.plans;
 
-import static com.example.assistant.NewTaskActivity.changeDateFormat;
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
+import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
 
 import static java.lang.Integer.parseInt;
 
@@ -18,7 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
+import com.example.assistant.R;
+import com.example.assistant.tasks.TaskAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -169,7 +170,7 @@ public class EditPlanActivity extends AppCompatActivity {
         tasksRecyclerView = findViewById(R.id.allTaskInPlanRV);
         linearLayoutManagerTask = new LinearLayoutManager(getApplicationContext());
         tasksRecyclerView.setLayoutManager(linearLayoutManagerTask);
-        tasksAdapter = new TaskAdapter(EditPlanActivity.this, tasks, "com.example.assistant.PlansActivity");
+        tasksAdapter = new TaskAdapter(EditPlanActivity.this, tasks, "com.example.assistant.plans.PlansActivity");
         tasksRecyclerView.setAdapter(tasksAdapter);
 
 

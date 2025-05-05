@@ -1,8 +1,8 @@
 package com.example.assistant;
 
 
-import static com.example.assistant.NewPlanActivity.setInitialDate;
-import static com.example.assistant.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
+import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.tasks.NewTaskActivity;
+import com.example.assistant.tasks.TaskAdapter;
+import com.example.assistant.timetable.TimetableAdapter;
+import com.example.assistant.wheel.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
@@ -274,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
     /*
         Определение текущей даты в формате ДЕНЬ.МЕСЯЦ.ГОД.
     */
-    protected static String getCurrDate(DateFormat formatForDate, String dateCurrStr) {
+    public static String getCurrDate(DateFormat formatForDate, String dateCurrStr) {
         Date currDate = new Date();
         dateCurrStr = formatForDate.format(currDate);
         return dateCurrStr;

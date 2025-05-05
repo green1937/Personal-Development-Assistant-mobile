@@ -1,4 +1,4 @@
-package com.example.assistant;
+package com.example.assistant.diary;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.assistant.R;
+
 import java.util.ArrayList;
 import java.util.List;
 

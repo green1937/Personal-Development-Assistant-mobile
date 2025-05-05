@@ -1,5 +1,6 @@
-package com.example.assistant;
+package com.example.assistant.tasks;
 
+import com.example.assistant.wheel.Category;
 import com.google.gson.annotations.SerializedName;
 
 public class Task {
