@@ -146,19 +146,6 @@ public class DiaryActivity extends AppCompatActivity {
             flag = 0;
             todayRecordEditText.setText(todayRecordData.get(1));
         }
-        else {  // нет записи
-            flag = 1;
-            todayRecordData.add("");
-            todayRecordData.add(dateCurrStr);
-        }
-
-
-        /*if(!todayRecordEditText.getText().equals(todayRecordData.get(0))) {
-            // Если происходят изменения в записи, то отправляем данные в бд
-            Toast.makeText(getApplicationContext(), "Изменения", Toast.LENGTH_SHORT).show();
-        }*/
-
-
         // Добавляем TextWatcher для отслеживания изменений
         todayRecordEditText.addTextChangedListener(new TextWatcher() {
             @Override
