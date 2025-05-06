@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -47,6 +46,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,11 +62,12 @@ public class NewTaskActivity extends AppCompatActivity {
     ArrayList<Integer> days = new ArrayList<>();
     Repeat repeat = null;
 
-    String itemCtg;
-    String urlCategories, urlTask;
+    String itemCtg, itemPlan;
+    String urlTask, urlCategories, urlPlans;
     List<ArrayList<String>> allCategories = new ArrayList<>();
     ArrayList<String> nameAllCategories = new ArrayList<>();
-
+    List<ArrayList<String>> allPlans = new ArrayList<>();
+    ArrayList<String> nameAllPlans = new ArrayList<>();
 
     Calendar dateToCld = Calendar.getInstance();
     Calendar dateFromCld = Calendar.getInstance();
@@ -79,11 +80,11 @@ public class NewTaskActivity extends AppCompatActivity {
     EditText nameTask, scoreEditText, descriptionEditText, dateFrom, timeFrom, dateTo, timeTo;
     EditText dateStart, countRepeat, dateEnd, countEnd;
 
-    CalendarView calendarView;
-    TextView calendarBtn, repeatOrNotRepeatText;
+    TextView repeatOrNotRepeatText;
     ImageButton saveTaskBtn, backBtn;
     LinearLayout repeatOrNotRepeatLL, taskRepeatLL;
-    Calendar dateAndTime = Calendar.getInstance();
+    Calendar dateStartCld = Calendar.getInstance();
+    Calendar dateEndCld = Calendar.getInstance();
     String[] paramRS = { "Неделя", "Месяц", "Год"};
     String[] paramES = { "Никогда", "До даты", "После n раз"};
     String itemRS, itemES;
@@ -136,23 +137,22 @@ public class NewTaskActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
 
         Resources res = getResources();
-        urlCategories = res.getString(R.string.urlTuna) + "categories";
         urlTask = res.getString(R.string.urlTuna) + "tasks";
-        loadJsonFromUrlCategories(urlCategories); // Загрузка категорий колеса баланса
+        urlCategories = res.getString(R.string.urlTuna) + "categories";
+        urlPlans = res.getString(R.string.urlTuna) + "plans";
 
-        //showSpinnerCtg();       // Отображение в выпадающем списке примеров категорий
 
-        showRepeat();
+        loadJsonFromUrlCategories(urlCategories);       // Загрузка всех категорий колеса баланса
+        loadJsonFromUrlPlans(urlPlans);                 // Загрузка всех планов
 
-        backToOption();         // Возвращение назад
-        spinnerRepeat();  // Вывод данных в выпадающем списке
-
-        spinnerWhenRepeatEnd();
-
-        saveTask();             // Сохранение задачи
-
+        showRepeat();                                   // Показ повторов задачи
+        backToOption();                                 // Возвращение назад
+        spinnerRepeat();                                // Вывод данных в выпадающем списке
+        spinnerWhenRepeatEnd();                         // Выпадающий список конца повторов
+        saveTask();                                     // Сохранение задачи
 
     }
+
 
 
     /*
@@ -205,117 +205,113 @@ public class NewTaskActivity extends AppCompatActivity {
         // Покраска дней недели
         colorWeeksBtn(monD, tuesD, wednesD, thursD, friD, saturD, sunD, flagWeek);
         getDaysForRepeat(flagWeek);
-        saveTaskBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                taskNameStr = nameTask.getText().toString();
-                String scoreStr = scoreEditText.getText().toString();
-                descriptionTask = descriptionEditText.getText().toString();
+        saveTaskBtn.setOnClickListener(v -> {
+            taskNameStr = nameTask.getText().toString();
+            String scoreStr = scoreEditText.getText().toString();
+            descriptionTask = descriptionEditText.getText().toString();
+            dateToStr = dateTo.getText().toString();
+            timeToStr = timeTo.getText().toString();
+            dateFromStr = dateFrom.getText().toString();
+            timeFromStr = timeFrom.getText().toString();
 
-                dateToStr = dateTo.getText().toString();
-                timeToStr = timeTo.getText().toString();
-                dateFromStr = dateFrom.getText().toString();
-                timeFromStr = timeFrom.getText().toString();
-
-                // Оценка не может быть пустой и нельзя указывать только время без даты
-                if (taskNameStr.equals("") || scoreStr.equals("") || (dateToStr.equals("")  && !timeToStr.equals("")) || (dateFromStr.equals("")  && !timeFromStr.equals(""))) {
-                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! Поля не могут быть пустыми!", Toast.LENGTH_SHORT).show();
-                }
-
-
-                else {
-                    score = parseInt(scoreEditText.getText().toString());
-
-                    /*
-                        Если оценка НЕ в диапазоне от 1 до 100 и введенные даты
-                        и время НЕкорректных типов, то выводиться ошибка и задача не сохранится,
-                        пока ошибки не будут исправлены.
-
-                     */
-                    if (score<=0 || score > 100
-                            || checkDateTimeFormat(dateFromStr, "date") == 1
-                            || checkDateTimeFormat(dateToStr, "date") == 1
-                            || checkDateTimeFormat(timeFromStr, "time") == 1
-                            || checkDateTimeFormat(timeToStr, "time") == 1) {
-                        Toast.makeText(getApplicationContext(), "Ошибка сохранения!", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        if ((dateFromStr.length() != 10 &&  checkDateTimeFormat(dateFromStr, "date") == 0)
-                                || (dateToStr.length() != 10 && checkDateTimeFormat(dateToStr, "date") == 0)) {
-                            Toast.makeText(getApplicationContext(), "Ошибка! Формат даты должен быть ДД.ММ.ГГГГ", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            // Если введены были обе даты
-                            if (checkDateTimeFormat(dateFromStr, "date") == 0 && checkDateTimeFormat(dateToStr, "date") == 0) {
-                                DateTimeFormatter dtfDATE = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
-                                LocalDate dateFromLD = LocalDate.parse(dateFromStr, dtfDATE);
-                                LocalDate dateToLD = LocalDate.parse(dateToStr, dtfDATE);
-
-                                // Проверка на то, что дата ОТ наступает раньше даты ДО
-                                if (dateFromLD.isAfter(dateToLD)) {
-                                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! " +
-                                                    "Дата ОТ должна наступать раньше даты ДО!",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    if (repeatOrNotRepeatText.getText().equals("Задача повторяется") ) {
-                                        saveRepeatData();
-                                    }
-                                    try {
-                                        dateFromStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateFromStr)));
-                                        dateToStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateToStr)));
-                                    } catch (ParseException e) {
-                                        throw new RuntimeException(e);
-                                    }
-
-                                    getAllParametersOfTaskAndSave();
-                                }
-
-                            } else {
-                                if (!dateFromStr.equals("")) {
-                                    try {
-                                        dateFromStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateFromStr)));
-                                    } catch (ParseException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-                                if (!dateToStr.equals("")) {
-                                    try {
-                                        dateToStr = formatForDateVariant2.format(Objects.requireNonNull(sdfDATE.parse(dateToStr)));
-                                    } catch (ParseException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }
-                                if (repeatOrNotRepeatText.getText().equals("Задача повторяется") ) {
-                                    saveRepeatData();
-                                }
-
-                                getAllParametersOfTaskAndSave();
-                            }
-                        }
-
-
-                    }
-                }
-
+            // Оценка не может быть пустой и нельзя указывать только время без даты
+            if (taskNameStr.equals("") || scoreStr.equals("") || (dateToStr.equals("") && !timeToStr.equals("")) || (dateFromStr.equals("") && !timeFromStr.equals(""))) {
+                Toast.makeText(getApplicationContext(), "Ошибка сохранения! Поля не могут быть пустыми!", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            score = Integer.parseInt(scoreStr);
+
+            // Валидация оценки и дат
+            if (!isValidScore(score) || (checkDateTimeFormat(dateFromStr, "date") == 1 ||  checkDateTimeFormat(dateToStr, "date") == 1
+                    || checkDateTimeFormat(timeFromStr, "time") == 1 || checkDateTimeFormat(timeToStr, "time") == 1)) {
+                showToast("Ошибка сохранения!");
+                return;
+            }
+
+
+            // Проверка последовательности дат
+            if (!isInvalidInput(dateFromStr, dateToStr) && isDateFromAfterDateTo(dateFromStr, dateToStr)) {
+                showToast("Дата ОТ должна быть раньше даты ДО!");
+                return;
+            }
+
+            if(!isInvalidInput(dateFromStr, dateToStr, timeFromStr, timeToStr) && dateFromStr.equals(dateToStr) && isTimeFromAfterTimeTo(timeFromStr, timeToStr)) {
+                showToast("Время ОТ должна быть раньше времени ДО!");
+                return;
+            }
+
+            // Форматирование дат
+            formatDates();
+
+            // Сохранение повторяющихся данных
+            if ("Задача повторяется".equals(repeatOrNotRepeatText.getText())) {
+                saveRepeatData();
+            }
+
+            getAllParametersOfTaskAndSave();
         });
+    }
+
+    protected static boolean isInvalidInput(String... fields) {
+        for (String field : fields) {
+            if (field.isEmpty()) return true;
+        }
+        return false;
+    }
+
+    protected static boolean isValidScore(int score) {
+        return score >= 1 && score <= 100;
+    }
+
+    protected void formatDates() {
+        try {
+            if (!dateFromStr.isEmpty()) {
+                dateFromStr = formatForDateVariant2.format(sdfDATE.parse(dateFromStr));
+            }
+            if (!dateToStr.isEmpty()) {
+                dateToStr = formatForDateVariant2.format(sdfDATE.parse(dateToStr));
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static boolean isDateFromAfterDateTo(String dateFrom, String dateTo) {
+        DateTimeFormatter dtfDATE = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
+        LocalDate dateFromLD = LocalDate.parse(dateFrom, dtfDATE);
+        LocalDate dateToLD = LocalDate.parse(dateTo, dtfDATE);
+        return dateFromLD.isAfter(dateToLD);
+    }
+
+    protected static boolean isTimeFromAfterTimeTo(String timeFrom, String timeTo) {
+        DateTimeFormatter dtfTIME = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
+        LocalTime timeFromLD = LocalTime.parse(timeFrom, dtfTIME);
+        LocalTime timeToLD = LocalTime.parse(timeTo, dtfTIME);
+        return timeFromLD.isAfter(timeToLD);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
 
     /*
-        Получение всех параметров задачи (включая повторы) и отправка на сервер для сохранения
-
-        (пока что без принадлежности к плану)
+        Получение всех параметров задачи (включая повторы)
+        и отправка на сервер для сохранения
      */
     protected void getAllParametersOfTaskAndSave() {
-        Category ctgTask = new Category(getIdCtg(itemCtg));
-        Task taskData = new Task(taskNameStr, descriptionTask, score, ctgTask, dateFromStr, dateToStr, timeFromStr, timeToStr, repeat);
+        Category ctgTask = new Category(getIdObj(itemCtg, allCategories));
+        Long planId = null;
+        if(!itemPlan.equals("Нет плана")) {
+            planId = Long.valueOf(getIdObj(itemPlan, allPlans));
+        }
+        Task taskData = new Task(taskNameStr, descriptionTask, score, ctgTask, dateFromStr, dateToStr, timeFromStr, timeToStr, planId, repeat);
         String jsonData = new Gson().toJson(taskData);
         System.out.println("DATA TASK = " + jsonData);
         sendDataToServer("POST", jsonData);
 
-        startActivity(new Intent(NewTaskActivity.this, MainActivity.class));
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
 
@@ -330,20 +326,17 @@ public class NewTaskActivity extends AppCompatActivity {
 
         //  Проверка на пустоту ввода: кол-ва повторов, даты окончания повторов, после какого кол-ва повторов заканчивать, дата начала повторов
         if (countRepeatStr.equals("") || (dateEndStr.equals("") && flagSpinner==1) || (countEndStr.equals("") && flagSpinner==2) || dateStartStr.equals("")) {
-            Toast.makeText(getApplicationContext(), "Ошибка сохранения! Поля не заполнены!",
-                    Toast.LENGTH_SHORT).show();
+            showToast( "Ошибка сохранения! Поля не заполнены!");
         }
         //  Если эти поля заполнены, то --- смотрим выбраны ли дни недели, если повторы на неделе
         else {
             if (linLayoutWeek.getVisibility() == View.VISIBLE && checkDaysWeek(flagWeek) == 1) {
-                Toast.makeText(getApplicationContext(), "Ошибка сохранения! Не выбран ни один день недели!",
-                        Toast.LENGTH_SHORT).show();
+                showToast("Ошибка сохранения! Не выбран ни один день недели!");
             }
             else {
                 // Проверка на кооректность введенной даты
                 if ((flagSpinner == 1 && checkDateFormat(dateEndStr) == 1) || (checkDateFormat(dateStartStr) == 1)) { // Проверка на дату
-                    Toast.makeText(getApplicationContext(), "Ошибка сохранения! ДАТА не является датой!",
-                            Toast.LENGTH_SHORT).show();
+                    showToast( "Ошибка сохранения! ДАТА не является датой!");
                 }
                 else {
                     SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -351,14 +344,9 @@ public class NewTaskActivity extends AppCompatActivity {
 
                     int countE = -1;
                     //  Перевод в числа
-                    if (flagSpinner == 2) {
-                        countE = parseInt(countEnd.getText().toString());
-                    }
+                    if (flagSpinner == 2) countE = parseInt(countEnd.getText().toString());
+
                     countR = parseInt(countRepeat.getText().toString());
-
-                    System.out.println("ПОВТОР ЗАДАЧИ --- " + countR + " " + flagWeek.toString() + " " + itemRS
-                            + " " + itemES + " " + dateEndStr + " " + countE);
-
                     end = null;
                     numberOfRepeats = 0;
                     term = "week";
@@ -400,8 +388,8 @@ public class NewTaskActivity extends AppCompatActivity {
         return formattedDate;
     }
 
-    protected ArrayList<Integer> getDaysForRepeat( int[] flagWeek) {
-        daysRepeat = new ArrayList<>();
+    protected static ArrayList<Integer> getDaysForRepeat( int[] flagWeek) {
+        ArrayList<Integer> daysRepeat = new ArrayList<>();
         for (int i =0; i<7; i++) {
             if (flagWeek[i] == 1) {
                 daysRepeat.add(i);
@@ -457,10 +445,10 @@ public class NewTaskActivity extends AppCompatActivity {
         }).start();
     }
 
-    protected int getIdCtg(String nameCtg) {
-        for (int i=0; i<allCategories.size(); i++) {
-            if (allCategories.get(i).get(1).equals(nameCtg)) {
-                return parseInt(allCategories.get(i).get(0));
+    protected static int getIdObj(String nameObj, List<ArrayList<String>> allData) {
+        for (int i=0; i<allData.size(); i++) {
+            if (allData.get(i).get(1).equals(nameObj)) {
+                return parseInt(allData.get(i).get(0));
             }
         }
         return 0;
@@ -471,33 +459,26 @@ public class NewTaskActivity extends AppCompatActivity {
     /*
         Функция, отвечающая за проверку даты или времени
      */
-    protected int checkDateTimeFormat(String param1, String param2) {
+    protected static int checkDateTimeFormat(String param1, String param2) {
+        SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
         int flag = 0;
         if (!param1.equals("")) {
             if (param2.equals("date")) {
                 sdfDATE.setLenient(false);
-                try {
-                    sdfDATE.parse(param1);
-                    System.out.println("Valid date");
-                } catch (ParseException e) {
-                    System.out.println("Invalid date");
-                    flag = 1;
-                }
+                try { sdfDATE.parse(param1); }
+                catch (ParseException e) { flag = 1; }
             }
+
             if (param2.equals("time")) {
                 sdfTIME.setLenient(false);
-                try {
-                    sdfTIME.parse(param1);
-                    System.out.println("Valid time");
-                } catch (ParseException e) {
-                    System.out.println("Invalid time");
-                    flag = 1;
-                }
+                try { sdfTIME.parse(param1); }
+                catch (ParseException e) { flag = 1; }
             }
         }
-        else {
-            flag = 2;
-        }
+        else flag = 2;
+
         return flag;
     }
 
@@ -652,6 +633,82 @@ public class NewTaskActivity extends AppCompatActivity {
     }
 
 
+
+
+    /*
+        Загрузка планов JSON через Tuna
+    */
+    private void loadJsonFromUrlPlans(String url) {
+        new Thread(() -> {
+            try {
+                // ссылка
+                String json = getJsonFromUrl(url);
+
+                if (json != null) {
+                    runOnUiThread(() -> {
+                        getPlansFromJSON(json);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных",
+                                Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } catch (Exception e) {
+                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
+            }
+        }).start();
+    }
+
+    /*
+        Получение всех планов
+     */
+    private void getPlansFromJSON(String json) {
+        allPlans = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(json);
+            for (int i=0; i<jsonArray.length(); i++) {
+                JSONObject planData = jsonArray.getJSONObject(i);
+                ArrayList<String> onePlan = new ArrayList<>();
+
+                onePlan.add(planData.getString("id"));
+                onePlan.add(planData.getString("name"));
+
+                nameAllPlans.add(planData.getString("name"));
+
+                allPlans.add(onePlan);
+            }
+            nameAllPlans.add(0, "Нет плана");
+            showSpinnerPlans(nameAllPlans);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    /*
+        Выпадающий список с планами
+    */
+    protected void showSpinnerPlans(ArrayList<String> nameAllPlans) {
+        Spinner spinner = findViewById(R.id.plansSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nameAllPlans);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Получаем выбранный объект
+                itemPlan = (String)parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        };
+        spinner.setOnItemSelectedListener(itemSelectedListener);
+    }
+
+
     /*
         Вывод данных в выпадающем списке (неделя, месяц, год)
      */
@@ -737,30 +794,44 @@ public class NewTaskActivity extends AppCompatActivity {
     }
 
 
+    /*
+     Выбор даты начала повторов в календаре
+     */
+    public void setDateRepeat(View v) {
+        new DatePickerDialog(NewTaskActivity.this, dR, dateStartCld.get(Calendar.YEAR),
+                dateStartCld.get(Calendar.MONTH), dateStartCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener dR=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateStartCld.set(Calendar.YEAR, year);
+            dateStartCld.set(Calendar.MONTH, monthOfYear);
+            dateStartCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setInitialDate(year, monthOfYear+1, dayOfMonth, dateStart);
+        }
+    };
+
+
+
+
 
     /*
      Выбор даты (когда заканчивается повтор задачи) в календаре
      */
     public void setDate(View v) {
-        new DatePickerDialog(NewTaskActivity.this, d, dateAndTime.get(Calendar.YEAR),
-                dateAndTime.get(Calendar.MONTH), dateAndTime.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(NewTaskActivity.this, d, dateEndCld.get(Calendar.YEAR),
+                dateEndCld.get(Calendar.MONTH), dateEndCld.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     DatePickerDialog.OnDateSetListener d=new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateAndTime.set(Calendar.YEAR, year);
-            dateAndTime.set(Calendar.MONTH, monthOfYear);
-            dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            dateEndCld.set(Calendar.YEAR, year);
+            dateEndCld.set(Calendar.MONTH, monthOfYear);
+            dateEndCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
             setInitialDate(year, monthOfYear+1, dayOfMonth, dateEnd);
         }
     };
 
-    /*
-        Вывод даты (когда заканчивается повтор задачи) в текстовое поле в формате ДД.ММ.ГГГГ
-     */
-    private void setInitialDateTime( int year, int monthOfYear, int dayOfMonth) {
-        String dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
-        dateEnd.setText(dateForEndStr);
-    }
 }

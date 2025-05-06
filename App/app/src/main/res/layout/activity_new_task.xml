@@ -124,6 +124,29 @@
                     <ImageButton
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+                        android:src="@drawable/plans"
+                        android:scaleType="centerCrop"
+                        android:background="@color/background_main"
+                        android:layout_marginVertical="10dp"
+                        />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:id="@+id/plansSpinner"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="10dp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@drawable/time_for_task"
                         android:scaleType="centerCrop"
                         android:background="@color/background_main"
@@ -260,7 +283,7 @@
                             android:inputType="date"
                             android:hint="дата"
                             android:textColor="@color/black"
-                            android:onClick="setDate"/>
+                            android:onClick="setDateRepeat"/>
 
                     </LinearLayout>
 
