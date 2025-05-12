@@ -1,8 +1,14 @@
 package com.example.assistant.wheel;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,6 +34,8 @@ import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 //import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 public class WheelActivity extends AppCompatActivity {
@@ -37,57 +45,21 @@ public class WheelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wheel);
 
+        WheelView wheelView = findViewById(R.id.wheelView);
+
+        List<WheelView.WheelSector> sectors = new ArrayList<>();
+        Random random = new Random();
+        int cnt = 5;
+
+        for (int i = 0; i < cnt; i++) {
+            float value = 0.3f + random.nextFloat() * 0.7f; // от 0.3 до 1.0
+            int color = Color.rgb(random.nextInt(256), random.nextInt(256), random.nextInt(256));
+            sectors.add(new WheelView.WheelSector("Cat " + (i+1), value, color));
+        }
+
+        wheelView.setWheelData(sectors);
+
         bottNavItem();  // Нижнее меню
-
-
-        chart = findViewById(R.id.radarChart);
-
-        chart.getDescription().setEnabled(false);
-
-        setData();
-
-        chart.animateXY(1400, 1400, Easing.EaseInOutQuad);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setTextSize(9f);
-        xAxis.setYOffset(0f);
-        xAxis.setXOffset(0f);
-        xAxis.setDrawAxisLine(true);
-        xAxis.setLabelCount(10);
-
-        /*
-        ArrayList<String> data = new ArrayList<>();
-        data.add("ctg1");
-        data.add("ctg2");
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(data));
-        xAxis.setPosition(XAxis.XAxisPosition.TOP) ;
-        xAxis.setTextColor(Color.BLACK);*/
-
-
-        YAxis yAxis = chart.getYAxis();
-        yAxis.setLabelCount(10, true);
-        yAxis.setTextSize(9f);
-        yAxis.setAxisMinimum(0);
-        yAxis.setAxisMaximum(100);
-        yAxis.setDrawLabels(false);
-        yAxis.setInverted(true);
-        yAxis.setCenterAxisLabels(true);
-
-
-
-        Legend l = chart.getLegend();
-        l.setTextSize(15f);
-        l.setWordWrapEnabled(true);
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
-        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        l.setForm(Legend.LegendForm.CIRCLE);
-        l.setFormSize(12f);
-        l.setDrawInside(false);
-        l.setXEntrySpace(7f);
-        l.setYEntrySpace(5f);
-        l.setTextColor(Color.WHITE);
-
 
     }
 

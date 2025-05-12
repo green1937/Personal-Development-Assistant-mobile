@@ -61,26 +61,36 @@
             android:textColor="@color/bottom_menu" />
     </LinearLayout>
 
-    <com.github.mikephil.charting.charts.RadarChart
+    <com.example.assistant.wheel.WheelView
+        android:id="@+id/wheelView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/radarChart"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginBottom="60dp"
+        android:layout_height="500dp"
         android:layout_below="@+id/linL"
-        />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="49dp"
+        android:layout_marginEnd="0dp" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/bottom_menu"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
-        app:itemIconTint="@color/black"
+<!--    <com.github.mikephil.charting.charts.RadarChart-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/radarChart"-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        android:layout_marginBottom="60dp"-->
+<!--        android:layout_below="@+id/linL"-->
+<!--        />-->
 
 
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_menu"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/bottom_menu"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            app:itemIconTint="@color/black"
 
-        />
-</RelativeLayout>
+
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_menu"
+
+            />
+    </RelativeLayout>
