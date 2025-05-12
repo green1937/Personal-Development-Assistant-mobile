@@ -63,7 +63,7 @@ import java.util.Locale;
 
 public class EditTaskActivity extends AppCompatActivity {
     String taskNameStr, descriptionTask, dateFromStr, dateToStr, timeFromStr, timeToStr, term, start, end, ctgName, planName;
-    int score, countR, numberOfRepeats, ctgId;
+    int score, countR, numberOfRepeats, ctgId, status;
     int[] arr;
     Long planId = null;
     ArrayList<Integer> days = new ArrayList<>();
@@ -160,9 +160,9 @@ public class EditTaskActivity extends AppCompatActivity {
 
 
         backToOption();                             // Назад на Главный Экран
-        loadTaskData();                             // Загрузка данных редактируемой задачи
+        //loadTaskData();                             // Загрузка данных редактируемой задачи
         loadJsonFromUrlCategories();                // Загрузка категорий колеса баланса
-        loadJsonFromUrlPlans();                     // Загрузка категорий колеса баланса
+        //loadJsonFromUrlPlans();                     // Загрузка категорий колеса баланса
     }
 
     /*
@@ -177,6 +177,7 @@ public class EditTaskActivity extends AppCompatActivity {
                 if (json != null) {
                     runOnUiThread(() -> {
                         getCategoriesFromJSON(json);
+                        loadJsonFromUrlPlans();
                     });
                 } else {
                     runOnUiThread(() -> {
@@ -203,6 +204,7 @@ public class EditTaskActivity extends AppCompatActivity {
                 if (json != null) {
                     runOnUiThread(() -> {
                         getPlansFromJSON(json);
+                        loadTaskData();
                     });
                 } else {
                     runOnUiThread(() -> {
@@ -295,6 +297,9 @@ public class EditTaskActivity extends AppCompatActivity {
 
         try {
             JSONObject jsonObject = new JSONObject(json);
+
+            status = parseInt(jsonObject.getString("status"));
+
 
             taskNameStr = jsonObject.getString("name");
             descriptionTask = jsonObject.getString("description");
@@ -468,7 +473,7 @@ public class EditTaskActivity extends AppCompatActivity {
         if(!itemPlan.equals("Нет плана")) {
             planId = Long.valueOf(getIdObj(itemPlan, allPlans));
         }
-        NewTask taskData = new NewTask(idEditTask, taskNameStr, descriptionTask, score, ctgTask,
+        NewTask taskData = new NewTask(idEditTask, status, taskNameStr, descriptionTask, score, ctgTask,
                 dateFromStr, dateToStr, timeFromStr, timeToStr, planId);
         String jsonData = new Gson().toJson(taskData);
         System.out.println("DATA TASK = " + jsonData);
@@ -822,15 +827,7 @@ public class EditTaskActivity extends AppCompatActivity {
 
                 // Получаем ответ
                 int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Данные успешно отправлены", Toast.LENGTH_SHORT).show();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Ошибка отправки данных: " + responseCode, Toast.LENGTH_SHORT).show();
-                    });
-                }
+
 
             } catch (IOException e) {
                 Log.e("SEND_ERROR", "Ошибка при отправке данных", e);

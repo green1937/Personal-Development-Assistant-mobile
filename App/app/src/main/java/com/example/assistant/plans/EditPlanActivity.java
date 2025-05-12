@@ -333,7 +333,7 @@ public class EditPlanActivity extends AppCompatActivity {
 
 
     /*
-        Вывод календарей и часов для дат и времени при создании задачи
+        Вывод календарей
      */
 
     public void setDateFrom(View v) {

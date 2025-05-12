@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 public class NewTask {
         @SerializedName("id")
         int id;
-
         @SerializedName("plan_id")
         Long planId;
 
@@ -44,11 +43,12 @@ public class NewTask {
         Category taskCategory;
 
 
-        public NewTask(int id, String name, String description, int estimate, Category taskCategory,
+        public NewTask(int id, int status, String name, String description, int estimate, Category taskCategory,
                        String startDate, String stopDate, String startTime,
                        String stopTime, Long planId) {
             this.id = id;
             this.userId = 1;
+            this.status = status;
             this.name = name;
             this.description = description;
             this.estimate = estimate;
@@ -58,7 +58,6 @@ public class NewTask {
             this.startTime = startTime;
             this.stopTime = stopTime;
             this.timezone = "Asia/Krasnoyarsk";
-            this.status = 0;
             this.planId = planId;
         }
 
