@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_main"
+    tools:context=".storage.StorageActivity"
+    android:scrollbars="vertical">
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/backBtn"
+        android:src="@drawable/back"
+        android:scaleType="fitCenter"
+        android:backgroundTint="@color/background_main"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textTt"
+        android:text="Хранилище"
+        android:textSize="26dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:paddingVertical="10dp"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/searchRL"
+        android:background="@color/background2"
+        android:layout_below="@+id/textTt">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textLL"
+            android:textSize="23dp"
+            android:textColor="@color/black"
+            android:text="Поиск"
+            android:textAlignment="center"
+            android:background="@color/background2"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"/>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/seeSearchSettingsBtn"
+            android:src="@drawable/back"
+            android:scaleType="fitCenter"
+            android:background="@color/bottom_menu"
+            android:rotation="270"
+            android:layout_alignParentEnd="true"/>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/groupLL"
+        android:layout_below="@+id/searchRL"
+        android:orientation="vertical"
+        android:background="@color/background2"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/storageGroupsSpinner"
+            android:layout_marginHorizontal="30dp"
+           />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/noteDiaryLL"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/findTextDiaryNote"
+                android:hint="Текст"
+                android:textStyle="italic"
+                android:paddingLeft="15dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/findDateDiaryNote"
+                android:textStyle="italic"
+                android:inputType="date"
+                android:hint="От (дата)"
+                android:onClick="setDate"/>
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/taskAndPlanLL"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/findTextTask"
+                android:hint="Текст"
+                android:textStyle="italic"
+                android:paddingLeft="15dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/checkBoxDone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/doneText"
+                    android:textSize="20dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:text="Завершено" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/findDateFrom"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textStyle="italic"
+                    android:inputType="date"
+                    android:hint="От даты"
+                    android:textAlignment="center"
+                    android:onClick="setDateFrom"/>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/findDateTo"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textStyle="italic"
+                    android:inputType="date"
+                    android:hint="До даты"
+                    android:textAlignment="center"
+                    android:layout_marginLeft="10dp"
+                    android:onClick="setDateTo"/>
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/findDateDone"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textStyle="italic"
+                    android:inputType="date"
+                    android:hint="Завершено"
+                    android:textAlignment="center"
+                    android:layout_marginLeft="10dp"
+                    android:onClick="setDate"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/taskLL"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/findTimeFrom"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:textStyle="italic"
+                        android:inputType="time"
+                        android:hint="От времени"
+                        android:textAlignment="center"
+                        android:onClick="setTimeFrom"/>
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/findTimeTo"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:textStyle="italic"
+                        android:inputType="time"
+                        android:hint="До времени"
+                        android:textAlignment="center"
+                        android:layout_marginLeft="10dp"
+                        android:onClick="setTimeTo"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <CheckBox
+                        android:id="@+id/checkBoxRepeat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/repeatText"
+                        android:textSize="20dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="Задача повторяется" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Баллы колеса баланса"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/wheelScore"
+                        android:hint="Баллы"
+                        android:paddingLeft="15dp"
+                        android:textStyle="italic"
+                        android:inputType="number"/>
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wheelCtgRV"
+                    android:paddingHorizontal="15dp"/>
+
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/planLL"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Всего баллов"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/allScore"
+                        android:hint="Баллы"
+                        android:paddingLeft="15dp"
+                        android:textStyle="italic"
+                        android:inputType="number"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Завершенных баллов"
+                        android:textSize="20dp"
+                        android:textColor="@color/black"/>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/doneScore"
+                        android:hint="Баллы"
+                        android:paddingLeft="15dp"
+                        android:textStyle="italic"
+                        android:inputType="number"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view_timetable_monday"
+        android:layout_below="@+id/groupLL"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp"/>
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/bottom_menu"
+        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+        app:itemIconTint="@color/black"
+        android:layout_alignParentBottom="true"
+        app:menu="@menu/bottom_menu"/>
+
+</RelativeLayout>

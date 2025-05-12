@@ -8,7 +8,10 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.mediabook.MediabookActivity;
+import com.example.assistant.phrases.DayPhrasesActivity;
 import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.storage.StorageActivity;
 import com.example.assistant.timetable.TimetableActivity;
 import com.example.assistant.wheel.CtgForWheelActivity;
 import com.example.assistant.wheel.WheelActivity;
@@ -24,6 +27,9 @@ public class SideMenuActivity extends AppCompatActivity {
         bottNavItem();    // Нижнее меню
         getColor();       // Переход на экран с категориями колеса баланса
         showTimetable();  // Переход на экран с расписанием занятий
+        showStorage();
+        showMediabook();
+        showPhrase();
 
     }
 
@@ -89,8 +95,8 @@ public class SideMenuActivity extends AppCompatActivity {
     }
 
     protected void showTimetable() {
-        LinearLayout goCtgActivity = findViewById(R.id.goTimetableActivity);
-        goCtgActivity.setOnClickListener(new View.OnClickListener() {
+        LinearLayout goTimetableActivity = findViewById(R.id.goTimetableActivity);
+        goTimetableActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
@@ -98,5 +104,35 @@ public class SideMenuActivity extends AppCompatActivity {
         });
     }
 
+
+    protected void showStorage() {
+        LinearLayout goStorageActivity = findViewById(R.id.goStorageActivity);
+        goStorageActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), StorageActivity.class));
+            }
+        });
+    }
+
+    protected void showMediabook() {
+        LinearLayout goMediabookActivity = findViewById(R.id.goMediabookActivity);
+        goMediabookActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), MediabookActivity.class));
+            }
+        });
+    }
+
+    protected void showPhrase() {
+        LinearLayout goPhraseActivity = findViewById(R.id.goPhraseActivity);
+        goPhraseActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), DayPhrasesActivity.class));
+            }
+        });
+    }
 }
 
