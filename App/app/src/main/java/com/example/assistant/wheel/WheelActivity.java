@@ -16,12 +16,15 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
 import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.plans.EditPlanActivity;
+import com.example.assistant.plans.PlanCtgAdapter;
 import com.example.assistant.plans.PlansActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,7 +60,7 @@ public class WheelActivity extends AppCompatActivity {
     DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     List<ArrayList<String>> allCategories = new ArrayList<>();
     String urlWheel, urlCtg, responseString;
-    LocalDate currentDate, sevenDaysAgo;
+
     String startDate, stopDate;
     WheelView wheelView;
     List<WheelView.WheelSector> sectors = new ArrayList<>();
@@ -129,13 +132,21 @@ public class WheelActivity extends AppCompatActivity {
 
 
     protected void drawWheel(List<ArrayList<String>> allCategories) {
+        LinearLayoutManager linearLayoutManagerCtg = new LinearLayoutManager(getApplicationContext());
+        RecyclerView categoriesRecyclerView = findViewById(R.id.ctgRV);
+        categoriesRecyclerView.setLayoutManager(linearLayoutManagerCtg);
+        WheelCtgAdapter categoriesAdapter = new WheelCtgAdapter(WheelActivity.this, allCategories);
+        categoriesRecyclerView.setAdapter(categoriesAdapter);
+
         sectors = new ArrayList<>();
 
         for (int i = 0; i < allCategories.size(); i++) {
-            String name = allCategories.get(i).get(0);
-            int color = Color.parseColor(allCategories.get(i).get(2));
-            int point = parseInt(allCategories.get(i).get(1));
-            sectors.add(new WheelView.WheelSector(name, point, color));
+            if (allCategories.get(i).get(3).equals("1")) {
+                String name = allCategories.get(i).get(0);
+                int color = Color.parseColor(allCategories.get(i).get(2));
+                int point = parseInt(allCategories.get(i).get(1));
+                sectors.add(new WheelView.WheelSector(name, point, color));
+            }
         }
 
         wheelView.setWheelData(sectors);
@@ -213,6 +224,7 @@ public class WheelActivity extends AppCompatActivity {
                 oneCategory.add(ctgData.getString("name"));
                 oneCategory.add(ctgData.getString("points"));
                 oneCategory.add(ctgData.getString("color"));
+                oneCategory.add("1");
 
                 allCategories.add(oneCategory);
             }

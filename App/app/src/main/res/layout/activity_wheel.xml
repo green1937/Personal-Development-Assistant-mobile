@@ -67,11 +67,17 @@
     <com.example.assistant.wheel.WheelView
         android:id="@+id/wheelView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_below="@+id/linL"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="49dp"
-        android:layout_marginEnd="0dp" />
+        android:layout_height="400dp"
+        android:layout_below="@+id/linL" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ctgRV"
+        android:layout_below="@+id/wheelView"
+        android:background="@color/filter_bcg"/>
+
+
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
