@@ -1,6 +1,6 @@
 package com.example.assistant.tasks;
 
-import static com.example.assistant.timetable.TimetableAdapter.deleteFromUrl;
+import static com.example.assistant.viewmodel.TimetableAdapter.deleteFromUrl;
 import static java.lang.Integer.parseInt;
 
 import android.content.Context;

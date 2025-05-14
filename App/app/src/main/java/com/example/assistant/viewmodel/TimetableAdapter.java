@@ -2,7 +2,7 @@
     Адаптер для работы с расписанием мероприятий на главном экране
  */
 
-package com.example.assistant.timetable;
+package com.example.assistant.viewmodel;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.assistant.R;
+import com.example.assistant.timetable.TimetableActivity;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

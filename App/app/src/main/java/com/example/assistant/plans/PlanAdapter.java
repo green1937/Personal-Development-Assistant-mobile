@@ -3,7 +3,7 @@
  */
 
 package com.example.assistant.plans;
-import static com.example.assistant.timetable.TimetableAdapter.deleteFromUrl;
+import static com.example.assistant.viewmodel.TimetableAdapter.deleteFromUrl;
 import static com.example.assistant.tasks.TaskAdapter.sendUpdateObjectStatusToServer;
 
 

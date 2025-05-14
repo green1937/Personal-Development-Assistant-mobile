@@ -24,6 +24,7 @@ android {
     }
 
     buildFeatures {
+        dataBinding true
         viewBinding true
     }
 
@@ -46,6 +47,9 @@ dependencies {
     implementation "com.github.skydoves:colorpickerview:2.3.0"
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation "com.fasterxml.jackson.core:jackson-databind:2.19.0-rc2"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1'
 
 
 }

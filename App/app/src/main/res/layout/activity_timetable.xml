@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.assistant.viewmodel.TimetableViewModel" />
+    </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +13,7 @@
     android:background="@color/background_main"
     tools:context=".wheel.CtgForWheelActivity"
     android:scrollbars="vertical">
+
 
     <ImageButton
         android:layout_width="60dp"
@@ -82,3 +89,4 @@
     app:menu="@menu/bottom_menu"/>
 
 </RelativeLayout>
+</layout>
