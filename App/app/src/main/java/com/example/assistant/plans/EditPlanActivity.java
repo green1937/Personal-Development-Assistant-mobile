@@ -2,7 +2,7 @@ package com.example.assistant.plans;
 
 import static com.example.assistant.plans.PlansActivity.checkDateFormat;
 import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
-import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import static java.lang.Integer.parseInt;
 

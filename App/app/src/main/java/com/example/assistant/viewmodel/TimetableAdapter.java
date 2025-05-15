@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.assistant.R;
-import com.example.assistant.timetable.TimetableActivity;
+import com.example.assistant.views.TimetableActivity;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

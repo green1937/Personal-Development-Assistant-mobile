@@ -32,11 +32,11 @@
             android:exported="false"/>
 
         <activity
-            android:name=".timetable.NewEventActivity"
+            android:name=".views.NewEventActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".timetable.TimetableActivity"
+            android:name=".views.TimetableActivity"
             android:exported="false"/>
 
         <activity

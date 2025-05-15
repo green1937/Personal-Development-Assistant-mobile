@@ -2,7 +2,7 @@ package com.example.assistant;
 
 
 import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
-import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;

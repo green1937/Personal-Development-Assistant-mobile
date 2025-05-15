@@ -1,10 +1,8 @@
 package com.example.assistant.tasks;
 
-import static com.example.assistant.timetable.NewEventActivity.checkDaysWeek;
-import static com.example.assistant.timetable.NewEventActivity.colorWeeksBtn;
 import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
 import static com.example.assistant.plans.PlansActivity.checkDateFormat;
-import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import static java.lang.Integer.parseInt;
 
@@ -12,6 +10,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -53,7 +53,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class NewTaskActivity extends AppCompatActivity {
 
@@ -153,6 +152,144 @@ public class NewTaskActivity extends AppCompatActivity {
 
     }
 
+    /*Функция, проверяющая есть ли выбранные дни недели для мероприятия.
+    Если есть хотя бы один выбранный день недели,
+    то рассматривать дальше все дни не имеет смысла.
+     */
+
+    public static int checkDaysWeek(int[] flagsForWeek) {
+        int flag = 1;
+        for (int i=0; i<7; i++) {
+            if (flagsForWeek[i] == 1) {  // Проверка на выбранный день
+                flag = 0;
+                break;
+            }
+        }
+        return flag;
+    }
+
+
+    /*
+    Покраска каждой кнопки дня недели при нажатии на нее
+    В дальнейшем также и передача выбранных дней
+    Пока криво сделано --- переделать потом в дальнейшем
+*/
+    public static void colorWeeksBtn(TextView monD, TextView tuesD, TextView wednesD, TextView thursD, TextView friD,
+                                     TextView saturD, TextView sunD, int[] flagWeek) {
+        monD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[0] == 1) {
+                    monD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[0] = 0;
+                }
+                else {
+                    monD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[0] = 1;
+                }
+
+
+            }
+        });
+
+
+        tuesD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[1] == 1) {
+                    tuesD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[1] = 0;
+                }
+                else {
+                    tuesD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[1] = 1;
+                }
+            }
+        });
+
+        wednesD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[2] == 1) {
+                    wednesD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[2] = 0;
+                }
+                else {
+                    wednesD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[2] = 1;
+                }
+            }
+        });
+
+        thursD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[3] == 1) {
+                    thursD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[3] = 0;
+                }
+                else {
+                    thursD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[3] = 1;
+                }
+            }
+        });
+
+        friD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[4] == 1) {
+                    friD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[4] = 0;
+                }
+                else {
+                    friD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[4] = 1;
+                }
+            }
+        });
+        saturD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[5] == 1) {
+                    saturD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[5] = 0;
+                }
+                else {
+                    saturD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[5] = 1;
+                }
+            }
+        });
+        sunD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flagWeek[6] == 1) {
+                    sunD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[6] = 0;
+                }
+                else {
+                    sunD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                    flagWeek[6] = 1;
+                }
+            }
+        });
+
+    }
 
 
     /*

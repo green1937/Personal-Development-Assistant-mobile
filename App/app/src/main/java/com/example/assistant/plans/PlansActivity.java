@@ -1,7 +1,7 @@
 package com.example.assistant.plans;
 
 import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
-import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 
 import android.app.DatePickerDialog;

@@ -13,6 +13,7 @@ public class TimetableViewModelFactory implements ViewModelProvider.Factory {
         this.application = application;
     }
 
+
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {

@@ -1,4 +1,4 @@
-package com.example.assistant.timetable;
+package com.example.assistant.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -52,5 +52,58 @@ public class Event {
 
     public String getStopTime() {
         return stopTime;
+    }
+
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getWeekNum() {
+        return weekNum;
+    }
+
+    public void setWeekNum(int weekNum) {
+        this.weekNum = weekNum;
+    }
+
+    public int getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getEventFormat() {
+        return eventFormat;
+    }
+
+    public void setEventFormat(String eventFormat) {
+        this.eventFormat = eventFormat;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setStopTime(String stopTime) {
+        this.stopTime = stopTime;
     }
 }

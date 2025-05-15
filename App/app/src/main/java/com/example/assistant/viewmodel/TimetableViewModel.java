@@ -20,12 +20,9 @@ public class TimetableViewModel extends ViewModel {
     private TimetableRepository repository;
 
     public TimetableViewModel(Application application) throws InterruptedException {
-        System.out.println("viewModel initial   ---------- ");
         repository = new TimetableRepository(application);
         List<List<ArrayList<String>>> data;
         data = loadData(); // Загружаем данные при создании ViewModel
-
-
     }
 
 

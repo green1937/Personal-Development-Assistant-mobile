@@ -1,7 +1,7 @@
 package com.example.assistant.diary;
 
 import static com.example.assistant.MainActivity.getCurrDate;
-import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import android.content.Intent;
 import android.content.res.Resources;

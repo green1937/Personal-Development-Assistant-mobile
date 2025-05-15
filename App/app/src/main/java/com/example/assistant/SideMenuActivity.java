@@ -12,7 +12,7 @@ import com.example.assistant.mediabook.MediabookActivity;
 import com.example.assistant.phrases.DayPhrasesActivity;
 import com.example.assistant.plans.PlansActivity;
 import com.example.assistant.storage.StorageActivity;
-import com.example.assistant.timetable.TimetableActivity;
+import com.example.assistant.views.TimetableActivity;
 import com.example.assistant.wheel.CtgForWheelActivity;
 import com.example.assistant.wheel.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

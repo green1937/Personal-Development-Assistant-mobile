@@ -1,7 +1,6 @@
 package com.example.assistant.tasks;
 
 import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
-import static com.example.assistant.plans.PlansActivity.checkDateFormat;
 import static com.example.assistant.tasks.NewTaskActivity.checkDateTimeFormat;
 import static com.example.assistant.tasks.NewTaskActivity.getDaysForRepeat;
 import static com.example.assistant.tasks.NewTaskActivity.getIdObj;
@@ -9,9 +8,8 @@ import static com.example.assistant.tasks.NewTaskActivity.isDateFromAfterDateTo;
 import static com.example.assistant.tasks.NewTaskActivity.isInvalidInput;
 import static com.example.assistant.tasks.NewTaskActivity.isTimeFromAfterTimeTo;
 import static com.example.assistant.tasks.NewTaskActivity.isValidScore;
-import static com.example.assistant.timetable.NewEventActivity.checkDaysWeek;
-import static com.example.assistant.timetable.NewEventActivity.colorWeeksBtn;
-import static com.example.assistant.timetable.TimetableActivity.getJsonFromUrl;
+import static com.example.assistant.tasks.NewTaskActivity.colorWeeksBtn;
+import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
 import static java.lang.Integer.parseInt;
 
