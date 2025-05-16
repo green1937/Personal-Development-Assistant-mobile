@@ -39,12 +39,8 @@ public class NewEventActivity extends AppCompatActivity {
     SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
     Calendar dateAndTime = Calendar.getInstance();
     Calendar dateAndTimeFrom = Calendar.getInstance();
-    EditText nameNewSubj, placeNewSubj;
-
     String itemFormat, itemRepeat;
-
     int[] flagWeek;
-
     String[] format = {"Онлайн", "Офлайн"};
     String[] repeat = {"Каждую неделю", "Четную неделю", "Нечетную неделю"};
 

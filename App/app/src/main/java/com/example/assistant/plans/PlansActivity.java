@@ -1,6 +1,6 @@
 package com.example.assistant.plans;
 
-import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
+import static com.example.assistant.views.NewPlanActivity.setInitialDate;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 
@@ -25,6 +25,7 @@ import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
+import com.example.assistant.views.NewPlanActivity;
 import com.example.assistant.wheel.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

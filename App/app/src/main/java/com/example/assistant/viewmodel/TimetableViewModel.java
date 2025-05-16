@@ -22,7 +22,7 @@ public class TimetableViewModel extends ViewModel {
     public TimetableViewModel(Application application) throws InterruptedException {
         repository = new TimetableRepository(application);
         List<List<ArrayList<String>>> data;
-        data = loadData(); // Загружаем данные при создании ViewModel
+        loadData(); // Загружаем данные при создании ViewModel
     }
 
 
@@ -46,7 +46,8 @@ public class TimetableViewModel extends ViewModel {
     }
 
     // Загрузка расписания за две недели
-    private List<List<ArrayList<String>>> loadData() throws InterruptedException {
+    private void loadData() throws InterruptedException {
+
         List<List<ArrayList<String>>> events = new ArrayList<>();
         repository.getTimetableData(new Callback() {
             @Override
@@ -59,10 +60,11 @@ public class TimetableViewModel extends ViewModel {
                 // Обработка ошибок
             }
         });
-        Thread.sleep(1500);
+
+        Thread.sleep(2000);
         allEventsInTwoWeek.setValue(events); //Расписание на ДВЕ недели
         allEventsInWeek.setValue(allEventsInTwoWeek.getValue().get(currentWeekType.getValue()));
-        return events;
+        //return events;
 
     }
 }

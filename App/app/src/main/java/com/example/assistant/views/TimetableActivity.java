@@ -49,11 +49,11 @@ public class TimetableActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
 
-        try {
+        /*try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         viewModel.getAllEventsInWeek().observe(this, new Observer<List<ArrayList<String>>>() {
             @Override

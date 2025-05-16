@@ -1,4 +1,4 @@
-package com.example.assistant.plans;
+package com.example.assistant.views;
 
 import static com.example.assistant.plans.PlansActivity.checkDateFormat;
 import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
@@ -18,11 +18,20 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assistant.R;
+import com.example.assistant.databinding.ActivityEditPlanBinding;
+import com.example.assistant.databinding.ActivityNewPlanBinding;
+import com.example.assistant.model.Plan;
+import com.example.assistant.plans.PlanCtgAdapter;
+import com.example.assistant.plans.PlansActivity;
 import com.example.assistant.tasks.TaskAdapter;
+import com.example.assistant.viewmodel.EditPlanViewModel;
+import com.example.assistant.viewmodel.NewPlanViewModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -56,8 +65,77 @@ public class EditPlanActivity extends AppCompatActivity {
     Calendar dateFromCld = Calendar.getInstance();
 
 
+
+
+    private ActivityEditPlanBinding binding;
+    EditPlanViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getIntent().getExtras();
+        idPlan = (int) bundle.getSerializable("id");
+        System.out.println("----- edit plan's id  = " + idPlan);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_plan);
+        viewModel = new ViewModelProvider(this).get(EditPlanViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.executePendingBindings();
+
+        Resources res = getResources();
+        viewModel.setUrl(res.getString(R.string.urlTuna) + "plans");
+        viewModel.setIdEditPlan(idPlan);
+
+        binding.backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this, PlansActivity.class));
+        });
+
+        //Грузим данные выбранного плана
+        viewModel.loadPlanData();
+
+
+        viewModel.getResult().observe(this, success -> {
+            if (success!=null) {
+                Toast.makeText(this, "Данные успешно получены", Toast.LENGTH_SHORT).show();
+                //Вывод данных в поля
+                viewModel.setPlan();
+                binding.planName.setText(viewModel.getPlanName());
+                binding.decrPlanEditText.setText(viewModel.getPlanDetails());
+                binding.dateFromEditText.setText(viewModel.getStartDate());
+                binding.dateToEditText.setText(viewModel.getStopDate());
+                binding.scoreEditText.setText(viewModel.getScore());
+
+                //categoriesRecyclerView
+                if(viewModel.getCategories() != null) {
+                    LinearLayoutManager linearLayoutManagerCtg = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    binding.ctgInPlanRV.setLayoutManager(linearLayoutManagerCtg);
+                    PlanCtgAdapter categoriesAdapter = new PlanCtgAdapter(EditPlanActivity.this, viewModel.getCategories());
+                    binding.ctgInPlanRV.setAdapter(categoriesAdapter);
+                }
+                //tasksRecyclerView
+                if(viewModel.getTasks() != null) {
+                    LinearLayoutManager linearLayoutManagerTask = new LinearLayoutManager(getApplicationContext());
+                    binding.allTaskInPlanRV.setLayoutManager(linearLayoutManagerTask);
+                    TaskAdapter tasksAdapter = new TaskAdapter(EditPlanActivity.this, viewModel.getTasks(), "com.example.assistant.plans.PlansActivity");
+                    binding.allTaskInPlanRV.setAdapter(tasksAdapter);
+                }
+            } else {
+                Toast.makeText(this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getSaveResult().observe(this, success -> {
+            if (success) {
+                Toast.makeText(this, "Данные успешно сохранены", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, PlansActivity.class));
+            } else {
+                Toast.makeText(this, "Ошибка сохранения данных", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+        /*
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_plan);
 
@@ -82,6 +160,7 @@ public class EditPlanActivity extends AppCompatActivity {
         loadPlanData();
 
         saveEditPlan();
+         */
 
 
     }

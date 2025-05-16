@@ -24,7 +24,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".plans.EditPlanActivity"
+            android:name=".views.EditPlanActivity"
             android:exported="false"/>
 
         <activity
@@ -60,7 +60,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".plans.NewPlanActivity"
+            android:name=".views.NewPlanActivity"
             android:exported="false"/>
 
         <activity

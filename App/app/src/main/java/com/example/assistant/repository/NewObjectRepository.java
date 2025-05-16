@@ -10,19 +10,19 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class EventRepository {
+public class NewObjectRepository {
 
-    public LiveData<Boolean> sendEvents(List<String> jsonData, String urlEvent) {
+    public LiveData<Boolean> sendDataObj(List<String> jsonData, String urlString, String requestMethod) {
         final MutableLiveData<Boolean> result = new MutableLiveData<>();
 
         new Thread(() -> {
             for (String json : jsonData) {
                 HttpURLConnection connection = null;
                 try {
-                    URL url = new URL(urlEvent);
+                    URL url = new URL(urlString);
                     connection = (HttpURLConnection) url.openConnection();
 
-                    connection.setRequestMethod("POST");
+                    connection.setRequestMethod(requestMethod);
                     connection.setDoOutput(true);
                     connection.setRequestProperty("Content-Type", "application/json");
                     connection.setRequestProperty("tuna-skip-browser-warning", "true");

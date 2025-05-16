@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.assistant.model.Event;
-import com.example.assistant.repository.EventRepository;
+import com.example.assistant.repository.NewObjectRepository;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -25,7 +25,7 @@ public class EventViewModel extends ViewModel {
     private MutableLiveData<String> repeatItem = new MutableLiveData<>();
     private MutableLiveData<String> url = new MutableLiveData<>();
 
-    private EventRepository repository = new EventRepository();
+    private NewObjectRepository repository = new NewObjectRepository();
     private MutableLiveData<Boolean> saveResult = new MutableLiveData<>();
 
 
@@ -117,7 +117,7 @@ public class EventViewModel extends ViewModel {
             }
         }
 
-        repository.sendEvents(allJsonData, url.getValue()).observeForever(result -> {
+        repository.sendDataObj(allJsonData, url.getValue(), "POST").observeForever(result -> {
             saveResult.setValue(result);
         });
 

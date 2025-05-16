@@ -1,4 +1,4 @@
-package com.example.assistant.plans;
+package com.example.assistant.views;
 
 import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
 import static com.example.assistant.plans.PlansActivity.checkDateFormat;
@@ -16,8 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assistant.R;
+import com.example.assistant.databinding.ActivityNewEventBinding;
+import com.example.assistant.databinding.ActivityNewPlanBinding;
+import com.example.assistant.model.NewPlan;
+import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.viewmodel.NewPlanViewModel;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -45,30 +52,91 @@ public class NewPlanActivity extends AppCompatActivity {
     ImageButton saveTaskBtn, backBtn;
 
 
-
+    private ActivityNewPlanBinding binding;
+    NewPlanViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_plan);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_plan);
+        viewModel = new ViewModelProvider(this).get(NewPlanViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.executePendingBindings();
 
         Resources res = getResources();
-        urlPlan = res.getString(R.string.urlTuna) + "plans";
+        viewModel.setUrl(res.getString(R.string.urlTuna) + "plans");
 
-        namePlan = findViewById(R.id.planName);                 // название плана
-        detailsPlan = findViewById(R.id.decrPlanEditText);      // описание плана
-        dateFrom = findViewById(R.id.datePlanFrom);             // дата от
-        dateTo = findViewById(R.id.datePlanTo);                 // дата до
+        binding.backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this, PlansActivity.class));
+        });
 
-        calendarBtn = findViewById(R.id.calendarBtn);
+        viewModel.getSaveResult().observe(this, success -> {
+            if (success) {
+                Toast.makeText(this, "Данные успешно сохранены", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, PlansActivity.class));
+            } else {
+                Toast.makeText(this, "Ошибка сохранения данных", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        saveTaskBtn = findViewById(R.id.tickBtn);
-        backBtn = findViewById(R.id.backBtn);
+
+        //backToOption();         // Возвращение назад
+        //savePlan();             // Сохранение задачи
+
+    }
+
+    /*
+        Вывод календарей и часов для дат и времени при создании задачи
+     */
+
+    public void setDateFrom(View v) {
+        new DatePickerDialog(NewPlanActivity.this, d1, dateFromCld.get(Calendar.YEAR),
+                dateFromCld.get(Calendar.MONTH), dateFromCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d1=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateFromCld.set(Calendar.YEAR, year);
+            dateFromCld.set(Calendar.MONTH, monthOfYear);
+            dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            viewModel.setInitialDate(year, monthOfYear+1, dayOfMonth, binding.datePlanFrom);
+        }
+    };
+
+    public void setDateTo(View v) {
+        new DatePickerDialog(NewPlanActivity.this, d2, dateToCld.get(Calendar.YEAR),
+                dateToCld.get(Calendar.MONTH), dateToCld.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    DatePickerDialog.OnDateSetListener d2=new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateToCld.set(Calendar.YEAR, year);
+            dateToCld.set(Calendar.MONTH, monthOfYear);
+            dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            viewModel.setInitialDate(year, monthOfYear+1, dayOfMonth, binding.datePlanTo);
+
+        }
+    };
 
 
+    public static void setInitialDate(int year, int monthOfYear, int dayOfMonth, EditText editDate) {
+        String dateForEndStr;
+        if (dayOfMonth < 10 && monthOfYear < 10) {
+            dateForEndStr = "0" + dayOfMonth + "." + "0" + monthOfYear + "." + year;
+        }
+        else {
+            if (dayOfMonth > 9 && monthOfYear < 10) {
+                dateForEndStr = dayOfMonth + "." + "0" + monthOfYear + "." + year;
+            } else if (dayOfMonth < 10 && monthOfYear > 9) {
+                dateForEndStr = "0" + dayOfMonth + "." + monthOfYear + "." + year;
+            } else {
+                dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+            }
+        }
 
-        backToOption();         // Возвращение назад
-        savePlan();             // Сохранение задачи
-
+        editDate.setText(dateForEndStr);
     }
 
 
@@ -211,57 +279,6 @@ public class NewPlanActivity extends AppCompatActivity {
     }
 
 
-    /*
-        Вывод календарей и часов для дат и времени при создании задачи
-     */
 
-    public void setDateFrom(View v) {
-        new DatePickerDialog(NewPlanActivity.this, d1, dateFromCld.get(Calendar.YEAR),
-                dateFromCld.get(Calendar.MONTH), dateFromCld.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-    DatePickerDialog.OnDateSetListener d1=new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateFromCld.set(Calendar.YEAR, year);
-            dateFromCld.set(Calendar.MONTH, monthOfYear);
-            dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            setInitialDate(year, monthOfYear+1, dayOfMonth, dateFrom);
-        }
-    };
-
-
-    public void setDateTo(View v) {
-        new DatePickerDialog(NewPlanActivity.this, d2, dateToCld.get(Calendar.YEAR),
-                dateToCld.get(Calendar.MONTH), dateToCld.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
-    DatePickerDialog.OnDateSetListener d2=new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateToCld.set(Calendar.YEAR, year);
-            dateToCld.set(Calendar.MONTH, monthOfYear);
-            dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            setInitialDate(year, monthOfYear+1, dayOfMonth, dateTo);
-        }
-    };
-
-    public static void setInitialDate(int year, int monthOfYear, int dayOfMonth, EditText editDate) {
-        String dateForEndStr;
-        if (dayOfMonth < 10 && monthOfYear < 10) {
-            dateForEndStr = "0" + dayOfMonth + "." + "0" + monthOfYear + "." + year;
-        }
-        else {
-            if (dayOfMonth > 9 && monthOfYear < 10) {
-                dateForEndStr = dayOfMonth + "." + "0" + monthOfYear + "." + year;
-            } else if (dayOfMonth < 10 && monthOfYear > 9) {
-                dateForEndStr = "0" + dayOfMonth + "." + monthOfYear + "." + year;
-            } else {
-                dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
-            }
-        }
-
-        editDate.setText(dateForEndStr);
-    }
 
 }

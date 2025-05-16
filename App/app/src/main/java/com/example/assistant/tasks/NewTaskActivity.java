@@ -1,6 +1,6 @@
 package com.example.assistant.tasks;
 
-import static com.example.assistant.plans.NewPlanActivity.setInitialDate;
+import static com.example.assistant.views.NewPlanActivity.setInitialDate;
 import static com.example.assistant.plans.PlansActivity.checkDateFormat;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
