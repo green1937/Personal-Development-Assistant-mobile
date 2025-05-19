@@ -1,4 +1,4 @@
-package com.example.assistant.diary;
+package com.example.assistant.views;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
-import com.example.assistant.views.WheelActivity;
-import com.example.assistant.views.PlansActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;

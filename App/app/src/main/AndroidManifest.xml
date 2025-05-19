@@ -52,11 +52,11 @@
             android:exported="false"/>
 
         <activity
-            android:name=".diary.AllRecordsDiaryActivity"
+            android:name=".views.AllRecordsDiaryActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".diary.DiaryActivity"
+            android:name=".views.DiaryActivity"
             android:exported="false"/>
 
         <activity

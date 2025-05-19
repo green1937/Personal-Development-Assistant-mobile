@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
-import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.views.DiaryActivity;
 import com.example.assistant.views.PlansActivity;
 import com.example.assistant.views.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

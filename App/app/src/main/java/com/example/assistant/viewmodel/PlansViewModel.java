@@ -67,8 +67,6 @@ public class PlansViewModel extends ViewModel {
     public void setPlans() {
         String jsonActive = getResultActive().getValue();
         String jsonArchive = getResultArchive().getValue();
-        System.out.println("1 ----- " + jsonActive);
-        System.out.println("2 ----- " + jsonArchive);
 
         List<ArrayList<String>> allPlans = new ArrayList<>();
 

@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.views.DiaryActivity;
 import com.example.assistant.mediabook.MediabookActivity;
 import com.example.assistant.phrases.DayPhrasesActivity;
 import com.example.assistant.views.PlansActivity;

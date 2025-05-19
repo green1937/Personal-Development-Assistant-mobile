@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.assistant.diary.DiaryActivity;
+import com.example.assistant.views.DiaryActivity;
 import com.example.assistant.views.PlansActivity;
 import com.example.assistant.tasks.NewTaskActivity;
 import com.example.assistant.tasks.TaskAdapter;

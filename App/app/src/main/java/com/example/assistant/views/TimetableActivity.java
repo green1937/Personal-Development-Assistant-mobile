@@ -14,7 +14,6 @@ import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
 import com.example.assistant.databinding.ActivityTimetableBinding;
-import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.viewmodel.TimetableAdapter;
 import com.example.assistant.viewmodel.TimetableViewModel;
 import com.example.assistant.viewmodel.TimetableViewModelFactory;

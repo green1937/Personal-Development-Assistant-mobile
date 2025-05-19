@@ -1,4 +1,4 @@
-package com.example.assistant.diary;
+package com.example.assistant.views;
 
 import android.content.Context;
 import android.view.LayoutInflater;

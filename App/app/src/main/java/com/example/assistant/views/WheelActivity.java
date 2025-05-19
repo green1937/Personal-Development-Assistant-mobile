@@ -19,7 +19,6 @@ import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
 import com.example.assistant.databinding.ActivityWheelBinding;
-import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.viewmodel.WheelViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;

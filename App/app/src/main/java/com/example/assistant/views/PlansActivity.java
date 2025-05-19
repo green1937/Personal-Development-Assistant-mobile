@@ -23,11 +23,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.assistant.databinding.ActivityPlansBinding;
-import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
+import com.example.assistant.databinding.ActivityPlansBinding;
 import com.example.assistant.viewmodel.PlansViewModel;
 
 import org.json.JSONArray;
