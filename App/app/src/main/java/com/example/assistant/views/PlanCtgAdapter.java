@@ -1,4 +1,4 @@
-package com.example.assistant.plans;
+package com.example.assistant.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

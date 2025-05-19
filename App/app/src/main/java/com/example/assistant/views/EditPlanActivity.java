@@ -1,6 +1,6 @@
 package com.example.assistant.views;
 
-import static com.example.assistant.plans.PlansActivity.checkDateFormat;
+import static com.example.assistant.views.PlansActivity.checkDateFormat;
 import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
@@ -25,13 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityEditPlanBinding;
-import com.example.assistant.databinding.ActivityNewPlanBinding;
 import com.example.assistant.model.Plan;
-import com.example.assistant.plans.PlanCtgAdapter;
-import com.example.assistant.plans.PlansActivity;
 import com.example.assistant.tasks.TaskAdapter;
 import com.example.assistant.viewmodel.EditPlanViewModel;
-import com.example.assistant.viewmodel.NewPlanViewModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -114,7 +110,7 @@ public class EditPlanActivity extends AppCompatActivity {
                 if(viewModel.getTasks() != null) {
                     LinearLayoutManager linearLayoutManagerTask = new LinearLayoutManager(getApplicationContext());
                     binding.allTaskInPlanRV.setLayoutManager(linearLayoutManagerTask);
-                    TaskAdapter tasksAdapter = new TaskAdapter(EditPlanActivity.this, viewModel.getTasks(), "com.example.assistant.plans.PlansActivity");
+                    TaskAdapter tasksAdapter = new TaskAdapter(EditPlanActivity.this, viewModel.getTasks(), "com.example.assistant.views.PlansActivity");
                     binding.allTaskInPlanRV.setAdapter(tasksAdapter);
                 }
             } else {
@@ -130,6 +126,7 @@ public class EditPlanActivity extends AppCompatActivity {
                 Toast.makeText(this, "Ошибка сохранения данных", Toast.LENGTH_SHORT).show();
             }
         });
+
 
 
 
@@ -339,7 +336,7 @@ public class EditPlanActivity extends AppCompatActivity {
         tasksRecyclerView = findViewById(R.id.allTaskInPlanRV);
         linearLayoutManagerTask = new LinearLayoutManager(getApplicationContext());
         tasksRecyclerView.setLayoutManager(linearLayoutManagerTask);
-        tasksAdapter = new TaskAdapter(EditPlanActivity.this, tasks, "com.example.assistant.plans.PlansActivity");
+        tasksAdapter = new TaskAdapter(EditPlanActivity.this, tasks, "com.example.assistant.views.PlansActivity");
         tasksRecyclerView.setAdapter(tasksAdapter);
 
 

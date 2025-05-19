@@ -1,7 +1,7 @@
 package com.example.assistant.views;
 
 import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
-import static com.example.assistant.plans.PlansActivity.checkDateFormat;
+import static com.example.assistant.views.PlansActivity.checkDateFormat;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -20,10 +20,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assistant.R;
-import com.example.assistant.databinding.ActivityNewEventBinding;
 import com.example.assistant.databinding.ActivityNewPlanBinding;
 import com.example.assistant.model.NewPlan;
-import com.example.assistant.plans.PlansActivity;
 import com.example.assistant.viewmodel.NewPlanViewModel;
 import com.google.gson.Gson;
 

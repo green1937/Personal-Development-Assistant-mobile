@@ -15,11 +15,9 @@ import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
 import com.example.assistant.databinding.ActivityTimetableBinding;
 import com.example.assistant.diary.DiaryActivity;
-import com.example.assistant.plans.PlansActivity;
 import com.example.assistant.viewmodel.TimetableAdapter;
 import com.example.assistant.viewmodel.TimetableViewModel;
 import com.example.assistant.viewmodel.TimetableViewModelFactory;
-import com.example.assistant.wheel.WheelActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;

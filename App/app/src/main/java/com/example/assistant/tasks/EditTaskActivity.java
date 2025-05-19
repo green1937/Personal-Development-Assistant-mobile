@@ -39,7 +39,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
-import com.example.assistant.wheel.Category;
+import com.example.assistant.model.Category;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;

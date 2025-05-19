@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.assistant.viewmodel.WheelViewModel" />
+    </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".wheel.WheelActivity"
+    tools:context=".views.WheelActivity"
     android:scrollbars="vertical">
 
     <TextView
@@ -64,7 +70,7 @@
 
     </LinearLayout>
 
-    <com.example.assistant.wheel.WheelView
+    <com.example.assistant.views.WheelView
         android:id="@+id/wheelView"
         android:layout_width="match_parent"
         android:layout_height="400dp"
@@ -89,3 +95,4 @@
             android:layout_alignParentBottom="true"
             app:menu="@menu/bottom_menu" />
     </RelativeLayout>
+</layout>

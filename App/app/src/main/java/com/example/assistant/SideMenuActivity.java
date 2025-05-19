@@ -10,11 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.mediabook.MediabookActivity;
 import com.example.assistant.phrases.DayPhrasesActivity;
-import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.views.PlansActivity;
 import com.example.assistant.storage.StorageActivity;
 import com.example.assistant.views.TimetableActivity;
 import com.example.assistant.wheel.CtgForWheelActivity;
-import com.example.assistant.wheel.WheelActivity;
+import com.example.assistant.views.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SideMenuActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.example.assistant.plans;
+package com.example.assistant.views;
 
 import static com.example.assistant.views.NewPlanActivity.setInitialDate;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
@@ -18,16 +18,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.assistant.databinding.ActivityPlansBinding;
 import com.example.assistant.diary.DiaryActivity;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
-import com.example.assistant.views.NewPlanActivity;
-import com.example.assistant.wheel.WheelActivity;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.assistant.viewmodel.PlansViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,8 +56,50 @@ public class PlansActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     PlanAdapter planAdapter;
 
+
+
+
+    private ActivityPlansBinding binding;
+    PlansViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_plans);
+        viewModel = new ViewModelProvider(this).get(PlansViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.executePendingBindings();
+
+        Resources res = getResources();
+        viewModel.setUrl(res.getString(R.string.urlTuna) + "plans");
+
+        viewModel.loadPlanData();
+
+
+        viewModel.getResultActive().observe(this, success -> {
+            if (success!=null) {
+                viewModel.getResultArchive().observe(this, success2 -> {
+                    if (success2!=null) {
+                        viewModel.setPlans();
+
+                        //recyclerview
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                        binding.allPlansRecyclerView.setLayoutManager(linearLayoutManager);
+                        PlanAdapter planAdapter = new PlanAdapter(PlansActivity.this, viewModel.getPlans());
+                        binding.allPlansRecyclerView.setAdapter(planAdapter);
+
+                    } else {
+                        Toast.makeText(this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        bottNavItem();
+        binding.addPlansBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this, NewPlanActivity.class));
+        });
+
+        /*
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plans);
 
@@ -74,6 +117,7 @@ public class PlansActivity extends AppCompatActivity {
 
         showHiddenFilterSett();  // Показ настроек фильтрации планов
         filterAllPlans();
+         */
     }
 
     private void loadJsonFromUrl() {
@@ -138,10 +182,9 @@ public class PlansActivity extends AppCompatActivity {
         колесо баланса, дневник, боковое/главное меню)
     */
     protected void bottNavItem() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_plans);
+        binding.bottomNavigationView.setSelectedItemId(R.id.bottom_plans);
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             // Главная
             if (item.getItemId() == R.id.bottom_home) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));

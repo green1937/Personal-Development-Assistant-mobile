@@ -1,7 +1,7 @@
 package com.example.assistant.tasks;
 
 import static com.example.assistant.views.NewPlanActivity.setInitialDate;
-import static com.example.assistant.plans.PlansActivity.checkDateFormat;
+import static com.example.assistant.views.PlansActivity.checkDateFormat;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import static java.lang.Integer.parseInt;
@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.assistant.wheel.Category;
+import com.example.assistant.model.Category;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.google.gson.Gson;

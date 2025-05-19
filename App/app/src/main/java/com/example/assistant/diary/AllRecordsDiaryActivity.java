@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
-import com.example.assistant.wheel.WheelActivity;
-import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.views.WheelActivity;
+import com.example.assistant.views.PlansActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;

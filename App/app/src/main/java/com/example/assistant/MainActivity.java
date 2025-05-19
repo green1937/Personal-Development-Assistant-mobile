@@ -26,11 +26,11 @@ import android.widget.Toast;
 
 
 import com.example.assistant.diary.DiaryActivity;
-import com.example.assistant.plans.PlansActivity;
+import com.example.assistant.views.PlansActivity;
 import com.example.assistant.tasks.NewTaskActivity;
 import com.example.assistant.tasks.TaskAdapter;
 import com.example.assistant.viewmodel.TimetableAdapter;
-import com.example.assistant.wheel.WheelActivity;
+import com.example.assistant.views.WheelActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;

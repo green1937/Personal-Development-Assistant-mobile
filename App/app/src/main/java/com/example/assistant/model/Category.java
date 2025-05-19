@@ -1,4 +1,4 @@
-package com.example.assistant.wheel;
+package com.example.assistant.model;
 
 import com.google.gson.annotations.SerializedName;
 

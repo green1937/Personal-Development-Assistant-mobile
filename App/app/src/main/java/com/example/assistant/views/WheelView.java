@@ -1,4 +1,4 @@
-package com.example.assistant.wheel;
+package com.example.assistant.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,5 +144,6 @@ public class WheelView extends View {
         float lastY = centerY + (float) Math.sin(lastAngleRad) * radius;
         canvas.drawLine(centerX, centerY, lastX, lastY, linePaint);
     }
+
 
 }

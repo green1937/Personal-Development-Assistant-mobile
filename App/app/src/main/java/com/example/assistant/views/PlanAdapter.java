@@ -2,7 +2,7 @@
     Адаптер для работы с планами
  */
 
-package com.example.assistant.plans;
+package com.example.assistant.views;
 import static com.example.assistant.viewmodel.TimetableAdapter.deleteFromUrl;
 import static com.example.assistant.tasks.TaskAdapter.sendUpdateObjectStatusToServer;
 
@@ -27,7 +27,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.assistant.R;
-import com.example.assistant.views.EditPlanActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
