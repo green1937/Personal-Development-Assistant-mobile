@@ -1,12 +1,7 @@
 package com.example.assistant.viewmodel;
 
-import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
-
 import static java.lang.Integer.parseInt;
-
-import android.util.Log;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -25,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -163,13 +157,15 @@ public class EditPlanViewModel extends ViewModel {
     public void saveEditPlan() {
         ArrayList<String> allJsonData = new ArrayList<>();
         Plan currentPlan = plan.getValue();
-        plan.setValue(new Plan(id.getValue(), 1, currentPlan.getName(), currentPlan.getDetails(), changeDateFormat(currentPlan.getStartDate(), "to server"), changeDateFormat(currentPlan.getStopDate(), "to server"), currentPlan.getStatus()));
+        plan.setValue(new Plan(id.getValue(), 1, currentPlan.getName(),
+                currentPlan.getDetails(),
+                changeDateFormat(currentPlan.getStartDate(), "to server"),
+                changeDateFormat(currentPlan.getStopDate(), "to server"),
+                currentPlan.getStatus()));
         allJsonData.add(new Gson().toJson(plan.getValue()));
-        System.out.println("in viewModel data EDIT PLAN " + allJsonData);
 
-        repository.sendDataObj(allJsonData, url.getValue(), "PUT").observeForever(result -> {
-            saveResult.setValue(result);
-        });
+        repository.sendDataObj(allJsonData, url.getValue(), "PUT").
+                observeForever(result -> saveResult.setValue(result));
     }
 
     public String changeDateFormat(String dateStr, String param) {
@@ -261,9 +257,6 @@ public class EditPlanViewModel extends ViewModel {
             setStopDate(jsonObject.getString("stop_date"));
             score.setValue(jsonObject.getString("done_points") + " / " + jsonObject.getString("goal_points"));
 
-
-
-
             //categories
             List<ArrayList<String>> array = new ArrayList<>();
             JSONArray jsonArrayCtg = jsonObject.getJSONArray("categories");
@@ -292,19 +285,11 @@ public class EditPlanViewModel extends ViewModel {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
-
     }
-
-
 
     public LiveData<String> getResult() {
         return getResult;
     }
+
 
 }

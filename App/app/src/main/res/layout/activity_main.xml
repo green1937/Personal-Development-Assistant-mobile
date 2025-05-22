@@ -122,7 +122,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="60dp"
-                android:background="@drawable/image_btn_style"
                 android:layout_below="@+id/TasksText"
                 android:layout_marginHorizontal="20dp"/>
 

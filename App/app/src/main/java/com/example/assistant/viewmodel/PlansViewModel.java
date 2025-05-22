@@ -76,12 +76,10 @@ public class PlansViewModel extends ViewModel {
 
         plans.setValue(allPlans);
 
-
-
     }
 
 
-    protected void getPlansFromJSON(String json, List<ArrayList<String>> allPlans) {
+    public static void getPlansFromJSON(String json, List<ArrayList<String>> allPlans) {
         try {
             JSONArray jsonArray = new JSONArray(json);
             for (int i = 0; i < jsonArray.length(); i++) {

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.assistant.viewmodel.StorageViewModel" />
+    </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".storage.StorageActivity"
+    tools:context=".views.StorageActivity"
     android:scrollbars="vertical">
 
     <ImageButton
@@ -80,7 +86,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/noteDiaryLL"
+            android:id="@+id/forAllLL"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -90,54 +96,87 @@
                 android:id="@+id/findTextDiaryNote"
                 android:hint="Текст"
                 android:textStyle="italic"
-                android:paddingLeft="15dp"/>
+                android:paddingLeft="15dp"
+                android:text="@={viewModel.storage.text}"/>
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/findDateDiaryNote"
-                android:textStyle="italic"
-                android:inputType="date"
-                android:hint="От (дата)"
-                android:onClick="setDate"/>
+                android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Даты: "
+                    android:textSize="18dp"
+                    android:textColor="@color/black"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/startDate"
+                    android:layout_weight="1"
+                    android:hint="От"
+                    android:textAlignment="center"
+                    android:onClick="setDateFrom"
+                    android:text="@={viewModel.storage.startDate}"
+                    />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/stopDate"
+                    android:layout_weight="1"
+                    android:hint="До"
+                    android:textAlignment="center"
+                    android:onClick="setDateTo"
+                    android:text="@={viewModel.storage.stopDate}"
+                    />
+            </LinearLayout>
         </LinearLayout>
-
 
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/taskAndPlanLL"
+            android:id="@+id/planAndTaskLL"
             android:visibility="gone"
             android:orientation="vertical">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/findTextTask"
-                android:hint="Текст"
-                android:textStyle="italic"
-                android:paddingLeft="15dp"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <CheckBox
-                    android:id="@+id/checkBoxDone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/doneText"
-                    android:textSize="20dp"
-                    android:layout_gravity="center"
+                    android:text="Завершено: "
+                    android:textSize="18dp"
                     android:textColor="@color/black"
-                    android:text="Завершено" />
+                    />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/doneStartDate"
+                    android:layout_weight="1"
+                    android:hint="От"
+                    android:textAlignment="center"
+                    android:onClick="setDoneDateFrom"
+                    android:text="@={viewModel.storage.doneStartDate}"
+                    />
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/doneStopDate"
+                    android:layout_weight="1"
+                    android:hint="До"
+                    android:textAlignment="center"
+                    android:onClick="setDoneDateTo"
+                    android:text="@={viewModel.storage.doneStopDate}"
+                    />
+
             </LinearLayout>
 
             <LinearLayout
@@ -145,45 +184,24 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <EditText
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/findDateFrom"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:textStyle="italic"
-                    android:inputType="date"
-                    android:hint="От даты"
-                    android:textAlignment="center"
-                    android:onClick="setDateFrom"/>
-                <EditText
-                    android:layout_width="wrap_content"
+                    android:text="Завершено: "
+                    android:textSize="18dp"
+                    android:textColor="@color/black"
+                    />
+                <Spinner
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/findDateTo"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:textStyle="italic"
-                    android:inputType="date"
-                    android:hint="До даты"
-                    android:textAlignment="center"
-                    android:layout_marginLeft="10dp"
-                    android:onClick="setDateTo"/>
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/findDateDone"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:textStyle="italic"
-                    android:inputType="date"
-                    android:hint="Завершено"
-                    android:textAlignment="center"
-                    android:layout_marginLeft="10dp"
-                    android:onClick="setDate"/>
-
+                    android:id="@+id/spinnerStatus"
+                    />
             </LinearLayout>
 
-            <LinearLayout
+    </LinearLayout>
+
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/taskLL"
@@ -195,48 +213,38 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/findTimeFrom"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:textStyle="italic"
-                        android:inputType="time"
-                        android:hint="От времени"
-                        android:textAlignment="center"
-                        android:onClick="setTimeFrom"/>
-                    <EditText
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/findTimeTo"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:textStyle="italic"
-                        android:inputType="time"
-                        android:hint="До времени"
-                        android:textAlignment="center"
-                        android:layout_marginLeft="10dp"
-                        android:onClick="setTimeTo"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <CheckBox
-                        android:id="@+id/checkBoxRepeat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/repeatText"
-                        android:textSize="20dp"
-                        android:layout_gravity="center"
+                        android:text="Повторяется: "
+                        android:textSize="18dp"
                         android:textColor="@color/black"
-                        android:text="Задача повторяется" />
+                        />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerIsRepeated"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginVertical="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Принадлежит плану: "
+                        android:textSize="18dp"
+                        android:textColor="@color/black"
+                        />
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinnerBelongsToPlan"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -246,78 +254,46 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Баллы колеса баланса"
-                        android:textSize="20dp"
-                        android:textColor="@color/black"/>
+                        android:text="Оценка: "
+                        android:textSize="18dp"
+                        android:textColor="@color/black"
+                        />
                     <EditText
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/wheelScore"
-                        android:hint="Баллы"
-                        android:paddingLeft="15dp"
-                        android:textStyle="italic"
-                        android:inputType="number"/>
+                        android:id="@+id/minPoints"
+                        android:layout_weight="1"
+                        android:hint="Минимум"
+                        android:textAlignment="center"
+                        android:inputType="number"
+                        />
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/maxPoints"
+                        android:layout_weight="1"
+                        android:hint="Максимум"
+                        android:textAlignment="center"
+                        android:inputType="number"
+                        />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Категории:"
+                    android:textSize="18dp"
+                    android:textColor="@color/black"
+                    />
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/wheelCtgRV"
+                    android:id="@+id/categoriesRV"
                     android:paddingHorizontal="15dp"/>
 
-
-
-
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/planLL"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Всего баллов"
-                        android:textSize="20dp"
-                        android:textColor="@color/black"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/allScore"
-                        android:hint="Баллы"
-                        android:paddingLeft="15dp"
-                        android:textStyle="italic"
-                        android:inputType="number"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Завершенных баллов"
-                        android:textSize="20dp"
-                        android:textColor="@color/black"/>
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/doneScore"
-                        android:hint="Баллы"
-                        android:paddingLeft="15dp"
-                        android:textStyle="italic"
-                        android:inputType="number"/>
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
 
 
@@ -326,7 +302,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recycler_view_timetable_monday"
+        android:id="@+id/storageRV"
         android:layout_below="@+id/groupLL"
         android:layout_marginBottom="60dp"
         android:layout_marginTop="10dp"
@@ -344,3 +320,4 @@
         app:menu="@menu/bottom_menu"/>
 
 </RelativeLayout>
+</layout>

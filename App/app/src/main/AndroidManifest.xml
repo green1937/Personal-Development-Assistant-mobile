@@ -16,11 +16,11 @@
         <activity android:name=".phrases.DayPhrasesActivity"
             android:exported="false"/>
 
-        <activity android:name=".mediabook.MediabookActivity"
+        <activity android:name=".views.BookmarkActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".storage.StorageActivity"
+            android:name=".views.StorageActivity"
             android:exported="false"/>
 
         <activity
@@ -68,7 +68,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".tasks.NewTaskActivity"
+            android:name=".views.NewTaskActivity"
             android:exported="false"/>
 
         <activity

@@ -6,8 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:orientation="horizontal">
+        android:background="@drawable/image_btn_style"
+        android:orientation="horizontal"
+        android:layout_marginVertical="3dp">
         <CheckBox
             android:id="@+id/checkBoxTask"
             android:layout_width="wrap_content"

@@ -61,7 +61,7 @@ public class WheelActivity extends AppCompatActivity {
                 binding.ctgRV.setAdapter(categoriesAdapter);
 
                 List<WheelView.WheelSector> sectors = new ArrayList<>();
-                System.out.println("uytrewasdfghjkl " + viewModel.getCtg());
+
                 for (int i = 0; i < viewModel.getCtg().size(); i++) {
                     if (viewModel.getCtg().get(i).get(3).equals("1")) {
                         String name = viewModel.getCtg().get(i).get(0);
@@ -86,10 +86,9 @@ public class WheelActivity extends AppCompatActivity {
         колесо баланса, дневник, боковое/главное меню)
     */
     protected void bottNavItem() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_wheel);
+        binding.bottomNavigationView.setSelectedItemId(R.id.bottom_wheel);
 
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             // Главная
             if (item.getItemId() == R.id.bottom_home) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));

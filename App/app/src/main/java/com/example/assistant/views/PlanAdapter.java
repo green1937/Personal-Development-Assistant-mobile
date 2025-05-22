@@ -44,10 +44,12 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
     Context context;
 
     List<ArrayList<String>> planData;
+    String activityName;
 
-    public PlanAdapter(Context context, List<ArrayList<String>> planData) {
+    public PlanAdapter(Context context, List<ArrayList<String>> planData, String activityName) {
         this.context = context;
         this.planData = planData;
+        this.activityName = activityName;
     }
 
 
@@ -129,7 +131,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                             ObjectNode json = mapper.createObjectNode()
                                     .put("op", "replace")
                                     .put("path", "/status")
-                                    .put("value", 1);
+                                    .put("value", flag);
                             array.add(json);
 
                             String jsonString = null;
@@ -140,7 +142,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                             }
                             System.out.println(jsonString); // Выводим сформированный JSON.
 
-                            sendUpdateObjectStatusToServer(context, urlPlanId, jsonString, "com.example.PlanActivity");
+                            sendUpdateObjectStatusToServer(context, urlPlanId, jsonString, activityName);
                         }
                     });
 
@@ -165,7 +167,9 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                                                 String result = deleteFromUrl(urlPlanId);
 
                                                 if (result != null && result.equals("SUCCESS")) {
-                                                    Toast.makeText(context, "План удален", Toast.LENGTH_SHORT).show();
+                                                    //update page
+                                                    Intent intent2 = new Intent(context, Class.forName(activityName));
+                                                    context.startActivity(intent2);
                                                 } else {
                                                     Toast.makeText(context, "Ошибка удаления!", Toast.LENGTH_SHORT).show();
                                                 }

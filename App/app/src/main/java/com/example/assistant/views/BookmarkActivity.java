@@ -1,25 +1,34 @@
-package com.example.assistant.mediabook;
+package com.example.assistant.views;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
-import com.example.assistant.views.DiaryActivity;
-import com.example.assistant.views.PlansActivity;
-import com.example.assistant.views.WheelActivity;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.assistant.databinding.ActivityBookmarkBinding;
+import com.example.assistant.viewmodel.BookmarkViewModel;
 
-public class MediabookActivity extends AppCompatActivity {
 
+public class BookmarkActivity extends AppCompatActivity {
+
+    private ActivityBookmarkBinding binding;
+    BookmarkViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mediabook);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_bookmark);
+        viewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.executePendingBindings();
 
+        Resources res = getResources();
+        //viewModel.setUrl(res.getString(R.string.urlTuna) + "bookmark");
         bottNavItem();
     }
 
@@ -28,9 +37,7 @@ public class MediabookActivity extends AppCompatActivity {
         колесо баланса, дневник, боковое/главное меню)
     */
     protected void bottNavItem() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             // Главная
             if (item.getItemId() == R.id.bottom_home) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));

@@ -63,16 +63,17 @@ public class DiaryActivity extends AppCompatActivity {
                 //Вывод данных в поля
                 viewModel.setDiary();
                 outputTodayRecord();
-                //setTodayDiary();
+
+                binding.allRecordsBtn.setOnClickListener(v -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("allRecords", (Serializable) viewModel.getAllRecords());
+                    Intent intent = new Intent(v.getContext(), AllRecordsDiaryActivity.class);
+                    intent.putExtras(bundle);
+                    v.getContext().startActivity(intent);
+                });
             }
         });
-        binding.allRecordsBtn.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("allRecords", (Serializable) viewModel.getAllRecords());
-            Intent intent = new Intent(v.getContext(), AllRecordsDiaryActivity.class);
-            intent.putExtras(bundle);
-            v.getContext().startActivity(intent);
-        });
+
 
         bottNavItem();
     }

@@ -1,7 +1,6 @@
 package com.example.assistant;
 
 
-import static com.example.assistant.views.NewPlanActivity.setInitialDate;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +26,7 @@ import android.widget.Toast;
 
 import com.example.assistant.views.DiaryActivity;
 import com.example.assistant.views.PlansActivity;
-import com.example.assistant.tasks.NewTaskActivity;
+import com.example.assistant.views.NewTaskActivity;
 import com.example.assistant.tasks.TaskAdapter;
 import com.example.assistant.viewmodel.TimetableAdapter;
 import com.example.assistant.views.WheelActivity;
@@ -441,5 +440,23 @@ public class MainActivity extends AppCompatActivity {
             loadJsonFromUrlHome(formattedDate);
         }
     };
+
+
+    public static void setInitialDate(int year, int monthOfYear, int dayOfMonth, EditText editDate) {
+        String dateForEndStr;
+        if (dayOfMonth < 10 && monthOfYear < 10) {
+            dateForEndStr = "0" + dayOfMonth + "." + "0" + monthOfYear + "." + year;
+        }
+        else {
+            if (dayOfMonth > 9 && monthOfYear < 10) {
+                dateForEndStr = dayOfMonth + "." + "0" + monthOfYear + "." + year;
+            } else if (dayOfMonth < 10 && monthOfYear > 9) {
+                dateForEndStr = "0" + dayOfMonth + "." + monthOfYear + "." + year;
+            } else {
+                dateForEndStr = dayOfMonth + "." + monthOfYear + "." + year;
+            }
+        }
+        editDate.setText(dateForEndStr);
+    }
 
 }

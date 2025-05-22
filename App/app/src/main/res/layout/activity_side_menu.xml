@@ -167,7 +167,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Медиабук"
+                        android:text="Закладки"
                         android:textSize="22dp"
                         android:textColor="@color/black"
                         android:layout_marginHorizontal="10dp"/>

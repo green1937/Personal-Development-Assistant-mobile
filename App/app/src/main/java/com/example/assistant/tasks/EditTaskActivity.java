@@ -1,16 +1,16 @@
 package com.example.assistant.tasks;
 
-import static com.example.assistant.views.NewPlanActivity.setInitialDate;
-import static com.example.assistant.tasks.NewTaskActivity.checkDateTimeFormat;
-import static com.example.assistant.tasks.NewTaskActivity.getDaysForRepeat;
-import static com.example.assistant.tasks.NewTaskActivity.getIdObj;
-import static com.example.assistant.tasks.NewTaskActivity.isDateFromAfterDateTo;
-import static com.example.assistant.tasks.NewTaskActivity.isInvalidInput;
-import static com.example.assistant.tasks.NewTaskActivity.isTimeFromAfterTimeTo;
-import static com.example.assistant.tasks.NewTaskActivity.isValidScore;
-import static com.example.assistant.tasks.NewTaskActivity.colorWeeksBtn;
+import static com.example.assistant.MainActivity.setInitialDate;
+import static com.example.assistant.views.NewTaskActivity.checkDateTimeFormat;
+import static com.example.assistant.views.NewTaskActivity.getDaysForRepeat;
+import static com.example.assistant.views.NewTaskActivity.getIdObj;
+import static com.example.assistant.views.NewTaskActivity.isDateFromAfterDateTo;
+import static com.example.assistant.views.NewTaskActivity.isInvalidInput;
+import static com.example.assistant.views.NewTaskActivity.isTimeFromAfterTimeTo;
+import static com.example.assistant.views.NewTaskActivity.isValidScore;
+import static com.example.assistant.views.NewTaskActivity.colorWeeksBtn;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
-import static com.example.assistant.tasks.NewTaskActivity.changeDateFormat;
+import static com.example.assistant.views.NewTaskActivity.changeDateFormat;
 import static java.lang.Integer.parseInt;
 
 import android.app.DatePickerDialog;
@@ -40,6 +40,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.model.Category;
+import com.example.assistant.model.NewTask;
+import com.example.assistant.model.Repeat;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;

@@ -1,7 +1,6 @@
-package com.example.assistant.tasks;
+package com.example.assistant.views;
 
-import static com.example.assistant.views.NewPlanActivity.setInitialDate;
-import static com.example.assistant.views.PlansActivity.checkDateFormat;
+import static com.example.assistant.MainActivity.setInitialDate;
 import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
 
 import static java.lang.Integer.parseInt;
@@ -28,10 +27,16 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.assistant.databinding.ActivityNewTaskBinding;
 import com.example.assistant.model.Category;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
+import com.example.assistant.model.Repeat;
+import com.example.assistant.model.Task;
+import com.example.assistant.viewmodel.NewTaskViewModel;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -94,10 +99,72 @@ public class NewTaskActivity extends AppCompatActivity {
     LinearLayout linLayoutWeek;
     ArrayList<Integer> daysRepeat = new ArrayList<>();
 
+
+
+
+
+    private ActivityNewTaskBinding binding;
+    NewTaskViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_task);
+
+        /*
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_task);
+        viewModel = new ViewModelProvider(this).get(NewTaskViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.executePendingBindings();
+
+        Resources res = getResources();
+        viewModel.setUrl(res.getString(R.string.urlTuna) + "tasks");
+        viewModel.setUrlCtg(res.getString(R.string.urlTuna) + "categories");
+        viewModel.setUrlPlans(res.getString(R.string.urlTuna) + "plans");
+
+        binding.backBtn.setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivity.class));
+        });
+
+        binding.tickBtn.setOnClickListener(v -> {
+            viewModel.setEstimate(binding.scoreEditText.getText().toString());
+            viewModel.setRepeatInterval(binding.count.getText().toString());
+            viewModel.setNumOfRepeats(binding.countEnd.getText().toString());
+            viewModel.onSaveBtnClicked();
+        });
+
+
+        binding.repeatOrNotRepeatLL.setOnClickListener(v -> {
+            // Если выбран повтор задачи
+                if (binding.repeatOrNotRepeatText.getText().equals("Не повторяется")) {
+                    binding.taskRepeatLL.setVisibility(View.VISIBLE);
+                    binding.repeatOrNotRepeatText.setText("Задача повторяется");
+                    viewModel.setIsTaskRepeat(true);
+
+                } else {
+                    binding.taskRepeatLL.setVisibility(View.GONE);
+                    binding.repeatOrNotRepeatText.setText("Не повторяется");
+                    viewModel.setIsTaskRepeat(false);
+                }
+            });
+
+        spinnerRepeatEnd();
+        spinnerRepeat();
+
+        flagWeek = new int[] {3, 3, 3, 3, 3, 3, 3};
+        colorWeeks();
+
+
+
+
+        */
+
+
+        //setContentView(R.layout.activity_new_task);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_task);
+        viewModel = new ViewModelProvider(this).get(NewTaskViewModel.class);
+        binding.setViewModel(viewModel);
+        binding.executePendingBindings();
 
         nameTask = findViewById(R.id.taskName);              // название задачи
         scoreEditText = findViewById(R.id.scoreEditText);    // оценка
@@ -151,6 +218,228 @@ public class NewTaskActivity extends AppCompatActivity {
         saveTask();                                     // Сохранение задачи
 
     }
+
+
+    /*
+        Выпадающий список с примерами категорий (сфер жизни).
+    */
+    protected void spinnerCtg(ArrayList<String> nameAllCategories) {
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nameAllCategories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.ctgSpinner.setAdapter(adapter);
+
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Получаем выбранный объект
+                itemCtg = (String)parent.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+        binding.ctgSpinner.setOnItemSelectedListener(itemSelectedListener);
+    }
+
+
+    protected void spinnerRepeatEnd() {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, paramES);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.whenEndSpinner.setAdapter(adapter);
+
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Получаем выбранный объект
+                itemES = (String)parent.getItemAtPosition(position);
+
+                /* Если выбрана неделя, то показываем выбор дней недели,
+                   если нет, то скрываем их
+                   */
+                if(itemES.equals("Никогда")) {
+                    binding.dateEnd.setVisibility(View.GONE);
+                    binding.countEnd.setVisibility(View.GONE);
+                    flagSpinner = 0;
+                    viewModel.setFlagSpinnerWhenRepeatEnd(flagSpinner);
+                }
+                else if (itemES.equals("До даты")){
+                    binding.dateEnd.setVisibility(View.VISIBLE);
+                    binding.countEnd.setVisibility(View.GONE);
+                    flagSpinner = 1;
+                    viewModel.setFlagSpinnerWhenRepeatEnd(flagSpinner);
+                }
+                else {
+                    binding.dateEnd.setVisibility(View.GONE);
+                    binding.countEnd.setVisibility(View.VISIBLE);
+                    flagSpinner = 2;
+                    viewModel.setFlagSpinnerWhenRepeatEnd(flagSpinner);
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+        binding.whenEndSpinner.setOnItemSelectedListener(itemSelectedListener);
+    }
+
+    protected void spinnerRepeat() {
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, paramRS);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.repeatSpinner.setAdapter(adapter);
+
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Получаем выбранный объект
+                itemRS = (String)parent.getItemAtPosition(position);
+
+                /* Если выбрана неделя, то показываем выбор дней недели,
+                   если нет, то скрываем их
+                   */
+                if(itemRS.equals("Неделя")) {
+                    binding.linearWeek.setVisibility(View.VISIBLE);
+                    binding.textDayRepeat.setVisibility(View.VISIBLE);
+                    viewModel.setSpinnerTimeParam(itemRS);
+                }
+                else {
+                    binding.linearWeek.setVisibility(View.GONE);
+                    binding.textDayRepeat.setVisibility(View.GONE);
+                    viewModel.setSpinnerTimeParam(itemRS);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+        binding.repeatSpinner.setOnItemSelectedListener(itemSelectedListener);
+    }
+
+
+
+    public void colorWeeks() {
+        binding.mondayBtn.setOnClickListener(v -> {
+            if (flagWeek[0] == 1) {
+                binding.mondayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[0] = 0;
+            } else {
+                binding.mondayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[0] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+
+
+        binding.tuesdayBtn.setOnClickListener(v -> {
+            if (flagWeek[1] == 1) {
+                binding.tuesdayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[1] = 0;
+            } else {
+                binding.tuesdayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[1] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+
+        binding.wednesdayBtn.setOnClickListener(v -> {
+            if (flagWeek[2] == 1) {
+                binding.wednesdayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[2] = 0;
+            } else {
+                binding.wednesdayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[2] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+
+        binding.thursdayBtn.setOnClickListener(v -> {
+            if (flagWeek[3] == 1) {
+                binding.thursdayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[3] = 0;
+            } else {
+                binding.thursdayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[3] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+
+        binding.fridayBtn.setOnClickListener(v -> {
+            if (flagWeek[4] == 1) {
+                binding.fridayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[4] = 0;
+            } else {
+                binding.fridayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[4] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+        binding.saturdayBtn.setOnClickListener(v -> {
+            if (flagWeek[5] == 1) {
+                binding.saturdayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[5] = 0;
+            } else {
+                binding.saturdayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[5] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+        binding.sundayBtn.setOnClickListener(v -> {
+            if (flagWeek[6] == 1) {
+                binding.sundayBtn.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[6] = 0;
+            } else {
+                binding.sundayBtn.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
+                        PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
+                flagWeek[6] = 1;
+            }
+            viewModel.setFlagWeek(flagWeek);
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*Функция, проверяющая есть ли выбранные дни недели для мероприятия.
     Если есть хотя бы один выбранный день недели,
@@ -390,14 +679,14 @@ public class NewTaskActivity extends AppCompatActivity {
         });
     }
 
-    protected static boolean isInvalidInput(String... fields) {
+    public static boolean isInvalidInput(String... fields) {
         for (String field : fields) {
             if (field.isEmpty()) return true;
         }
         return false;
     }
 
-    protected static boolean isValidScore(int score) {
+    public static boolean isValidScore(int score) {
         return score >= 1 && score <= 100;
     }
 
@@ -414,14 +703,14 @@ public class NewTaskActivity extends AppCompatActivity {
         }
     }
 
-    protected static boolean isDateFromAfterDateTo(String dateFrom, String dateTo) {
+    public static boolean isDateFromAfterDateTo(String dateFrom, String dateTo) {
         DateTimeFormatter dtfDATE = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
         LocalDate dateFromLD = LocalDate.parse(dateFrom, dtfDATE);
         LocalDate dateToLD = LocalDate.parse(dateTo, dtfDATE);
         return dateFromLD.isAfter(dateToLD);
     }
 
-    protected static boolean isTimeFromAfterTimeTo(String timeFrom, String timeTo) {
+    public static boolean isTimeFromAfterTimeTo(String timeFrom, String timeTo) {
         DateTimeFormatter dtfTIME = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
         LocalTime timeFromLD = LocalTime.parse(timeFrom, dtfTIME);
         LocalTime timeToLD = LocalTime.parse(timeTo, dtfTIME);
@@ -472,7 +761,7 @@ public class NewTaskActivity extends AppCompatActivity {
             }
             else {
                 // Проверка на кооректность введенной даты
-                if ((flagSpinner == 1 && checkDateFormat(dateEndStr) == 1) || (checkDateFormat(dateStartStr) == 1)) { // Проверка на дату
+                if ((flagSpinner == 1 && !checkDateFormat(dateEndStr)) || !(checkDateFormat(dateStartStr))) { // Проверка на дату
                     showToast( "Ошибка сохранения! ДАТА не является датой!");
                 }
                 else {
@@ -525,7 +814,7 @@ public class NewTaskActivity extends AppCompatActivity {
         return formattedDate;
     }
 
-    protected static ArrayList<Integer> getDaysForRepeat( int[] flagWeek) {
+    public static ArrayList<Integer> getDaysForRepeat(int[] flagWeek) {
         ArrayList<Integer> daysRepeat = new ArrayList<>();
         for (int i =0; i<7; i++) {
             if (flagWeek[i] == 1) {
@@ -582,7 +871,7 @@ public class NewTaskActivity extends AppCompatActivity {
         }).start();
     }
 
-    protected static int getIdObj(String nameObj, List<ArrayList<String>> allData) {
+    public static int getIdObj(String nameObj, List<ArrayList<String>> allData) {
         for (int i=0; i<allData.size(); i++) {
             if (allData.get(i).get(1).equals(nameObj)) {
                 return parseInt(allData.get(i).get(0));
@@ -596,7 +885,7 @@ public class NewTaskActivity extends AppCompatActivity {
     /*
         Функция, отвечающая за проверку даты или времени
      */
-    protected static int checkDateTimeFormat(String param1, String param2) {
+    public static int checkDateTimeFormat(String param1, String param2) {
         SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
@@ -849,38 +1138,7 @@ public class NewTaskActivity extends AppCompatActivity {
     /*
         Вывод данных в выпадающем списке (неделя, месяц, год)
      */
-    protected void spinnerRepeat() {
-        Spinner repeatSpinner = findViewById(R.id.repeatSpinner);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, paramRS);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        repeatSpinner.setAdapter(adapter);
-
-        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Получаем выбранный объект
-                itemRS = (String)parent.getItemAtPosition(position);
-
-                /* Если выбрана неделя, то показываем выбор дней недели,
-                   если нет, то скрываем их
-                   */
-                if(itemRS.equals("Неделя")) {
-                    linLayoutWeek.setVisibility(View.VISIBLE);
-                    textDayRepeat.setVisibility(View.VISIBLE);
-                }
-                else {
-                    linLayoutWeek.setVisibility(View.GONE);
-                    textDayRepeat.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        };
-        repeatSpinner.setOnItemSelectedListener(itemSelectedListener);
-    }
 
 
     /*
@@ -970,5 +1228,16 @@ public class NewTaskActivity extends AppCompatActivity {
             setInitialDate(year, monthOfYear+1, dayOfMonth, dateEnd);
         }
     };
+
+    public boolean checkDateFormat(String param) {
+        SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        boolean flag = true;
+        if (!param.equals("")) {
+            sdfDATE.setLenient(false);
+            try { sdfDATE.parse(param); }
+            catch (ParseException e) { flag = false; }
+        }
+        return flag;
+    }
 
 }

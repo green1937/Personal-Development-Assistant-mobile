@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.assistant.viewmodel.BookmarkViewModel" />
+    </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".mediabook.MediabookActivity"
+    tools:context=".views.BookmarkActivity"
     android:scrollbars="vertical">
 
     <ImageButton
@@ -20,41 +26,45 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textTt"
-        android:text="Медиабук"
+        android:id="@+id/textPlans"
+        android:text="Закладки"
         android:textSize="26dp"
         android:gravity="center"
         android:textColor="@color/black"
         android:paddingVertical="10dp"/>
 
-
-
-
-
-    <androidx.recyclerview.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/mediaRV"
-        android:layout_below="@+id/textTt"
-        android:layout_marginBottom="60dp"/>
+        android:layout_height="match_parent"
+        android:id="@+id/scroll"
+        android:layout_below="@+id/textPlans"
+        android:layout_marginBottom="55dp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/allMarks"
+                android:layout_marginTop="10dp"
+                android:layout_marginHorizontal="10dp"
+                android:visibility="visible"
+                android:layout_marginBottom="60dp"/>
 
+    </ScrollView>
 
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/addEventBtn"
+        android:id="@+id/newBookMarkBtn"
         android:src="@drawable/add_plus3"
         android:scaleType="fitCenter"
         android:padding="10dp"
         android:background="@drawable/image_btn_style"
-        android:backgroundTint="@color/white"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="70dp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
+        android:contentDescription=""
         />
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -64,6 +74,8 @@
         style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         app:itemIconTint="@color/black"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_menu"/>
+        app:menu="@menu/bottom_menu"
+        />
 
 </RelativeLayout>
+</layout>

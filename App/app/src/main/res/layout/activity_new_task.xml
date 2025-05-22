@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.assistant.viewmodel.NewTaskViewModel" />
+    </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".tasks.NewTaskActivity">
+    tools:context=".views.NewTaskActivity">
 
     <ImageButton
         android:layout_width="60dp"
@@ -38,6 +44,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:layout_alignParentEnd="true"
+        android:onClick="@{()-> viewModel.onSaveBtnClicked()}"
         />
 
 
@@ -64,7 +71,8 @@
                     android:hint="Название"
                     android:textSize="20dp"
                     android:textStyle="italic"
-                    android:maxLength="30"/>
+                    android:maxLength="30"
+                    android:text="@={viewModel.task.name}"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -87,7 +95,7 @@
                         android:textStyle="italic"
                         android:inputType="number"
                         android:hint="Оценка"
-                        android:layout_marginLeft="10dp"/>
+                        android:layout_marginLeft="10dp" />
 
                 </LinearLayout>
 
@@ -162,7 +170,8 @@
                         android:inputType="date"
                         android:hint="От (дата)"
                         android:layout_marginLeft="10dp"
-                        android:onClick="setDateFrom"/>
+                        android:onClick="setDateFrom"
+                        android:text="@={viewModel.task.startDate}"/>
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -173,7 +182,8 @@
                         android:inputType="time"
                         android:hint="От (время)"
                         android:layout_marginLeft="10dp"
-                        android:onClick="setTimeFrom"/>
+                        android:onClick="setTimeFrom"
+                        android:text="@={viewModel.task.startTime}"/>
 
                 </LinearLayout>
 
@@ -192,7 +202,8 @@
                         android:inputType="date"
                         android:hint="До (дата)"
                         android:layout_marginLeft="10dp"
-                        android:onClick="setDateTo"/>
+                        android:onClick="setDateTo"
+                        android:text="@={viewModel.task.stopDate}"/>
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -203,7 +214,8 @@
                         android:inputType="time"
                         android:hint="До (время)"
                         android:layout_marginLeft="10dp"
-                        android:onClick="setTimeTo"/>
+                        android:onClick="setTimeTo"
+                        android:text="@={viewModel.task.stopTime}"/>
                 </LinearLayout>
 
                 <EditText
@@ -219,6 +231,7 @@
                     android:background="@drawable/image_btn_style"
                     android:textStyle="italic"
                     android:layout_marginTop="10dp"
+                    android:text="@={viewModel.task.description}"
                     />
 
                 <LinearLayout
@@ -283,7 +296,8 @@
                             android:inputType="date"
                             android:hint="дата"
                             android:textColor="@color/black"
-                            android:onClick="setDateRepeat"/>
+                            android:onClick="setDateRepeat"
+                            android:text="@={viewModel.repeat.start}"/>
 
                     </LinearLayout>
 
@@ -456,7 +470,9 @@
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:visibility="gone"
-                            android:onClick="setDate"/>
+                            android:onClick="setDate"
+                            android:text="@={viewModel.repeat.stop}"
+                            />
 
                         <EditText
                             android:layout_width="match_parent"
@@ -466,7 +482,7 @@
                             android:inputType="number"
                             android:textAlignment="center"
                             android:textColor="@color/black"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
                     </LinearLayout>
 
 
@@ -480,3 +496,4 @@
 
 
 </RelativeLayout>
+</layout>

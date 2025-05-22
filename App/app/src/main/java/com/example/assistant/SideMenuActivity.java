@@ -8,10 +8,10 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assistant.views.DiaryActivity;
-import com.example.assistant.mediabook.MediabookActivity;
+import com.example.assistant.views.BookmarkActivity;
 import com.example.assistant.phrases.DayPhrasesActivity;
 import com.example.assistant.views.PlansActivity;
-import com.example.assistant.storage.StorageActivity;
+import com.example.assistant.views.StorageActivity;
 import com.example.assistant.views.TimetableActivity;
 import com.example.assistant.wheel.CtgForWheelActivity;
 import com.example.assistant.views.WheelActivity;
@@ -120,7 +120,7 @@ public class SideMenuActivity extends AppCompatActivity {
         goMediabookActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MediabookActivity.class));
+                startActivity(new Intent(getApplicationContext(), BookmarkActivity.class));
             }
         });
     }

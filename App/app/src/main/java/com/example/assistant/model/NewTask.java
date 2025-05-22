@@ -1,4 +1,4 @@
-package com.example.assistant.tasks;
+package com.example.assistant.model;
 
 import com.example.assistant.model.Category;
 import com.google.gson.annotations.SerializedName;
