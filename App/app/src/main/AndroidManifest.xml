@@ -16,9 +16,6 @@
         <activity android:name=".phrases.DayPhrasesActivity"
             android:exported="false"/>
 
-        <activity android:name=".views.BookmarkActivity"
-            android:exported="false"/>
-
         <activity
             android:name=".views.StorageActivity"
             android:exported="false"/>
@@ -28,7 +25,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".tasks.EditTaskActivity"
+            android:name=".views.EditTaskActivity"
             android:exported="false"/>
 
         <activity

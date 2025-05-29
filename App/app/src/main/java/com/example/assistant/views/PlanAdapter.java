@@ -4,7 +4,7 @@
 
 package com.example.assistant.views;
 import static com.example.assistant.viewmodel.TimetableAdapter.deleteFromUrl;
-import static com.example.assistant.tasks.TaskAdapter.sendUpdateObjectStatusToServer;
+import static com.example.assistant.views.TaskAdapter.sendUpdateObjectStatusToServer;
 
 
 import static java.lang.Integer.parseInt;

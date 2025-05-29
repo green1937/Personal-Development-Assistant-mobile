@@ -10,14 +10,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class NewObjectRepository {
+public class NewTaskRepository {
 
-    public LiveData<Boolean> sendDataObj(List<String> jsonData, String urlString, String requestMethod) {
+    public LiveData<Boolean> sendDataObj(String jsonData, String urlString, String requestMethod) {
         final MutableLiveData<Boolean> result = new MutableLiveData<>();
         System.out.println("JSON DATA " + jsonData);
 
         new Thread(() -> {
-            for (String json : jsonData) {
+
                 HttpURLConnection connection = null;
                 try {
                     URL url = new URL(urlString);
@@ -29,7 +29,7 @@ public class NewObjectRepository {
                     connection.setRequestProperty("tuna-skip-browser-warning", "true");
 
                     try (OutputStream os = connection.getOutputStream()) {
-                        byte[] input = json.getBytes(StandardCharsets.UTF_8);
+                        byte[] input = jsonData.getBytes(StandardCharsets.UTF_8);
                         os.write(input);
                     }
 
@@ -46,7 +46,7 @@ public class NewObjectRepository {
                 } finally {
                     connection.disconnect();
                 }
-            }
+
             result.postValue(true);
             System.out.println("3");
         }).start();

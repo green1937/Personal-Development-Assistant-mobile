@@ -1,29 +1,16 @@
 package com.example.assistant.views;
 
-import static com.example.assistant.MainActivity.setInitialDate;
-import static com.example.assistant.views.TimetableActivity.getJsonFromUrl;
-
-import static java.lang.Integer.parseInt;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,78 +18,19 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assistant.databinding.ActivityNewTaskBinding;
-import com.example.assistant.model.Category;
 import com.example.assistant.MainActivity;
 import com.example.assistant.R;
-import com.example.assistant.model.Repeat;
-import com.example.assistant.model.Task;
 import com.example.assistant.viewmodel.NewTaskViewModel;
-import com.google.gson.Gson;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class NewTaskActivity extends AppCompatActivity {
-
-    String taskNameStr, descriptionTask, dateFromStr, dateToStr, timeFromStr, timeToStr, term, start, end;
-    int score, countR, numberOfRepeats;
-    ArrayList<Integer> days = new ArrayList<>();
-    Repeat repeat = null;
-
-    String itemCtg, itemPlan;
-    String urlTask, urlCategories, urlPlans;
-    List<ArrayList<String>> allCategories = new ArrayList<>();
-    ArrayList<String> nameAllCategories = new ArrayList<>();
-    List<ArrayList<String>> allPlans = new ArrayList<>();
-    ArrayList<String> nameAllPlans = new ArrayList<>();
-
     Calendar dateToCld = Calendar.getInstance();
     Calendar dateFromCld = Calendar.getInstance();
     Calendar timeFromCld = Calendar.getInstance();
     Calendar timeToCld = Calendar.getInstance();
-    SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-    DateFormat formatForDateVariant2 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-    EditText nameTask, scoreEditText, descriptionEditText, dateFrom, timeFrom, dateTo, timeTo;
-    EditText dateStart, countRepeat, dateEnd, countEnd;
-
-    TextView repeatOrNotRepeatText;
-    ImageButton saveTaskBtn, backBtn;
-    LinearLayout repeatOrNotRepeatLL, taskRepeatLL;
     Calendar dateStartCld = Calendar.getInstance();
     Calendar dateEndCld = Calendar.getInstance();
-    String[] paramRS = { "Неделя", "Месяц", "Год"};
-    String[] paramES = { "Никогда", "До даты", "После n раз"};
-    String itemRS, itemES;
-    TextView textDayRepeat, monD, tuesD, wednesD, thursD, friD, saturD, sunD;
     int[] flagWeek;
-    int flagSpinner;
-
-    LinearLayout linLayoutWeek;
-    ArrayList<Integer> daysRepeat = new ArrayList<>();
-
-
-
-
-
     private ActivityNewTaskBinding binding;
     NewTaskViewModel viewModel;
 
@@ -111,7 +39,6 @@ public class NewTaskActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        /*
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_task);
         viewModel = new ViewModelProvider(this).get(NewTaskViewModel.class);
         binding.setViewModel(viewModel);
@@ -120,7 +47,27 @@ public class NewTaskActivity extends AppCompatActivity {
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "tasks");
         viewModel.setUrlCtg(res.getString(R.string.urlTuna) + "categories");
-        viewModel.setUrlPlans(res.getString(R.string.urlTuna) + "plans");
+        viewModel.setUrlPlans(res.getString(R.string.urlTuna) + "plans/full?status=0");
+
+        viewModel.loadNameAllCtgForTask();
+        viewModel.loadNameAllPlanForTask();
+        viewModel.getCtgResult().observe(this, success -> {
+            if (success!=null) {
+                spinnerCtg(NewTaskActivity.this, binding, viewModel, "");
+            } else {
+                Toast.makeText(this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+            }
+        });
+        viewModel.getPlanResult().observe(this, success -> {
+            if (success!=null) {
+                spinnerPlans(NewTaskActivity.this, binding, viewModel, "");
+            } else {
+                Toast.makeText(this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+            }
+        });
+
 
         binding.backBtn.setOnClickListener(v -> {
             startActivity(new Intent(this, MainActivity.class));
@@ -131,9 +78,17 @@ public class NewTaskActivity extends AppCompatActivity {
             viewModel.setRepeatInterval(binding.count.getText().toString());
             viewModel.setNumOfRepeats(binding.countEnd.getText().toString());
             viewModel.onSaveBtnClicked();
+
         });
 
-
+        viewModel.getSaveResult().observe(this, success -> {
+            if (success) {
+                Toast.makeText(this, "Данные успешно сохранены", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                Toast.makeText(this, "Ошибка сохранения данных", Toast.LENGTH_SHORT).show();
+            }
+        });
         binding.repeatOrNotRepeatLL.setOnClickListener(v -> {
             // Если выбран повтор задачи
                 if (binding.repeatOrNotRepeatText.getText().equals("Не повторяется")) {
@@ -148,74 +103,11 @@ public class NewTaskActivity extends AppCompatActivity {
                 }
             });
 
-        spinnerRepeatEnd();
-        spinnerRepeat();
+        spinnerRepeatEnd(NewTaskActivity.this, binding, viewModel, "", 0);
+        spinnerRepeat(NewTaskActivity.this, binding, viewModel, "");
 
         flagWeek = new int[] {3, 3, 3, 3, 3, 3, 3};
         colorWeeks();
-
-
-
-
-        */
-
-
-        //setContentView(R.layout.activity_new_task);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_task);
-        viewModel = new ViewModelProvider(this).get(NewTaskViewModel.class);
-        binding.setViewModel(viewModel);
-        binding.executePendingBindings();
-
-        nameTask = findViewById(R.id.taskName);              // название задачи
-        scoreEditText = findViewById(R.id.scoreEditText);    // оценка
-        descriptionEditText = findViewById(R.id.decrTaskEditText);  // Описание задачи
-        dateFrom = findViewById(R.id.dateTimeTaskFromDate);  // дата от
-        timeFrom = findViewById(R.id.dateTimeTaskFromTime);  // время от
-        dateTo = findViewById(R.id.dateTimeTaskToDate);      // дата до
-        timeTo = findViewById(R.id.dateTimeTaskToTime);      // время до
-
-
-        // Повтор задачи
-        repeatOrNotRepeatLL = findViewById(R.id.repeatOrNotRepeatLL);
-        taskRepeatLL = findViewById(R.id.taskRepeatLL);
-        repeatOrNotRepeatText = findViewById(R.id.repeatOrNotRepeatText);
-
-        dateStart = findViewById(R.id.dateStart);
-        countRepeat = findViewById(R.id.count);
-        dateEnd = findViewById(R.id.dateEnd);
-        countEnd = findViewById(R.id.countEnd);
-
-        textDayRepeat = findViewById(R.id.textDayRepeat);
-
-        monD = findViewById(R.id.mondayBtn);
-        tuesD = findViewById(R.id.tuesdayBtn);
-        wednesD = findViewById(R.id.wednesdayBtn);
-        thursD = findViewById(R.id.thursdayBtn);
-        friD = findViewById(R.id.fridayBtn);
-        saturD = findViewById(R.id.saturdayBtn);
-        sunD = findViewById(R.id.sundayBtn);
-        flagWeek = new int[] {3, 3, 3, 3, 3, 3, 3};
-        linLayoutWeek = findViewById(R.id.linearWeek);
-        flagSpinner = 3;
-
-
-        saveTaskBtn = findViewById(R.id.tickBtn);
-        backBtn = findViewById(R.id.backBtn);
-
-        Resources res = getResources();
-        urlTask = res.getString(R.string.urlTuna) + "tasks";
-        urlCategories = res.getString(R.string.urlTuna) + "categories";
-        urlPlans = res.getString(R.string.urlTuna) + "plans";
-
-
-        loadJsonFromUrlCategories(urlCategories);       // Загрузка всех категорий колеса баланса
-        loadJsonFromUrlPlans(urlPlans);                 // Загрузка всех планов
-
-        showRepeat();                                   // Показ повторов задачи
-        backToOption();                                 // Возвращение назад
-        spinnerRepeat();                                // Вывод данных в выпадающем списке
-        spinnerWhenRepeatEnd();                         // Выпадающий список конца повторов
-        saveTask();                                     // Сохранение задачи
 
     }
 
@@ -223,18 +115,20 @@ public class NewTaskActivity extends AppCompatActivity {
     /*
         Выпадающий список с примерами категорий (сфер жизни).
     */
-    protected void spinnerCtg(ArrayList<String> nameAllCategories) {
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nameAllCategories);
+    public static void spinnerCtg(Context context, ActivityNewTaskBinding binding, NewTaskViewModel viewModel, String ctgName) {
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, viewModel.getNameAllCtgForTask());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.ctgSpinner.setAdapter(adapter);
+
+        // Находим позицию нужного элемента
+        if(context instanceof EditTaskActivity) binding.ctgSpinner.setSelection(adapter.getPosition(ctgName));
 
         AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Получаем выбранный объект
-                itemCtg = (String)parent.getItemAtPosition(position);
+                viewModel.setItemCtg((String)parent.getItemAtPosition(position));
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -243,17 +137,55 @@ public class NewTaskActivity extends AppCompatActivity {
     }
 
 
-    protected void spinnerRepeatEnd() {
-
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, paramES);
+    /*
+        Выпадающий список с планами
+    */
+    public static void spinnerPlans(Context context, ActivityNewTaskBinding binding, NewTaskViewModel viewModel, String planName) {
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, viewModel.getNameAllPlanForTask());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.whenEndSpinner.setAdapter(adapter);
+        binding.plansSpinner.setAdapter(adapter);
+
+        if(context instanceof EditTaskActivity) {
+            int position;
+            if (planName == null || planName.isEmpty()) position = adapter.getPosition("Без плана");
+            else position = adapter.getPosition(planName);
+            binding.plansSpinner.setSelection(position);
+        }
 
         AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Получаем выбранный объект
-                itemES = (String)parent.getItemAtPosition(position);
+                //itemPlan = (String)parent.getItemAtPosition(position);
+                viewModel.setItemPlan((String)parent.getItemAtPosition(position));
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        };
+        binding.plansSpinner.setOnItemSelectedListener(itemSelectedListener);
+    }
+
+
+    protected static void spinnerRepeatEnd(Context context, ActivityNewTaskBinding binding, NewTaskViewModel viewModel, String end, int numberOfRepeats) {
+        String[] paramES = { "Никогда", "До даты", "После n раз"};
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, paramES);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.whenEndSpinner.setAdapter(adapter);
+
+        if(context instanceof EditTaskActivity) {
+            int position = adapter.getPosition("Никогда");
+            if (!end.equals("null")) position = adapter.getPosition("До даты");
+            if (numberOfRepeats != 0) position = adapter.getPosition("После n раз");
+            binding.whenEndSpinner.setSelection(position);
+        }
+
+        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Получаем выбранный объект
+                String itemES = (String)parent.getItemAtPosition(position);
 
                 /* Если выбрана неделя, то показываем выбор дней недели,
                    если нет, то скрываем их
@@ -261,21 +193,17 @@ public class NewTaskActivity extends AppCompatActivity {
                 if(itemES.equals("Никогда")) {
                     binding.dateEnd.setVisibility(View.GONE);
                     binding.countEnd.setVisibility(View.GONE);
-                    flagSpinner = 0;
-                    viewModel.setFlagSpinnerWhenRepeatEnd(flagSpinner);
+                    viewModel.setFlagSpinnerWhenRepeatEnd(0);
                 }
                 else if (itemES.equals("До даты")){
                     binding.dateEnd.setVisibility(View.VISIBLE);
                     binding.countEnd.setVisibility(View.GONE);
-                    flagSpinner = 1;
-                    viewModel.setFlagSpinnerWhenRepeatEnd(flagSpinner);
+                    viewModel.setFlagSpinnerWhenRepeatEnd(1);
                 }
                 else {
                     binding.dateEnd.setVisibility(View.GONE);
                     binding.countEnd.setVisibility(View.VISIBLE);
-                    flagSpinner = 2;
-                    viewModel.setFlagSpinnerWhenRepeatEnd(flagSpinner);
-
+                    viewModel.setFlagSpinnerWhenRepeatEnd(2);
                 }
             }
 
@@ -286,16 +214,28 @@ public class NewTaskActivity extends AppCompatActivity {
         binding.whenEndSpinner.setOnItemSelectedListener(itemSelectedListener);
     }
 
-    protected void spinnerRepeat() {
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, paramRS);
+    protected static void spinnerRepeat(Context context, ActivityNewTaskBinding binding, NewTaskViewModel viewModel, String term) {
+        String[] paramRS = { "Неделя", "Месяц", "Год"};
+        ArrayAdapter<String> adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, paramRS);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.repeatSpinner.setAdapter(adapter);
+
+        if(context instanceof EditTaskActivity) {
+            // "перевод"
+            String posName = "Неделя";
+            if (term.equals("month"))  posName = "Месяц";
+            if (term.equals("year"))  posName = "Год";
+
+            // Находим позицию нужного элемента
+            int position = adapter.getPosition(posName);
+            binding.repeatSpinner.setSelection(position);
+        }
 
         AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Получаем выбранный объект
-                itemRS = (String)parent.getItemAtPosition(position);
+                String itemRS = (String)parent.getItemAtPosition(position);
 
                 /* Если выбрана неделя, то показываем выбор дней недели,
                    если нет, то скрываем их
@@ -414,780 +354,34 @@ public class NewTaskActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*Функция, проверяющая есть ли выбранные дни недели для мероприятия.
-    Если есть хотя бы один выбранный день недели,
-    то рассматривать дальше все дни не имеет смысла.
-     */
-
-    public static int checkDaysWeek(int[] flagsForWeek) {
-        int flag = 1;
-        for (int i=0; i<7; i++) {
-            if (flagsForWeek[i] == 1) {  // Проверка на выбранный день
-                flag = 0;
-                break;
-            }
-        }
-        return flag;
-    }
-
-
-    /*
-    Покраска каждой кнопки дня недели при нажатии на нее
-    В дальнейшем также и передача выбранных дней
-    Пока криво сделано --- переделать потом в дальнейшем
-*/
-    public static void colorWeeksBtn(TextView monD, TextView tuesD, TextView wednesD, TextView thursD, TextView friD,
-                                     TextView saturD, TextView sunD, int[] flagWeek) {
-        monD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[0] == 1) {
-                    monD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[0] = 0;
-                }
-                else {
-                    monD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[0] = 1;
-                }
-
-
-            }
-        });
-
-
-        tuesD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[1] == 1) {
-                    tuesD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[1] = 0;
-                }
-                else {
-                    tuesD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[1] = 1;
-                }
-            }
-        });
-
-        wednesD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[2] == 1) {
-                    wednesD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[2] = 0;
-                }
-                else {
-                    wednesD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[2] = 1;
-                }
-            }
-        });
-
-        thursD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[3] == 1) {
-                    thursD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[3] = 0;
-                }
-                else {
-                    thursD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[3] = 1;
-                }
-            }
-        });
-
-        friD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[4] == 1) {
-                    friD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[4] = 0;
-                }
-                else {
-                    friD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[4] = 1;
-                }
-            }
-        });
-        saturD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[5] == 1) {
-                    saturD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[5] = 0;
-                }
-                else {
-                    saturD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[5] = 1;
-                }
-            }
-        });
-        sunD.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(flagWeek[6] == 1) {
-                    sunD.getBackground().setColorFilter(Color.parseColor("#FFFFFFFF"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[6] = 0;
-                }
-                else {
-                    sunD.getBackground().setColorFilter(Color.parseColor("#FFEFDACB"),
-                            PorterDuff.Mode.DARKEN);  // Смена цвета кнопки
-                    flagWeek[6] = 1;
-                }
-            }
-        });
-
-    }
-
-
-    /*
-        Показ настроек повтора задачи
-     */
-    protected void showRepeat() {
-        repeatOrNotRepeatLL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Если выбран повтор задачи
-                if (repeatOrNotRepeatText.getText().equals("Не повторяется")) {
-                    taskRepeatLL.setVisibility(View.VISIBLE);
-                    repeatOrNotRepeatText.setText("Задача повторяется");
-
-                } else {
-                    taskRepeatLL.setVisibility(View.GONE);
-                    repeatOrNotRepeatText.setText("Не повторяется");
-                }
-            }
-        });
-
-    }
-
-
-    /*
-        Возвращение назад на Главный экран
-     */
-    protected void backToOption() {
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(NewTaskActivity.this, MainActivity.class));
-            }
-        });
-    }
-
-
-    /*
-        Функция, отвечающая за сохранение созданной задачи.
-
-        1. В случае, если ошибок никаких нет, то задача успешно сохраняется,
-           и пользователь переходит на главный экран.
-        2. В противном случае, задача не сохраняется и пользователь получает сообщение
-           об ошибке сохранения.
-
-     */
-    protected void saveTask() {
-
-        // Покраска дней недели
-        colorWeeksBtn(monD, tuesD, wednesD, thursD, friD, saturD, sunD, flagWeek);
-        getDaysForRepeat(flagWeek);
-        saveTaskBtn.setOnClickListener(v -> {
-            taskNameStr = nameTask.getText().toString();
-            String scoreStr = scoreEditText.getText().toString();
-            descriptionTask = descriptionEditText.getText().toString();
-            dateToStr = dateTo.getText().toString();
-            timeToStr = timeTo.getText().toString();
-            dateFromStr = dateFrom.getText().toString();
-            timeFromStr = timeFrom.getText().toString();
-
-            // Оценка не может быть пустой и нельзя указывать только время без даты
-            if (taskNameStr.equals("") || scoreStr.equals("") || (dateToStr.equals("") && !timeToStr.equals("")) || (dateFromStr.equals("") && !timeFromStr.equals(""))) {
-                Toast.makeText(getApplicationContext(), "Ошибка сохранения! Поля не могут быть пустыми!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            score = Integer.parseInt(scoreStr);
-
-            // Валидация оценки и дат
-            if (!isValidScore(score) || (checkDateTimeFormat(dateFromStr, "date") == 1 ||  checkDateTimeFormat(dateToStr, "date") == 1
-                    || checkDateTimeFormat(timeFromStr, "time") == 1 || checkDateTimeFormat(timeToStr, "time") == 1)) {
-                showToast("Ошибка сохранения!");
-                return;
-            }
-
-
-            // Проверка последовательности дат
-            if (!isInvalidInput(dateFromStr, dateToStr) && isDateFromAfterDateTo(dateFromStr, dateToStr)) {
-                showToast("Дата ОТ должна быть раньше даты ДО!");
-                return;
-            }
-
-            if(!isInvalidInput(dateFromStr, dateToStr, timeFromStr, timeToStr) && dateFromStr.equals(dateToStr) && isTimeFromAfterTimeTo(timeFromStr, timeToStr)) {
-                showToast("Время ОТ должна быть раньше времени ДО!");
-                return;
-            }
-
-            // Форматирование дат
-            formatDates();
-
-            // Сохранение повторяющихся данных
-            if ("Задача повторяется".equals(repeatOrNotRepeatText.getText())) {
-                saveRepeatData();
-            }
-
-            getAllParametersOfTaskAndSave();
-        });
-    }
-
-    public static boolean isInvalidInput(String... fields) {
-        for (String field : fields) {
-            if (field.isEmpty()) return true;
-        }
-        return false;
-    }
-
-    public static boolean isValidScore(int score) {
-        return score >= 1 && score <= 100;
-    }
-
-    protected void formatDates() {
-        try {
-            if (!dateFromStr.isEmpty()) {
-                dateFromStr = formatForDateVariant2.format(sdfDATE.parse(dateFromStr));
-            }
-            if (!dateToStr.isEmpty()) {
-                dateToStr = formatForDateVariant2.format(sdfDATE.parse(dateToStr));
-            }
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static boolean isDateFromAfterDateTo(String dateFrom, String dateTo) {
-        DateTimeFormatter dtfDATE = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault());
-        LocalDate dateFromLD = LocalDate.parse(dateFrom, dtfDATE);
-        LocalDate dateToLD = LocalDate.parse(dateTo, dtfDATE);
-        return dateFromLD.isAfter(dateToLD);
-    }
-
-    public static boolean isTimeFromAfterTimeTo(String timeFrom, String timeTo) {
-        DateTimeFormatter dtfTIME = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault());
-        LocalTime timeFromLD = LocalTime.parse(timeFrom, dtfTIME);
-        LocalTime timeToLD = LocalTime.parse(timeTo, dtfTIME);
-        return timeFromLD.isAfter(timeToLD);
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-
-    /*
-        Получение всех параметров задачи (включая повторы)
-        и отправка на сервер для сохранения
-     */
-    protected void getAllParametersOfTaskAndSave() {
-        Category ctgTask = new Category(getIdObj(itemCtg, allCategories));
-        Long planId = null;
-        if(!itemPlan.equals("Нет плана")) {
-            planId = Long.valueOf(getIdObj(itemPlan, allPlans));
-        }
-        Task taskData = new Task(taskNameStr, descriptionTask, score, ctgTask, dateFromStr, dateToStr, timeFromStr, timeToStr, planId, repeat);
-        String jsonData = new Gson().toJson(taskData);
-        System.out.println("DATA TASK = " + jsonData);
-        sendDataToServer("POST", jsonData);
-
-        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-    }
-
-
-    /*
-        Работа с повторами задачи, если задача будет повторяться
-     */
-    protected void saveRepeatData() {
-        String dateStartStr = dateStart.getText().toString();
-        String countRepeatStr = countRepeat.getText().toString();
-        String dateEndStr = dateEnd.getText().toString();
-        String countEndStr = countEnd.getText().toString();
-
-        //  Проверка на пустоту ввода: кол-ва повторов, даты окончания повторов, после какого кол-ва повторов заканчивать, дата начала повторов
-        if (countRepeatStr.equals("") || (dateEndStr.equals("") && flagSpinner==1) || (countEndStr.equals("") && flagSpinner==2) || dateStartStr.equals("")) {
-            showToast( "Ошибка сохранения! Поля не заполнены!");
-        }
-        //  Если эти поля заполнены, то --- смотрим выбраны ли дни недели, если повторы на неделе
-        else {
-            if (linLayoutWeek.getVisibility() == View.VISIBLE && checkDaysWeek(flagWeek) == 1) {
-                showToast("Ошибка сохранения! Не выбран ни один день недели!");
-            }
-            else {
-                // Проверка на кооректность введенной даты
-                if ((flagSpinner == 1 && !checkDateFormat(dateEndStr)) || !(checkDateFormat(dateStartStr))) { // Проверка на дату
-                    showToast( "Ошибка сохранения! ДАТА не является датой!");
-                }
-                else {
-                    SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy");
-                    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                    int countE = -1;
-                    //  Перевод в числа
-                    if (flagSpinner == 2) countE = parseInt(countEnd.getText().toString());
-
-                    countR = parseInt(countRepeat.getText().toString());
-                    end = null;
-                    numberOfRepeats = 0;
-                    term = "week";
-                    start = changeDateFormat(dateStartStr, inputFormat, outputFormat);
-                    days = getDaysForRepeat(flagWeek);
-
-                    if (itemRS.equals("Месяц")) term = "month";
-                    if (itemRS.equals("Год")) term = "year";
-
-                    if (!itemES.equals("Никогда")) {
-                        end = changeDateFormat(dateEndStr, inputFormat, outputFormat);
-                        if (!itemES.equals("До даты")) numberOfRepeats =  parseInt(countEndStr);
-                    }
-
-                    int[] arr = new int[days.size()];
-
-                    for (int i = 0; i < days.size(); i++) {
-                        arr[i] = days.get(i);
-                    }
-
-                    repeat = new Repeat(countR, term, arr, start, end, numberOfRepeats);
-                }
-
-
-            }
-        }
-
-    }
-
-    public static String changeDateFormat(String dateStrWithComma, SimpleDateFormat inputFormat, SimpleDateFormat outputFormat) {
-        String formattedDate = "";
-
-        try {
-            Date date = inputFormat.parse(dateStrWithComma);
-            formattedDate = outputFormat.format(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return formattedDate;
-    }
-
-    public static ArrayList<Integer> getDaysForRepeat(int[] flagWeek) {
-        ArrayList<Integer> daysRepeat = new ArrayList<>();
-        for (int i =0; i<7; i++) {
-            if (flagWeek[i] == 1) {
-                daysRepeat.add(i);
-            }
-        }
-        return daysRepeat;
-    }
-
-    protected void sendDataToServer(String requestMethod, String jsonData) {
-        new Thread(() -> {
-            HttpURLConnection connection = null;
-            try {
-                // Создаем URL и соединение
-                URL serverUrl = new URL(urlTask);
-                connection = (HttpURLConnection) serverUrl.openConnection();
-
-                // Настраиваем запрос
-                connection.setRequestMethod(requestMethod);
-                connection.setDoOutput(true);
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setRequestProperty("tuna-skip-browser-warning", "true");
-
-                // Отправляем JSON данные
-
-                try (OutputStream os = connection.getOutputStream()) {
-                    byte[] input = jsonData.getBytes("utf-8");
-                    os.write(input, 0, input.length);
-                }
-
-
-                // Получаем ответ
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    runOnUiThread(() -> {
-                        //Toast.makeText(getApplicationContext(), "Данные успешно отправлены", Toast.LENGTH_SHORT).show();
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Ошибка отправки данных: " + responseCode, Toast.LENGTH_SHORT).show();
-                    });
-                }
-
-            } catch (IOException e) {
-                Log.e("SEND_ERROR", "Ошибка при отправке данных", e);
-                runOnUiThread(() -> {
-                    Toast.makeText(getApplicationContext(), "Произошла ошибка при отправке данных", Toast.LENGTH_SHORT).show();
-                });
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-        }).start();
-    }
-
-    public static int getIdObj(String nameObj, List<ArrayList<String>> allData) {
-        for (int i=0; i<allData.size(); i++) {
-            if (allData.get(i).get(1).equals(nameObj)) {
-                return parseInt(allData.get(i).get(0));
-            }
-        }
-        return 0;
-    }
-
-
-
-    /*
-        Функция, отвечающая за проверку даты или времени
-     */
-    public static int checkDateTimeFormat(String param1, String param2) {
-        SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        SimpleDateFormat sdfTIME = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-        int flag = 0;
-        if (!param1.equals("")) {
-            if (param2.equals("date")) {
-                sdfDATE.setLenient(false);
-                try { sdfDATE.parse(param1); }
-                catch (ParseException e) { flag = 1; }
-            }
-
-            if (param2.equals("time")) {
-                sdfTIME.setLenient(false);
-                try { sdfTIME.parse(param1); }
-                catch (ParseException e) { flag = 1; }
-            }
-        }
-        else flag = 2;
-
-        return flag;
-    }
-
-
-
     /*
         Вывод календарей и часов для дат и времени при создании задачи
      */
-
-
     public void setDateFrom(View v) {
         new DatePickerDialog(NewTaskActivity.this, d1, dateFromCld.get(Calendar.YEAR),
                 dateFromCld.get(Calendar.MONTH), dateFromCld.get(Calendar.DAY_OF_MONTH)).show();
     }
+    DatePickerDialog.OnDateSetListener d1 = (view, year, month, day) -> viewModel.handleDateSet(dateFromCld, binding.dateTimeTaskFromDate, year, month, day);
 
-    DatePickerDialog.OnDateSetListener d1=new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateFromCld.set(Calendar.YEAR, year);
-            dateFromCld.set(Calendar.MONTH, monthOfYear);
-            dateFromCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            setInitialDate(year, monthOfYear+1, dayOfMonth, dateFrom);
-        }
-    };
 
 
     public void setTimeFrom(View v) {
         new TimePickerDialog(NewTaskActivity.this, t1, timeFromCld.get(Calendar.HOUR_OF_DAY),
                 timeFromCld.get(Calendar.MINUTE), true).show();
     }
-
-    TimePickerDialog.OnTimeSetListener t1=new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet (TimePicker view, int hourOfDay, int minute) {
-            timeFromCld.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            timeFromCld.set(Calendar.MINUTE, minute);
-
-            setInitialTime(timeFrom, timeFromCld);
-        }
-    };
-
-
+    TimePickerDialog.OnTimeSetListener t1 = (view, hourOfDay, minute) -> viewModel.handleTimeSet(timeFromCld, binding.dateTimeTaskFromTime, hourOfDay, minute);
 
     public void setDateTo(View v) {
         new DatePickerDialog(NewTaskActivity.this, d2, dateToCld.get(Calendar.YEAR),
                 dateToCld.get(Calendar.MONTH), dateToCld.get(Calendar.DAY_OF_MONTH)).show();
     }
-
-    DatePickerDialog.OnDateSetListener d2=new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateToCld.set(Calendar.YEAR, year);
-            dateToCld.set(Calendar.MONTH, monthOfYear);
-            dateToCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            setInitialDate(year, monthOfYear+1, dayOfMonth, dateTo);
-        }
-    };
-
+    DatePickerDialog.OnDateSetListener d2 = (view, year, month, day) -> viewModel.handleDateSet(dateToCld, binding.dateTimeTaskToDate, year, month, day);
 
     public void setTimeTo(View v) {
         new TimePickerDialog(NewTaskActivity.this, t2, timeToCld.get(Calendar.HOUR_OF_DAY),
                 timeToCld.get(Calendar.MINUTE), true).show();
     }
-
-    TimePickerDialog.OnTimeSetListener t2=new TimePickerDialog.OnTimeSetListener() {
-        public void onTimeSet (TimePicker view, int hourOfDay, int minute) {
-            timeToCld.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            timeToCld.set(Calendar.MINUTE, minute);
-
-            setInitialTime(timeTo, timeToCld);
-        }
-    };
-
-
-    private void setInitialTime(EditText editTime, Calendar timeCld) {
-        editTime.setText(DateUtils.formatDateTime(this, timeCld.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME));
-    }
-
-
-    /*
-        Загрузка категорий JSON через Tuna
-    */
-    private void loadJsonFromUrlCategories(String url) {
-        new Thread(() -> {
-            try {
-                // ссылка
-                String json = getJsonFromUrl(url);
-
-                if (json != null) {
-                    runOnUiThread(() -> {
-                        getCategoriesFromJSON(json);
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных",
-                                Toast.LENGTH_SHORT).show();
-                    });
-                }
-            } catch (Exception e) {
-                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
-            }
-        }).start();
-    }
-
-    /*
-        Получение всех категорий Колеса баланса
-     */
-    private void getCategoriesFromJSON(String json) {
-        allCategories = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject ctgData = jsonArray.getJSONObject(i);
-                ArrayList<String> oneCategory = new ArrayList<>();
-
-                oneCategory.add(ctgData.getString("id"));
-                oneCategory.add(ctgData.getString("title"));
-
-
-                nameAllCategories.add(ctgData.getString("title"));
-
-
-                allCategories.add(oneCategory);
-            }
-            showSpinnerCtg(nameAllCategories);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    /*
-        Выпадающий список с примерами категорий (сфер жизни).
-    */
-    protected void showSpinnerCtg(ArrayList<String> nameAllCategories) {
-        Spinner spinner = findViewById(R.id.ctgSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nameAllCategories);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Получаем выбранный объект
-                itemCtg = (String)parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        };
-        spinner.setOnItemSelectedListener(itemSelectedListener);
-    }
-
-
-
-
-    /*
-        Загрузка планов JSON через Tuna
-    */
-    private void loadJsonFromUrlPlans(String url) {
-        new Thread(() -> {
-            try {
-                // ссылка
-                String json = getJsonFromUrl(url);
-
-                if (json != null) {
-                    runOnUiThread(() -> {
-                        getPlansFromJSON(json);
-                    });
-                } else {
-                    runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Ошибка загрузки данных",
-                                Toast.LENGTH_SHORT).show();
-                    });
-                }
-            } catch (Exception e) {
-                Log.e("THREAD_ERROR", "Ошибка в потоке:", e);
-            }
-        }).start();
-    }
-
-    /*
-        Получение всех планов
-     */
-    private void getPlansFromJSON(String json) {
-        allPlans = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(json);
-            for (int i=0; i<jsonArray.length(); i++) {
-                JSONObject planData = jsonArray.getJSONObject(i);
-                ArrayList<String> onePlan = new ArrayList<>();
-
-                onePlan.add(planData.getString("id"));
-                onePlan.add(planData.getString("name"));
-
-                nameAllPlans.add(planData.getString("name"));
-
-                allPlans.add(onePlan);
-            }
-            nameAllPlans.add(0, "Нет плана");
-            showSpinnerPlans(nameAllPlans);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    /*
-        Выпадающий список с планами
-    */
-    protected void showSpinnerPlans(ArrayList<String> nameAllPlans) {
-        Spinner spinner = findViewById(R.id.plansSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, nameAllPlans);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Получаем выбранный объект
-                itemPlan = (String)parent.getItemAtPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        };
-        spinner.setOnItemSelectedListener(itemSelectedListener);
-    }
-
-
-    /*
-        Вывод данных в выпадающем списке (неделя, месяц, год)
-     */
-
-
-
-    /*
-        Вывод данных в выпадающем списке (никогда, до даты, после стольких раз)
-        О том, когда заканчивается повтор
-     */
-    protected void spinnerWhenRepeatEnd() {
-        Spinner endSpinner = findViewById(R.id.whenEndSpinner);
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, paramES);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        endSpinner.setAdapter(adapter);
-
-        AdapterView.OnItemSelectedListener itemSelectedListener = new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Получаем выбранный объект
-                itemES = (String)parent.getItemAtPosition(position);
-
-                /* Если выбрана неделя, то показываем выбор дней недели,
-                   если нет, то скрываем их
-                   */
-                if(itemES.equals("Никогда")) {
-                    dateEnd.setVisibility(View.GONE);
-                    countEnd.setVisibility(View.GONE);
-                    flagSpinner = 0;
-                }
-                else if (itemES.equals("До даты")){
-                    dateEnd.setVisibility(View.VISIBLE);
-                    countEnd.setVisibility(View.GONE);
-                    flagSpinner = 1;
-                }
-                else {
-                    dateEnd.setVisibility(View.GONE);
-                    countEnd.setVisibility(View.VISIBLE);
-                    flagSpinner = 2;
-
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        };
-        endSpinner.setOnItemSelectedListener(itemSelectedListener);
-    }
-
+    TimePickerDialog.OnTimeSetListener t2 = (view, hourOfDay, minute) -> viewModel.handleTimeSet(timeToCld, binding.dateTimeTaskToTime, hourOfDay, minute);
 
     /*
      Выбор даты начала повторов в календаре
@@ -1196,18 +390,7 @@ public class NewTaskActivity extends AppCompatActivity {
         new DatePickerDialog(NewTaskActivity.this, dR, dateStartCld.get(Calendar.YEAR),
                 dateStartCld.get(Calendar.MONTH), dateStartCld.get(Calendar.DAY_OF_MONTH)).show();
     }
-
-    DatePickerDialog.OnDateSetListener dR=new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateStartCld.set(Calendar.YEAR, year);
-            dateStartCld.set(Calendar.MONTH, monthOfYear);
-            dateStartCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            setInitialDate(year, monthOfYear+1, dayOfMonth, dateStart);
-        }
-    };
-
-
+    DatePickerDialog.OnDateSetListener dR = (view, year, month, day) -> viewModel.handleDateSet(dateStartCld, binding.dateStart, year, month, day);
 
 
 
@@ -1219,25 +402,5 @@ public class NewTaskActivity extends AppCompatActivity {
                 dateEndCld.get(Calendar.MONTH), dateEndCld.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    DatePickerDialog.OnDateSetListener d=new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            dateEndCld.set(Calendar.YEAR, year);
-            dateEndCld.set(Calendar.MONTH, monthOfYear);
-            dateEndCld.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            setInitialDate(year, monthOfYear+1, dayOfMonth, dateEnd);
-        }
-    };
-
-    public boolean checkDateFormat(String param) {
-        SimpleDateFormat sdfDATE = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        boolean flag = true;
-        if (!param.equals("")) {
-            sdfDATE.setLenient(false);
-            try { sdfDATE.parse(param); }
-            catch (ParseException e) { flag = false; }
-        }
-        return flag;
-    }
-
+    DatePickerDialog.OnDateSetListener d = (view, year, month, day) -> viewModel.handleDateSet(dateEndCld, binding.dateEnd, year, month, day);
 }

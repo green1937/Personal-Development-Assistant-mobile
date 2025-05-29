@@ -2,7 +2,6 @@ package com.example.assistant.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -17,13 +16,6 @@ import com.example.assistant.databinding.ActivityTimetableBinding;
 import com.example.assistant.viewmodel.TimetableAdapter;
 import com.example.assistant.viewmodel.TimetableViewModel;
 import com.example.assistant.viewmodel.TimetableViewModelFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,8 +88,10 @@ public class TimetableActivity extends AppCompatActivity {
         bottNavItem();
     }
 
+    /*
+        Нижнее меню
+     */
     protected void bottNavItem() {
-
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             // Главная
             if (item.getItemId() == R.id.bottom_home) {
@@ -141,57 +135,5 @@ public class TimetableActivity extends AppCompatActivity {
 
             return false;
         });
-    }
-
-
-
-/*
-УДАЛИТЬ ПОТОМ ЭТО ОТСЮДА
- */
-    public static String getJsonFromUrl(String urlString) {
-        String json = null;
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-
-        try {
-            URL url = new URL(urlString);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-
-            // Заголовок для обхода tuna browser warning
-            urlConnection.setRequestProperty("tuna-skip-browser-warning", "true");
-
-            urlConnection.connect();
-
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-
-            if (inputStream == null) {
-                Log.d("DEBUG", "inputStream == null");
-                return null;
-            }
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line);
-            }
-
-            if (buffer.length() == 0) return null;
-            json = buffer.toString();
-
-        } catch (IOException e) {
-            Log.e("DEBUG", "IOException при получении JSON", e);
-        } finally {
-            if (urlConnection != null) urlConnection.disconnect();
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    Log.e("DEBUG", "Ошибка закрытия reader", e);
-                }
-            }
-        }
-        return json;
     }
 }

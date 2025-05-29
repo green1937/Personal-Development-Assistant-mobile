@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityEditPlanBinding;
-import com.example.assistant.tasks.TaskAdapter;
 import com.example.assistant.viewmodel.EditPlanViewModel;
 import java.util.Calendar;
 

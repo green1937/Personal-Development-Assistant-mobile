@@ -1,4 +1,4 @@
-package com.example.assistant.tasks;
+package com.example.assistant.views;
 
 import static com.example.assistant.viewmodel.TimetableAdapter.deleteFromUrl;
 import static java.lang.Integer.parseInt;

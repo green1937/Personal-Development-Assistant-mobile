@@ -8,7 +8,6 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assistant.views.DiaryActivity;
-import com.example.assistant.views.BookmarkActivity;
 import com.example.assistant.phrases.DayPhrasesActivity;
 import com.example.assistant.views.PlansActivity;
 import com.example.assistant.views.StorageActivity;
@@ -28,8 +27,6 @@ public class SideMenuActivity extends AppCompatActivity {
         getColor();       // Переход на экран с категориями колеса баланса
         showTimetable();  // Переход на экран с расписанием занятий
         showStorage();
-        showMediabook();
-        showPhrase();
 
     }
 
@@ -115,24 +112,5 @@ public class SideMenuActivity extends AppCompatActivity {
         });
     }
 
-    protected void showMediabook() {
-        LinearLayout goMediabookActivity = findViewById(R.id.goMediabookActivity);
-        goMediabookActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), BookmarkActivity.class));
-            }
-        });
-    }
-
-    protected void showPhrase() {
-        LinearLayout goPhraseActivity = findViewById(R.id.goPhraseActivity);
-        goPhraseActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), DayPhrasesActivity.class));
-            }
-        });
-    }
 }
 

@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +24,6 @@ import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
 import com.example.assistant.databinding.ActivityStorageBinding;
-import com.example.assistant.tasks.TaskAdapter;
 import com.example.assistant.viewmodel.StorageViewModel;
 
 import java.util.Calendar;
@@ -214,7 +211,7 @@ public class StorageActivity extends AppCompatActivity {
                 itemIsRepeated = (String)parent.getItemAtPosition(position);
                 if (itemIsRepeated.equals("Не важно")) viewModel.setIsRepeated(null);
                 if (itemIsRepeated.equals("Да")) viewModel.setIsRepeated(true);
-                else viewModel.setIsRepeated(false);
+                if (itemIsRepeated.equals("Нет")) viewModel.setIsRepeated(false);
 
                 //saveSetting();
             }

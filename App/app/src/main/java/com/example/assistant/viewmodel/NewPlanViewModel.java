@@ -100,6 +100,7 @@ public class NewPlanViewModel extends ViewModel {
         NewPlan currentPlan = newPlan.getValue();
         newPlan.setValue(new NewPlan(1, currentPlan.getName(), currentPlan.getDetails(), changeDateFormat(currentPlan.getStartDate()), changeDateFormat(currentPlan.getStopDate())));
         allJsonData.add(new Gson().toJson(newPlan.getValue()));
+        System.out.println(allJsonData + " " + url.getValue());
         repository.sendDataObj(allJsonData, url.getValue(), "POST").observeForever(result -> {
             saveResult.setValue(result);
         });
