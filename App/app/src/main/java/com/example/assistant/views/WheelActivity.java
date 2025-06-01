@@ -15,12 +15,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import com.example.assistant.MainActivity;
+
 import com.example.assistant.R;
 import com.example.assistant.SideMenuActivity;
 import com.example.assistant.databinding.ActivityWheelBinding;
 import com.example.assistant.viewmodel.WheelViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;

@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assistant.views.DiaryActivity;
-import com.example.assistant.phrases.DayPhrasesActivity;
+import com.example.assistant.views.MainActivity;
 import com.example.assistant.views.PlansActivity;
 import com.example.assistant.views.StorageActivity;
 import com.example.assistant.views.TimetableActivity;

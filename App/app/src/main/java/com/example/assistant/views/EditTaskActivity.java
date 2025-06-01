@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.assistant.MainActivity;
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityNewTaskBinding;
 import com.example.assistant.viewmodel.NewTaskViewModel;
