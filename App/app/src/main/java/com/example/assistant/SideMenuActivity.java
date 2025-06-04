@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.assistant.views.DiaryActivity;
 import com.example.assistant.views.MainActivity;
 import com.example.assistant.views.PlansActivity;
+import com.example.assistant.views.ProfileActivity;
 import com.example.assistant.views.StorageActivity;
 import com.example.assistant.views.TimetableActivity;
 import com.example.assistant.wheel.CtgForWheelActivity;
@@ -24,6 +25,7 @@ public class SideMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_side_menu);
 
         bottNavItem();    // Нижнее меню
+        showProfile();    // Профиль
         getColor();       // Переход на экран с категориями колеса баланса
         showTimetable();  // Переход на экран с расписанием занятий
         showStorage();
@@ -78,6 +80,17 @@ public class SideMenuActivity extends AppCompatActivity {
             }
 
             return false;
+        });
+    }
+
+
+    protected void showProfile() {
+        LinearLayout goProfileActivity = findViewById(R.id.goProfileActivity);
+        goProfileActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+            }
         });
     }
 
