@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.assistant.viewmodel.EventViewModel" />
+            type="com.example.assistant.ui.timetable.viewmodel.EventViewModel" />
     </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".views.NewEventActivity"
+    tools:context=".ui.timetable.view.NewEventActivity"
     android:scrollbars="vertical">
 
     <ImageButton

@@ -13,72 +13,70 @@
         android:theme="@style/Theme.Assistant"
         tools:targetApi="31" >
 
-        <activity android:name=".views.ProfileActivity"
+        <activity android:name=".ui.wheel.view.NewCategoriesActivity"
             android:exported="false"/>
 
-        <activity android:name=".views.RegistrationActivity"
+        <activity android:name=".ui.profile.view.ProfileActivity"
             android:exported="false"/>
 
-        <activity android:name=".views.LoginActivity"
+        <activity android:name=".ui.auth.view.RegistrationActivity"
             android:exported="false"/>
 
-        <activity android:name=".phrases.DayPhrasesActivity"
+        <activity android:name=".ui.auth.view.LoginActivity"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".ui.storage.view.StorageActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.StorageActivity"
+            android:name=".ui.plans.view.EditPlanActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.EditPlanActivity"
+            android:name=".ui.home.view.EditTaskActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.EditTaskActivity"
+            android:name=".ui.timetable.view.NewEventActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.NewEventActivity"
+            android:name=".ui.timetable.view.TimetableActivity"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".ui.home.view.SideMenuActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.TimetableActivity"
+            android:name=".ui.wheel.view.WheelActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".wheel.CtgForWheelActivity"
+            android:name=".ui.diary.view.AllRecordsDiaryActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".SideMenuActivity"
+            android:name=".ui.diary.view.DiaryActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.WheelActivity"
+            android:name=".ui.plans.view.NewPlanActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.AllRecordsDiaryActivity"
+            android:name=".ui.plans.view.PlansActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.DiaryActivity"
+            android:name=".ui.home.view.NewTaskActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".views.NewPlanActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".views.PlansActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".views.NewTaskActivity"
-            android:exported="false"/>
-
-        <activity
-            android:name=".views.MainActivity"
+            android:name=".ui.home.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

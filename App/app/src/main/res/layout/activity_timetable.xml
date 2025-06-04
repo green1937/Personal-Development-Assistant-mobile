@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.assistant.viewmodel.TimetableViewModel" />
+            type="com.example.assistant.ui.timetable.viewmodel.TimetableViewModel" />
     </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

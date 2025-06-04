@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.assistant.ui.wheel.viewmodel.CategoriesViewModel" />
+    </data>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_main"
+        tools:context=".ui.wheel.view.NewCategoriesActivity"
+        android:scrollbars="vertical">
+
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/backBtn"
+            android:src="@drawable/back"
+            android:scaleType="fitCenter"
+            android:backgroundTint="@color/background_main"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textNewEvent"
+            android:text="Новая категория"
+            android:textSize="26dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:paddingVertical="10dp"/>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/tickBtn"
+            android:src="@drawable/tick"
+            android:scaleType="fitCenter"
+            android:padding="5dp"
+            android:background="@drawable/image_btn_style"
+            android:layout_marginBottom="70dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textNewEvent"
+            android:id="@+id/scroll">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addCtgRelativeLayout"
+                android:layout_below="@+id/linL"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/colorNewCtg"
+                android:layout_marginRight="10dp"
+                android:background="@color/background2"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nameNewCtg"
+                android:layout_toRightOf="@+id/colorNewCtg"
+                android:hint="Название категории"
+                android:textColor="@color/black"
+                android:textSize="18dp"/>
+
+            <com.skydoves.colorpickerview.ColorPickerView
+                android:id="@+id/colorPickerView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_below="@+id/nameNewCtg"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"/>
+            </RelativeLayout>
+
+        </ScrollView>
+
+
+    </RelativeLayout>
+</layout>

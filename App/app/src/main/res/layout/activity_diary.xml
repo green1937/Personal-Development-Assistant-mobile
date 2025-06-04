@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.assistant.viewmodel.DiaryViewModel" />
+            type="com.example.assistant.ui.diary.viewmodel.DiaryViewModel" />
     </data>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,7 +11,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_main"
-    tools:context=".views.DiaryActivity"
+    tools:context=".ui.diary.view.DiaryActivity"
     android:scrollbars="vertical">
 
     <TextView
