@@ -21,6 +21,7 @@ public class PlansViewModel extends ViewModel {
     private MutableLiveData<List<ArrayList<String>>> plans = new MutableLiveData<>();
     private MutableLiveData<String> getResultActive = new MutableLiveData<>();
     private MutableLiveData<String> getResultArchive = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
 
     public void setUrl(String urlPlan) {
@@ -43,17 +44,21 @@ public class PlansViewModel extends ViewModel {
         return plans.getValue();
     }
 
+    public void setToken(String t) {
+        token.setValue(t);
+    }
+
     /*
         Загрузка данных
      */
     public void loadPlanData() {
         String urlActive = url.getValue() + "/full?status=0";
-        getDataRepository.getDataObj(urlActive).observeForever(result -> {
+        getDataRepository.getDataObj(urlActive, token.getValue()).observeForever(result -> {
             getResultActive.setValue(result);
         });
 
         String urlArchive = url.getValue() + "/full?status=1";
-        getDataRepository.getDataObj(urlArchive).observeForever(result -> {
+        getDataRepository.getDataObj(urlArchive, token.getValue()).observeForever(result -> {
             getResultArchive.setValue(result);
         });
     }

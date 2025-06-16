@@ -23,6 +23,7 @@ import com.example.assistant.ui.diary.view.DiaryActivity;
 import com.example.assistant.ui.plans.view.PlansActivity;
 import com.example.assistant.ui.wheel.viewmodel.WheelViewModel;
 import com.example.assistant.ui.home.view.MainActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,25 +46,23 @@ public class WheelActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
 
+        viewModel.setCtx(getApplicationContext());
+
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
+
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "wheel");
         viewModel.setUrlCtg(res.getString(R.string.urlTuna) + "categories");
 
-        binding.dateWheelFrom.setText(viewModel.getStartDate());
-        binding.dateWheelTo.setText(viewModel.getStopDate());
 
         viewModel.getInitialDate();
+        System.out.println("ДАТЫ  - "+ viewModel.getStartDate() + " " + viewModel.getStopDate());
+        binding.dateWheelFrom.setText(viewModel.getStartDate());
+        binding.dateWheelTo.setText(viewModel.getStopDate());
 
         viewModel.getResultWheel().observe(this, success -> {
             if (success!=null) {
                 viewModel.setWheel();
-
-                /*
-                LinearLayoutManager linearLayoutManagerCtg = new LinearLayoutManager(getApplicationContext());
-                binding.ctgRV.setLayoutManager(linearLayoutManagerCtg);
-                WheelCtgAdapter categoriesAdapter = new WheelCtgAdapter(WheelActivity.this, viewModel.getCtg());
-                binding.ctgRV.setAdapter(categoriesAdapter);
-                 */
 
                 List<WheelView.WheelSector> sectors = new ArrayList<>();
 

@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityRegistrationBinding;
 import com.example.assistant.ui.auth.viewmodel.RegistrationViewModel;
-
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -32,8 +32,10 @@ public class RegistrationActivity extends AppCompatActivity {
         viewModel.setUrl(res.getString(R.string.urlTuna) + "auth/register");
 
         viewModel.getSaveResult().observe(this, success -> {
-            if (success) {
+            if (success!=null) {
                 Toast.makeText(this, "Вы успешно зарегистрированы!", Toast.LENGTH_SHORT).show();
+                System.out.println("token " + viewModel.getSaveResult().getValue());
+                SharedPreferencesHelper.saveToken(getApplicationContext(), viewModel.getSaveResult().getValue());
                 startActivity(new Intent(this, LoginActivity.class));
             } else {
                 Toast.makeText(this, "Ошибка регистрации!", Toast.LENGTH_SHORT).show();

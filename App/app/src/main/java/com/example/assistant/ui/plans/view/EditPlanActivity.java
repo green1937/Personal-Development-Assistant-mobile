@@ -17,6 +17,7 @@ import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityEditPlanBinding;
 import com.example.assistant.ui.plans.viewmodel.EditPlanViewModel;
 import com.example.assistant.ui.home.view.TaskAdapter;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.util.Calendar;
 
@@ -35,6 +36,8 @@ public class EditPlanActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(EditPlanViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
+
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
 
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "plans");
@@ -70,7 +73,7 @@ public class EditPlanActivity extends AppCompatActivity {
                 if(viewModel.getTasks() != null) {
                     LinearLayoutManager linearLayoutManagerTask = new LinearLayoutManager(getApplicationContext());
                     binding.allTaskInPlanRV.setLayoutManager(linearLayoutManagerTask);
-                    TaskAdapter tasksAdapter = new TaskAdapter(EditPlanActivity.this, viewModel.getTasks(), "com.example.assistant.ui.plans.view.PlansActivity");
+                    TaskAdapter tasksAdapter = new TaskAdapter(EditPlanActivity.this, viewModel.getTasks(), "com.example.assistant.ui.plans.view.PlansActivity", SharedPreferencesHelper.getToken(getApplicationContext()));
                     binding.allTaskInPlanRV.setAdapter(tasksAdapter);
                 }
             } else {

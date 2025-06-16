@@ -37,10 +37,12 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     Context context;
 
     List<ArrayList<String>> eventData;
+    String token;
 
-    public TimetableAdapter(Context context, List<ArrayList<String>> eventData) {
+    public TimetableAdapter(Context context, List<ArrayList<String>> eventData, String token) {
         this.context = context;
         this.eventData = eventData;
+        this.token = token;
     }
 
     @NonNull
@@ -94,7 +96,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
                                 // Запускаем удаление в отдельном потоке
                                 new Thread(() -> {
                                     try {
-                                        String result = deleteFromUrl(urlString);
+                                        String result = deleteFromUrl(urlString, token);
 
                                         if (result != null && result.equals("SUCCESS")) {
                                             Toast.makeText(context, "Мероприятие удалено", Toast.LENGTH_SHORT).show();
@@ -124,7 +126,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
     }
 
 
-    public static String deleteFromUrl(String urlString) {
+    public static String deleteFromUrl(String urlString, String token) {
         String result = null;
         HttpURLConnection urlConnection = null;
 
@@ -135,6 +137,7 @@ public class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.MyVi
 
             // Заголовок для обхода tuna browser warning
             urlConnection.setRequestProperty("tuna-skip-browser-warning", "true");
+            urlConnection.setRequestProperty("Authorization", "Bearer " + token);
 
             urlConnection.setDoOutput(true);
             urlConnection.connect();

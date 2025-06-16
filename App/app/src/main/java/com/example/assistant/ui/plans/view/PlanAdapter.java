@@ -45,11 +45,13 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
 
     List<ArrayList<String>> planData;
     String activityName;
+    String token;
 
-    public PlanAdapter(Context context, List<ArrayList<String>> planData, String activityName) {
+    public PlanAdapter(Context context, List<ArrayList<String>> planData, String activityName, String token) {
         this.context = context;
         this.planData = planData;
         this.activityName = activityName;
+        this.token = token;
     }
 
 
@@ -142,7 +144,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                             }
                             System.out.println(jsonString); // Выводим сформированный JSON.
 
-                            sendUpdateObjectStatusToServer(context, urlPlanId, jsonString, activityName);
+                            sendUpdateObjectStatusToServer(context, urlPlanId, jsonString, activityName, token);
                         }
                     });
 
@@ -164,7 +166,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.MyViewPlanHold
                                         // Запускаем удаление в отдельном потоке
                                         new Thread(() -> {
                                             try {
-                                                String result = deleteFromUrl(urlPlanId);
+                                                String result = deleteFromUrl(urlPlanId, token);
 
                                                 if (result != null && result.equals("SUCCESS")) {
                                                     //update page

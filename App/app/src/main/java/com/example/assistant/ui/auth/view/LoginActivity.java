@@ -13,6 +13,7 @@ import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityLoginBinding;
 import com.example.assistant.ui.auth.viewmodel.LoginViewModel;
 import com.example.assistant.ui.home.view.MainActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,8 +33,11 @@ public class LoginActivity extends AppCompatActivity {
         viewModel.setUrl(res.getString(R.string.urlTuna) + "auth/login");
 
         viewModel.getSaveResult().observe(this, success -> {
-            if (success) {
+            if (success!=null) {
                 Toast.makeText(this, "Вы успешно вошли в аккаунт!", Toast.LENGTH_SHORT).show();
+                System.out.println("token " + viewModel.getSaveResult().getValue());
+                viewModel.getTokenFromJSON(viewModel.getSaveResult().getValue());
+                SharedPreferencesHelper.saveToken(getApplicationContext(), viewModel.getTokenFromJSON(viewModel.getSaveResult().getValue()));
                 startActivity(new Intent(this, MainActivity.class));
             } else {
                 Toast.makeText(this, "Ошибка входа!", Toast.LENGTH_SHORT).show();

@@ -4,6 +4,7 @@ import static java.lang.Integer.parseInt;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ import com.example.assistant.ui.plans.view.PlanAdapter;
 import com.example.assistant.ui.plans.view.PlansActivity;
 import com.example.assistant.ui.storage.viewmodel.StorageViewModel;
 import com.example.assistant.ui.wheel.view.WheelActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.util.Calendar;
 
@@ -53,6 +55,8 @@ public class StorageActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(StorageViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
+        viewModel.setCtx(getApplicationContext());
 
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "storage");
@@ -63,29 +67,28 @@ public class StorageActivity extends AppCompatActivity {
     }
 
 
+
+
+
     protected void showSettingForSearch() {
-        binding.searchRL.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onClick(View v) {
-                if (binding.groupLL.getVisibility() == View.VISIBLE) {
-                    System.out.println("here1");
-                    binding.groupLL.setVisibility(View.GONE);
-                    binding.seeSearchSettingsBtn.setImageDrawable(getResources().getDrawable(R.drawable.back));
-                    binding.seeSearchSettingsBtn.getBackground().setColorFilter(Color.parseColor("#FFF3A972"),
-                            PorterDuff.Mode.DARKEN);
-                    binding.seeSearchSettingsBtn.setRotation(270);
-                }
-                else {
-                    System.out.println("here2");
-                    binding.groupLL.setVisibility(View.VISIBLE);
-                    binding.seeSearchSettingsBtn.setImageDrawable(getResources().getDrawable(R.drawable.tick));
-                    binding.seeSearchSettingsBtn.getBackground().setColorFilter(Color.parseColor("#77F400"),
-                            PorterDuff.Mode.DARKEN);
-                    binding.seeSearchSettingsBtn.setRotation(0);
-                    showGroupSettings();
-                    saveSetting();
-                }
+        binding.searchRL.setOnClickListener(v -> {
+            if (binding.groupLL.getVisibility() == View.VISIBLE) {
+                System.out.println("here1");
+                binding.groupLL.setVisibility(View.GONE);
+                binding.seeSearchSettingsBtn.setImageDrawable(getResources().getDrawable(R.drawable.back));
+                binding.seeSearchSettingsBtn.getBackground().setColorFilter(Color.parseColor("#FFF3A972"),
+                        PorterDuff.Mode.DARKEN);
+                binding.seeSearchSettingsBtn.setRotation(270);
+            }
+            else {
+                System.out.println("here2");
+                binding.groupLL.setVisibility(View.VISIBLE);
+                binding.seeSearchSettingsBtn.setImageDrawable(getResources().getDrawable(R.drawable.tick));
+                binding.seeSearchSettingsBtn.getBackground().setColorFilter(Color.parseColor("#77F400"),
+                        PorterDuff.Mode.DARKEN);
+                binding.seeSearchSettingsBtn.setRotation(0);
+                showGroupSettings();
+                saveSetting();
             }
         });
     }
@@ -128,7 +131,6 @@ public class StorageActivity extends AppCompatActivity {
                 }
                 viewModel.setEntityTypes(itemGroups);
 
-                //saveSetting();
             }
 
             @Override
@@ -144,7 +146,6 @@ public class StorageActivity extends AppCompatActivity {
         Сохранение настроек поиска
      */
     protected void saveSetting() {
-        System.out.println("HERE 3");
         if (binding.groupLL.getVisibility() == View.VISIBLE) {
             binding.seeSearchSettingsBtn.setOnClickListener(v -> {
 
@@ -155,8 +156,6 @@ public class StorageActivity extends AppCompatActivity {
 
                     if (binding.maxPoints.getText().toString().equals("")) viewModel.setMaxPoints(null);
                     else viewModel.setMaxPoints(parseInt(binding.maxPoints.getText().toString()));
-                    //viewModel.setMinPoints(parseInt(binding.minPoints.getText().toString()));
-                    //viewModel.setMaxPoints(parseInt(binding.maxPoints.getText().toString()));
                 }
 
                 viewModel.onSaveBtnClicked();
@@ -168,11 +167,11 @@ public class StorageActivity extends AppCompatActivity {
                             binding.storageRV.setLayoutManager(linearLayoutManager);
 
                             if (viewModel.getEntityType().get(i).equals("task")) {
-                                TaskAdapter adapter = new TaskAdapter(this, viewModel.getTask(), "com.example.assistant.ui.storage.view.StorageActivity");
+                                TaskAdapter adapter = new TaskAdapter(this, viewModel.getTask(), "com.example.assistant.ui.storage.view.StorageActivity", SharedPreferencesHelper.getToken(getApplicationContext()));
                                 binding.storageRV.setAdapter(adapter);
                             }
                             if (viewModel.getEntityType().get(i).equals("plan")) {
-                                PlanAdapter adapter = new PlanAdapter(this, viewModel.getPlan(), "com.example.assistant.ui.storage.view.StorageActivity");
+                                PlanAdapter adapter = new PlanAdapter(this, viewModel.getPlan(), "com.example.assistant.ui.storage.view.StorageActivity", SharedPreferencesHelper.getToken(getApplicationContext()));
                                 binding.storageRV.setAdapter(adapter);
                             }
 
@@ -188,7 +187,7 @@ public class StorageActivity extends AppCompatActivity {
                         }
 
                         System.out.println("SEE RESULT ---POST---  " + success);
-                        Toast.makeText(getApplicationContext(), "Поиск выполнен", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Поиск выполнен", Toast.LENGTH_SHORT).show();
                         binding.groupLL.setVisibility(View.GONE);
                         binding.seeSearchSettingsBtn.setImageDrawable(getResources().getDrawable(R.drawable.back));
                         binding.seeSearchSettingsBtn.getBackground().setColorFilter(Color.parseColor("#FFF3A972"),
@@ -219,7 +218,6 @@ public class StorageActivity extends AppCompatActivity {
                 if (itemIsRepeated.equals("Да")) viewModel.setIsRepeated(true);
                 if (itemIsRepeated.equals("Нет")) viewModel.setIsRepeated(false);
 
-                //saveSetting();
             }
 
             @Override

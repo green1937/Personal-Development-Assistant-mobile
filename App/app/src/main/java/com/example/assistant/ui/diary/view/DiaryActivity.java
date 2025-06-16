@@ -5,8 +5,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,31 +18,14 @@ import com.example.assistant.ui.diary.viewmodel.DiaryViewModel;
 import com.example.assistant.ui.home.view.MainActivity;
 import com.example.assistant.ui.plans.view.PlansActivity;
 import com.example.assistant.ui.wheel.view.WheelActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 public class DiaryActivity extends AppCompatActivity {
-    DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-    DateFormat formatForDateVariant2 = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    String dateCurrStr, dateCurrStr2;
-    TextView dateCurrDiary;
-    String urlDiary;
-    ArrayList<String> recordData = new ArrayList<>();
-    ArrayList<String> todayRecordData = new ArrayList<>();
-
-    List<ArrayList<String>> allRecords = new ArrayList<>();
-    EditText todayRecordEditText;
-    int flag, todayRecordId;
-
-
-
+    int flag;
     private ActivityDiaryBinding binding;
     DiaryViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +36,7 @@ public class DiaryActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
 
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "diary");
         binding.dateDiary.setText(viewModel.getTodayDate());
@@ -80,8 +62,8 @@ public class DiaryActivity extends AppCompatActivity {
         bottNavItem();
     }
     /*
-            Функция передачи текста записи на текущую дату
-         */
+        Функция передачи текста записи на текущую дату
+     */
     protected void outputTodayRecord() {
         flag = 1;
 
@@ -133,9 +115,9 @@ public class DiaryActivity extends AppCompatActivity {
 
 
     /*
-            Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
-            колесо баланса, дневник, боковое/главное меню)
-        */
+        Функция, отвечающая за работу нижнего меню - переход на другие активности (главная, планы,
+        колесо баланса, дневник, боковое/главное меню)
+    */
     protected void bottNavItem() {
         binding.bottomNavigationView.setSelectedItemId(R.id.bottom_diary);
 

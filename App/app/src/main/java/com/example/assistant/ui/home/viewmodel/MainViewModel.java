@@ -7,6 +7,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.assistant.repository.GetDataRepository;
+import com.example.assistant.repository.NewObjectRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -28,30 +33,46 @@ import java.util.Objects;
 
 public class MainViewModel extends ViewModel {
     private MutableLiveData<String> url = new MutableLiveData<>();
+    private MutableLiveData<String> urlNote = new MutableLiveData<>();
     private GetDataRepository getDataRepository = new GetDataRepository();
+    private NewObjectRepository repository = new NewObjectRepository();
     private MutableLiveData<String> getResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> getResultNewNote = new MutableLiveData<>();
+    private MutableLiveData<Boolean> getResultEditNote = new MutableLiveData<>();
     private MutableLiveData<String> getPhraseResult = new MutableLiveData<>();
     private MutableLiveData<String> nameDayOfWeek = new MutableLiveData<>();
 
     private MutableLiveData<List<ArrayList<String>>> tasks = new MutableLiveData<>();
     private MutableLiveData<List<ArrayList<String>>> events = new MutableLiveData<>();
     private MutableLiveData<String> note = new MutableLiveData<>();
+    private MutableLiveData<String> dateNote = new MutableLiveData<>();
+
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
 
     DateFormat formatForDate = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-    DateFormat formatForDateServer = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
-
+    DateFormat formatForDateServer = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public void setUrl(String urlTuna, String date) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat outputFormat2 = new SimpleDateFormat("yyyy-MM-dd");
         try {
             String formattedDate = outputFormat.format(Objects.requireNonNull(inputFormat.parse(date)));
             url.setValue(urlTuna + formattedDate);
+            dateNote.setValue(outputFormat2.format(Objects.requireNonNull(inputFormat.parse(date))));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    public void setToken(String t) {
+        token.setValue(t);
+    }
+
+    public void setNoteUrl(String urlN) {
+        urlNote.setValue(urlN);
+    }
+
 
     //  Получение текущей даты в формате ДД.ММ.ГГГГ
     public String getTodayData() {
@@ -91,6 +112,14 @@ public class MainViewModel extends ViewModel {
         int valueDayOfWeek = day.getValue() - 1;  // Порядковый номер дня недели (отсчет начинается с 0)
         nameDayOfWeek.setValue(weeksDay[valueDayOfWeek]);
     }
+    public LiveData<Boolean> getResultNewNote() {
+        return getResultNewNote;
+    }
+
+    public LiveData<Boolean> getResultEditNote() {
+        return getResultEditNote;
+    }
+
 
 
     //  Результат загрузки данных
@@ -119,13 +148,14 @@ public class MainViewModel extends ViewModel {
 
     // Загрузка данных Главного экрана на день (Задачи, Распсиание, Заметки)
     public void loadHomeData() {
-        getDataRepository.getDataObj(url.getValue()).observeForever(result -> {
+        System.out.println("TOKEN in VIEWMODEL = " + token.getValue());
+        getDataRepository.getDataObj(url.getValue(), token.getValue()).observeForever(result -> {
             getResult.setValue(result);
         });
     }
 
     public void loadPhrase() {
-        getDataRepository.getDataObj("https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&jsonp=parseQuote").observeForever(result -> {
+        getDataRepository.getDataObj("https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&jsonp=parseQuote", "phrase").observeForever(result -> {
             getPhraseResult.setValue(result);
         });
     }
@@ -202,7 +232,7 @@ public class MainViewModel extends ViewModel {
                 }
             }
 
-            //note.setValue(oneNote);
+            note.setValue(todayObject.getString("text_note"));
             events.setValue(allEvents);
             tasks.setValue(allTasks);
 
@@ -211,6 +241,17 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+
+    public void createNote(String text) {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode json = mapper.createObjectNode()
+                .put("user_id", 1)
+                .put("assigned_day", dateNote.getValue())
+                .put("text", text);
+        System.out.println("JSON DATA NEW NOTE = " + json.toString());
+        repository.sendDataObj(Collections.singletonList(json.toString()), urlNote.getValue(),
+                "POST", token.getValue()).observeForever(result -> getResultNewNote.setValue(result));
+    }
 
     /*
         Возвращает фразу дня и ее автора
@@ -254,5 +295,27 @@ public class MainViewModel extends ViewModel {
         editDate.setText(dateForEndStr);
     }
 
+
+    public int noteVisibility(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        int flag = 0;
+        try {
+            Date currDate = new Date();
+            LocalDate localDate1 = LocalDate.parse(date, formatter);
+            LocalDate localDate2 = LocalDate.parse(formatForDate.format(currDate), formatter);
+
+            if(localDate1.equals(localDate2)) flag = 0;
+            else {
+                if (localDate1.isAfter(localDate2)) flag = 1;
+                else flag = 3;
+            }
+
+        } catch (DateTimeParseException e) {
+            System.err.println("Ошибка при парсинге даты: " + e.getMessage());
+        }
+        System.out.println("FLAG NOTE = " + flag);
+        return flag;
+    }
 
 }

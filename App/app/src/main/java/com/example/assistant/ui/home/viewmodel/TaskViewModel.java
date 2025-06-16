@@ -71,10 +71,12 @@ public class TaskViewModel extends ViewModel {
     private MutableLiveData<String> getPlanResult = new MutableLiveData<>();
     private MutableLiveData<String> getEditTaskResult = new MutableLiveData<>();
 
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
 
-
-
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
 
 
@@ -192,16 +194,16 @@ public class TaskViewModel extends ViewModel {
 
 
     public void loadNameAllCtgForTask() {
-        getDataRepository.getDataObj(urlCtg.getValue()).observeForever(result -> getCtgResult.setValue(result));
+        getDataRepository.getDataObj(urlCtg.getValue(), token.getValue()).observeForever(result -> getCtgResult.setValue(result));
     }
 
     public void loadNameAllPlanForTask() {
-        getDataRepository.getDataObj(urlPlans.getValue()).observeForever(result -> getPlanResult.setValue(result));
+        getDataRepository.getDataObj(urlPlans.getValue(), token.getValue()).observeForever(result -> getPlanResult.setValue(result));
     }
 
 
     public void loadEditTaskData() {
-        getDataRepository.getDataObj(urlEditTask.getValue()).observeForever(result -> getEditTaskResult.setValue(result));
+        getDataRepository.getDataObj(urlEditTask.getValue(), token.getValue()).observeForever(result -> getEditTaskResult.setValue(result));
     }
 
     public void setEditTask() {
@@ -349,7 +351,7 @@ public class TaskViewModel extends ViewModel {
 
         allJsonData.add(new Gson().toJson(editTask.getValue()));
         String jsonData = new Gson().toJson(editTask.getValue());
-        repository.sendDataObj(jsonData, url.getValue(), "PUT").observeForever(result -> saveResult.setValue(result));
+        repository.sendDataObj(jsonData, url.getValue(), "PUT", token.getValue()).observeForever(result -> saveResult.setValue(result));
     }
 
     public void saveNewTask() {
@@ -368,7 +370,7 @@ public class TaskViewModel extends ViewModel {
 
         allJsonData.add(new Gson().toJson(task.getValue()));
         String jsonData = new Gson().toJson(task.getValue());
-        repository.sendDataObj(jsonData, url.getValue(), "POST").observeForever(result -> {
+        repository.sendDataObj(jsonData, url.getValue(), "POST", token.getValue()).observeForever(result -> {
             saveResult.setValue(result);
         });
 

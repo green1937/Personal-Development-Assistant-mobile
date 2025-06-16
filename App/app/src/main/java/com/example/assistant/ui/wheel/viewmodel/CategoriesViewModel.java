@@ -17,6 +17,13 @@ public class CategoriesViewModel extends ViewModel {
     private MutableLiveData<String> colorCtg = new MutableLiveData<>();
     private NewObjectRepository repository = new NewObjectRepository();
     private MutableLiveData<Boolean> saveResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
+
+
+
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
 
     public void setUrl(String urlCtg) {
@@ -38,7 +45,7 @@ public class CategoriesViewModel extends ViewModel {
         String allJsonData = null;
         try {
             allJsonData = mapper.writeValueAsString(json);
-            repository.sendDataObj(Collections.singletonList(allJsonData), url.getValue(), "POST").observeForever(result -> saveResult.setValue(result));
+            repository.sendDataObj(Collections.singletonList(allJsonData), url.getValue(), "POST", token.getValue()).observeForever(result -> saveResult.setValue(result));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

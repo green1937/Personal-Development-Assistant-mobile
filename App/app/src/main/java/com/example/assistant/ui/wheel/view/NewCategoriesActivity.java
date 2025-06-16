@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityNewCategoriesBinding;
 import com.example.assistant.ui.wheel.viewmodel.CategoriesViewModel;
+import com.example.assistant.utils.SharedPreferencesHelper;
 import com.skydoves.colorpickerview.listeners.ColorListener;
 
 
@@ -31,16 +32,11 @@ public class NewCategoriesActivity extends AppCompatActivity {
 
         binding.backBtn.setOnClickListener(v -> startActivity(new Intent(this, WheelActivity.class)));
 
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "categories");
 
-        binding.colorPickerView.setColorListener(new ColorListener() {
-            @Override
-            public void onColorSelected(int color, boolean fromUser) {
-                binding.colorNewCtg.setBackgroundColor(color);
-
-            }
-        });
+        binding.colorPickerView.setColorListener((ColorListener) (color, fromUser) -> binding.colorNewCtg.setBackgroundColor(color));
 
         binding.tickBtn.setOnClickListener(v -> {
             if(!binding.nameNewCtg.getText().toString().equals("")) {
@@ -50,7 +46,6 @@ public class NewCategoriesActivity extends AppCompatActivity {
                 int colorInt = ((ColorDrawable) binding.colorNewCtg.getBackground()).getColor();
 
                 String colorHex = String.format("#%06X", (0xFFFFFF & colorInt));
-                System.out.println("------------------- name " + binding.nameNewCtg.getText().toString() + " color " + colorHex);
 
                 viewModel.setColorCtg(colorHex);
                 viewModel.saveData();
@@ -68,11 +63,6 @@ public class NewCategoriesActivity extends AppCompatActivity {
             }
 
         });
-
-
-
-
-
 
 
     }

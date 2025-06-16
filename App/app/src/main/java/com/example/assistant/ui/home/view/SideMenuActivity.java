@@ -2,14 +2,12 @@ package com.example.assistant.ui.home.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.assistant.R;
 import com.example.assistant.ui.diary.view.DiaryActivity;
-import com.example.assistant.ui.home.view.MainActivity;
 import com.example.assistant.ui.plans.view.PlansActivity;
 import com.example.assistant.ui.profile.view.ProfileActivity;
 import com.example.assistant.ui.storage.view.StorageActivity;
@@ -27,7 +25,7 @@ public class SideMenuActivity extends AppCompatActivity {
         bottNavItem();    // Нижнее меню
         showProfile();    // Профиль
         showTimetable();  // Переход на экран с расписанием занятий
-        showStorage();
+        showStorage();    // Хранилище
 
     }
 
@@ -85,34 +83,19 @@ public class SideMenuActivity extends AppCompatActivity {
 
     protected void showProfile() {
         LinearLayout goProfileActivity = findViewById(R.id.goProfileActivity);
-        goProfileActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
-            }
-        });
+        goProfileActivity.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), ProfileActivity.class)));
     }
 
 
     protected void showTimetable() {
         LinearLayout goTimetableActivity = findViewById(R.id.goTimetableActivity);
-        goTimetableActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), TimetableActivity.class));
-            }
-        });
+        goTimetableActivity.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), TimetableActivity.class)));
     }
 
 
     protected void showStorage() {
         LinearLayout goStorageActivity = findViewById(R.id.goStorageActivity);
-        goStorageActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), StorageActivity.class));
-            }
-        });
+        goStorageActivity.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), StorageActivity.class)));
     }
 
 }

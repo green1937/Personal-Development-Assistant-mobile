@@ -12,9 +12,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class GetWheelRepository {
+public class GetRequestRepository {
 
-    public LiveData<String> sendDataToServer(String jsonData, String urlWheel) {
+    public LiveData<String> sendDataToServer(String jsonData, String urlWheel, String token) {
         final MutableLiveData<String> result = new MutableLiveData<>();
 
         new Thread(() -> {
@@ -27,6 +27,9 @@ public class GetWheelRepository {
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("tuna-skip-browser-warning", "true");
+
+                // Добавляем заголовок с токеном
+                connection.setRequestProperty("Authorization", "Bearer " + token);
 
                 // Отправка данных
                 try (OutputStream os = connection.getOutputStream()) {

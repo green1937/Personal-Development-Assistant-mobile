@@ -9,13 +9,18 @@
         android:layout_height="30dp"
         android:id="@+id/linL"
         android:orientation="horizontal"
-        android:layout_marginEnd="45dp">
-        <CheckBox
-            android:id="@+id/checkBoxCtg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/bottom_menu"
-            />
+        android:layout_marginHorizontal="10dp">
+
+        <View
+            android:id="@+id/ctgColorView"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/circular_shape" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,21 +28,14 @@
             android:id="@+id/ctgNameTextOut"
             android:textSize="18dp"
             android:layout_gravity="center"
-            android:gravity="center"
+            android:gravity="left"
             android:textColor="@color/black"
             android:text="Категория колеса баланса"
             android:layout_marginRight="15dp"
+            android:paddingLeft="30dp"
             android:layout_weight="1"/>
+
     </LinearLayout>
 
-    <View
-        android:id="@+id/ctgColorView"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/circular_shape" />
+
 </RelativeLayout>

@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityNewPlanBinding;
 import com.example.assistant.ui.plans.viewmodel.NewPlanViewModel;
+import com.example.assistant.utils.SharedPreferencesHelper;
+
 import java.util.Calendar;
 
 public class NewPlanActivity extends AppCompatActivity {
@@ -31,6 +33,8 @@ public class NewPlanActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(NewPlanViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
+
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
 
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "plans");

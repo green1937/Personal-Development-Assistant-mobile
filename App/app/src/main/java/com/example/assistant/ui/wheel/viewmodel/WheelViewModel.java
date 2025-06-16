@@ -1,6 +1,7 @@
 package com.example.assistant.ui.wheel.viewmodel;
 
 
+import android.content.Context;
 import android.widget.EditText;
 
 import androidx.lifecycle.LiveData;
@@ -8,7 +9,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.assistant.repository.GetDataRepository;
-import com.example.assistant.repository.GetWheelRepository;
+import com.example.assistant.repository.GetRequestRepository;
+import com.example.assistant.utils.SharedPreferencesHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -27,6 +29,7 @@ import java.util.List;
 
 public class WheelViewModel extends ViewModel {
     private MutableLiveData<String> url = new MutableLiveData<>();
+    private MutableLiveData<Context> context = new MutableLiveData<>();
     private MutableLiveData<String> urlCtg = new MutableLiveData<>();
 
     private MutableLiveData<String> startDate = new MutableLiveData<>();
@@ -35,15 +38,24 @@ public class WheelViewModel extends ViewModel {
     private MutableLiveData<String> startDateET = new MutableLiveData<>();
     private MutableLiveData<String> stopDateET = new MutableLiveData<>();
 
-    private GetWheelRepository getWheelRepository = new GetWheelRepository();
+    private GetRequestRepository getRequestRepository = new GetRequestRepository();
     private GetDataRepository repositoryAllCtg = new GetDataRepository();
 
     private MutableLiveData<String> getResultWheel = new MutableLiveData<>();
     private MutableLiveData<String> getResultCtg = new MutableLiveData<>();
 
     private MutableLiveData<List<ArrayList<String>>> categories = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
+    
 
 
+    public void setToken(String t) {
+        token.setValue(t);
+    }
+
+    public void setCtx(Context ctx) {
+        context.setValue(ctx);
+    }
     public void setUrl(String urlWheel) {
         url.setValue(urlWheel);
     }
@@ -86,7 +98,7 @@ public class WheelViewModel extends ViewModel {
         String jsonString = null;
         try {
             jsonString = mapper.writeValueAsString(json);
-            getWheelRepository.sendDataToServer(jsonString, url.getValue()).observeForever(result -> getResultWheel.setValue(result));
+            getRequestRepository.sendDataToServer(jsonString, url.getValue(), token.getValue()).observeForever(result -> getResultWheel.setValue(result));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -145,7 +157,7 @@ public class WheelViewModel extends ViewModel {
         try {
             jsonString = mapper.writeValueAsString(json);
             System.out.println("SSSSSSSSSSSEEEEEEEEEE data wheel " + jsonString);
-            getWheelRepository.sendDataToServer(jsonString, url.getValue()).observeForever(result -> getResultWheel.setValue(result));
+            getRequestRepository.sendDataToServer(jsonString, url.getValue(), token.getValue()).observeForever(result -> getResultWheel.setValue(result));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -191,7 +203,7 @@ public class WheelViewModel extends ViewModel {
 
 
     public void getAllCtg() {
-        repositoryAllCtg.getDataObj(urlCtg.getValue()).observeForever(result -> getResultCtg.setValue(result));
+        repositoryAllCtg.getDataObj(urlCtg.getValue(), token.getValue()).observeForever(result -> getResultCtg.setValue(result));
     }
 
 

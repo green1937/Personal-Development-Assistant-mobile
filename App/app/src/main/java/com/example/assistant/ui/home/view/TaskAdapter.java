@@ -41,11 +41,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     Context context;
     List<ArrayList<String>> taskData;
     String activityName;
+    String token;
 
-    public TaskAdapter(Context context, List<ArrayList<String>> taskData, String activityName) {
+    public TaskAdapter(Context context, List<ArrayList<String>> taskData, String activityName, String token) {
         this.context = context;
         this.taskData = taskData;
         this.activityName = activityName;
+        this.token = token;
 
     }
 
@@ -140,18 +142,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                         }
                         System.out.println(jsonString); // Выводим сформированный JSON.
 
-                        sendUpdateObjectStatusToServer(context, urlTasksId, jsonString, activityName);
-
-                        //update page
-                        /*
-                        try {
-                            Class<?> activityClass = Class.forName(activityName);
-                            Intent intent = new Intent(context, activityClass);
-                            context.startActivity(intent);
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                         */
+                        sendUpdateObjectStatusToServer(context, urlTasksId, jsonString, activityName, token);
 
                     }
                 });
@@ -174,7 +165,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                                     // Запускаем удаление в отдельном потоке
                                     new Thread(() -> {
                                         try {
-                                            String result = deleteFromUrl(urlTasksId);
+                                            String result = deleteFromUrl(urlTasksId, token);
 
                                             if (result != null && result.equals("SUCCESS")) {
                                                 //update page
@@ -224,7 +215,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
 
 
 
-    public static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData, String activityName) {
+    public static void sendUpdateObjectStatusToServer(Context context, String url, String jsonData, String activityName, String token) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             try {
@@ -237,6 +228,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
                 connection.setDoOutput(true);
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("tuna-skip-browser-warning", "true");
+                connection.setRequestProperty("Authorization", "Bearer " + token);
 
                 // Отправляем JSON данные
 

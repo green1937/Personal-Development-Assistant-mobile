@@ -10,19 +10,24 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityMainBinding;
+import com.example.assistant.ui.auth.view.LoginActivity;
 import com.example.assistant.ui.diary.view.DiaryActivity;
 import com.example.assistant.ui.home.viewmodel.MainViewModel;
 import com.example.assistant.ui.plans.view.PlansActivity;
 import com.example.assistant.ui.timetable.view.TimetableAdapter;
 import com.example.assistant.ui.wheel.view.WheelActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.util.Calendar;
 
@@ -31,11 +36,18 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     MainViewModel viewModel;
     Resources res;
+    int flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //SharedPreferencesHelper.saveToken(getApplicationContext(), null);
 
+        if(SharedPreferencesHelper.getToken(getApplicationContext()).isEmpty()) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+
+        flag = 3;
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         binding.setViewModel(viewModel);
@@ -50,14 +62,17 @@ public class MainActivity extends AppCompatActivity {
                 setData();
             }
         });
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         viewModel.setUrl(res.getString(R.string.urlTuna), viewModel.getTodayData());
+        viewModel.setNoteUrl(res.getString(R.string.urlTuna) + "notes");
+
         binding.dateText.setText(viewModel.getTodayData());
 
         bottNavItem();              // Нижнее меню
         showTimetableAndNote();     // Показ по нажатию расписания и заметки
         spinnerDays();              // Выпадающий список с днями
         binding.newTaskBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NewTaskActivity.class)));
-
+        outputTodayRecord();
     }
 
 
@@ -156,23 +171,124 @@ public class MainActivity extends AppCompatActivity {
                     binding.newTaskBtn.setVisibility(View.VISIBLE);
                 }
 
+                binding.notesBtn.setVisibility(View.VISIBLE);
+                if(viewModel.noteVisibility(binding.dateText.getText().toString()) == 1) {
+                    binding.notesBtn.setVisibility(View.GONE);
+                    binding.notesEditText.setVisibility(View.GONE);
+                }
+
+                if (viewModel.noteVisibility(binding.dateText.getText().toString()) == 3) {
+                    binding.notesEditText.setFocusable(false);
+                    binding.notesEditText.setClickable(false);
+                }
+
+
                 viewModel.getDataFromJSON(binding.dateText.getText().toString());
 
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 binding.timetableRecyclerView.setLayoutManager(linearLayoutManager);
-                TimetableAdapter timetableAdapter = new TimetableAdapter(MainActivity.this, viewModel.getEvents().getValue());
+                TimetableAdapter timetableAdapter = new TimetableAdapter(MainActivity.this, viewModel.getEvents().getValue(), SharedPreferencesHelper.getToken(getApplicationContext()));
                 binding.timetableRecyclerView.setAdapter(timetableAdapter);
 
                 LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getApplicationContext());
                 binding.tasksRecyclerView.setLayoutManager(linearLayoutManager2);
-                TaskAdapter adapter = new TaskAdapter(this, viewModel.getTasks().getValue(), "com.example.assistant.ui.home.view.MainActivity");
+                TaskAdapter adapter = new TaskAdapter(this, viewModel.getTasks().getValue(), "com.example.assistant.ui.home.view.MainActivity", SharedPreferencesHelper.getToken(getApplicationContext()));
                 binding.tasksRecyclerView.setAdapter(adapter);
+
+                if (viewModel.getNote().getValue().equals("null")) {
+                    System.out.println("На сегодня НЕТ заметки!");
+                    //binding.notesEditText.setText("");
+                    //viewModel.createNote();
+
+                }
+
 
             }
         });
 
 
+
+
+
     }
+
+
+    /*
+        Функция передачи текста записи на текущую дату
+     */
+    protected void outputTodayRecord() {
+        //flag = 1;
+
+        //Вывод текст записи на сегодня (если есть)
+       /* if (viewModel.getNote().getValue() != null && !viewModel.getNote().getValue().equals("null")) {
+            System.out.println("Запись уже есть! Выводим его...");
+            flag = 0;
+            binding.notesEditText.setText(viewModel.getNote().getValue());
+        }*/
+
+        if (viewModel.getNote().getValue() != null) {// && !viewModel.getNote().getValue().equals("null")) {
+            System.out.println("Запись уже есть! Выводим его...");
+            flag = 0;
+            binding.notesEditText.setText(viewModel.getNote().getValue());
+        }
+
+        // Добавляем TextWatcher для отслеживания изменений
+        binding.notesEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Этот метод вызывается перед изменением текста
+
+
+                    //viewModel.createRecord(binding.notesEditText.getText().toString());
+                    /*
+                    viewModel.getSaveResult().observe(MainActivity.this, success -> {
+                        if (success != null) {
+                            Toast.makeText(MainActivity.this, "Новая запись успешно сохранена", Toast.LENGTH_SHORT).show();
+                            viewModel.loadAllRecords();
+                            viewModel.getResult().observe(MainActivity.this, success2 -> {
+                                if (success2 != null) {
+                                    Toast.makeText(MainActivity.this, "Данные успешно получены2", Toast.LENGTH_SHORT).show();
+                                    viewModel.setDiary();
+                                }
+                            });
+                        }
+                    });
+
+                     */
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Этот метод вызывается во время изменения текста
+                // Здесь можно добавить дополнительную логику
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                System.out.println("\n 0. WE ARE HERE \n");
+
+                if(flag == 3) {
+                    System.out.println("1. Новая note");
+                    viewModel.createNote(binding.notesEditText.getText().toString());
+                    flag = 0;
+                    setData();
+                }
+                else {
+                    // Этот метод вызывается после изменения текста
+
+                    System.out.println("2. Изменения в note = " + s.toString());
+                    System.out.println(" + то что в поле = " + binding.notesEditText.getText());
+                    //viewModel.updateRecord(binding.todayRecordEditText.getText().toString());
+                }
+            }
+        });
+    }
+
+
+
+
+
 
 
     /*

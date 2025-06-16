@@ -134,7 +134,7 @@
             android:id="@+id/notesEditText"
             android:layout_below="@+id/notesBtn"
             android:background="@color/background2"
-            android:text="Здесь написана какая-то заметка. В дальнейшем ее можно будет изменять."
+
             android:textColor="@color/black"
             android:textSize="16dp"
             android:paddingHorizontal="10dp"

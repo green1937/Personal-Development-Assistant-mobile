@@ -38,7 +38,12 @@ public class EditPlanViewModel extends ViewModel {
     private MutableLiveData<Boolean> saveResult = new MutableLiveData<>();
 
     private MutableLiveData<String> getResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
+
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
     public LiveData<Plan> getPlan() {
         return plan;
@@ -164,7 +169,7 @@ public class EditPlanViewModel extends ViewModel {
                 currentPlan.getStatus()));
         allJsonData.add(new Gson().toJson(plan.getValue()));
 
-        repository.sendDataObj(allJsonData, url.getValue(), "PUT").
+        repository.sendDataObj(allJsonData, url.getValue(), "PUT", token.getValue()).
                 observeForever(result -> saveResult.setValue(result));
     }
 
@@ -235,7 +240,7 @@ public class EditPlanViewModel extends ViewModel {
      */
     public void loadPlanData() {
         String editPlanUrl = url.getValue() + "/" + id.getValue();
-        getDataRepository.getDataObj(editPlanUrl).observeForever(result -> {
+        getDataRepository.getDataObj(editPlanUrl, token.getValue()).observeForever(result -> {
             getResult.setValue(result);
         });
     }

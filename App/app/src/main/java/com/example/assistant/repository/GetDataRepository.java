@@ -15,7 +15,7 @@ import java.net.URL;
 public class GetDataRepository {
 
 
-    public LiveData<String> getDataObj(String urlString) {
+    public LiveData<String> getDataObj(String urlString, String token) {
         final MutableLiveData<String> result = new MutableLiveData<>();
         System.out.println("URL in GET Repo " + urlString);
 
@@ -32,6 +32,10 @@ public class GetDataRepository {
 
                 // Заголовок для обхода tuna browser warning
                 urlConnection.setRequestProperty("tuna-skip-browser-warning", "true");
+                System.out.println("TOKEN IN REPO = " + token);
+                // Добавляем заголовок с токеном
+                if(!token.equals("phrase")) urlConnection.setRequestProperty("Authorization", "Bearer " + token);
+
 
                 urlConnection.connect();
 

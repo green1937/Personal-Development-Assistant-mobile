@@ -19,7 +19,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.assistant.databinding.ActivityNewTaskBinding;
 import com.example.assistant.R;
+import com.example.assistant.ui.auth.view.LoginActivity;
 import com.example.assistant.ui.home.viewmodel.TaskViewModel;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.util.Calendar;
 
@@ -38,12 +40,15 @@ public class NewTaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        if(SharedPreferencesHelper.getToken(getApplicationContext()).isEmpty()) {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_new_task);
         viewModel = new ViewModelProvider(this).get(TaskViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
-
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "tasks");
         viewModel.setUrlCtg(res.getString(R.string.urlTuna) + "categories");

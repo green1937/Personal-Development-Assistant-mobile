@@ -2,6 +2,7 @@ package com.example.assistant.ui.profile.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.example.assistant.ui.home.view.SideMenuActivity;
 import com.example.assistant.databinding.ActivityProfileBinding;
 import com.example.assistant.ui.auth.view.LoginActivity;
 import com.example.assistant.ui.profile.viewmodel.ProfileViewModel;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -26,8 +28,15 @@ public class ProfileActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
+        binding.exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferencesHelper.saveToken(ProfileActivity.this, null);
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
+        });
 
-        binding.exit.setOnClickListener(v -> startActivity(new Intent(this, LoginActivity.class)));
         binding.backBtn.setOnClickListener(v -> startActivity(new Intent(this, SideMenuActivity.class)));
 
         viewModel.getDataProfile();

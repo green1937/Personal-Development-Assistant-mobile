@@ -23,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityNewTaskBinding;
 import com.example.assistant.ui.home.viewmodel.TaskViewModel;
+import com.example.assistant.utils.SharedPreferencesHelper;
+
 import java.util.Calendar;
 
 
@@ -51,7 +53,7 @@ public class EditTaskActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         idEditTask = (int) bundle.getSerializable("id");
         viewModel.setIdEditTask(idEditTask);
-
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         Resources res = getApplicationContext().getResources();
         viewModel.setEditUrl(res.getString(R.string.urlTuna) + "tasks/" + idEditTask);
         viewModel.setUrl(res.getString(R.string.urlTuna) + "tasks");

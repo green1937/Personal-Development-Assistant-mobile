@@ -2,6 +2,7 @@ package com.example.assistant.ui.storage.viewmodel;
 
 import static com.example.assistant.ui.plans.viewmodel.PlansViewModel.getPlansFromJSON;
 
+import android.content.Context;
 import android.widget.EditText;
 
 import androidx.lifecycle.LiveData;
@@ -9,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.assistant.ui.storage.model.Storage;
-import com.example.assistant.repository.GetWheelRepository;
+import com.example.assistant.repository.GetRequestRepository;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -34,13 +35,24 @@ public class StorageViewModel extends ViewModel {
     private MutableLiveData<Integer> minPoints = new MutableLiveData<>();
     private MutableLiveData<Integer> maxPoints = new MutableLiveData<>();
     private MutableLiveData<String> url = new MutableLiveData<>();
+    private MutableLiveData<Context> context = new MutableLiveData<>();
 
-    private GetWheelRepository getWheelRepository = new GetWheelRepository();
+    private GetRequestRepository getRequestRepository = new GetRequestRepository();
     private MutableLiveData<String> postResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
+
+
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
     public LiveData<Storage> getStorage() {
         return storage;
+    }
+
+    public void setCtx(Context ctx) {
+        context.setValue(ctx);
     }
 
     public void setEntityTypes(String type) {
@@ -118,7 +130,7 @@ public class StorageViewModel extends ViewModel {
     }
 
     public StorageViewModel() {
-        storage.setValue(new Storage(null, null, null, null, null, null, null, null, null, new ArrayList<>(), null, null));
+        storage.setValue(new Storage(null, null, null, null, null, null, null, null, null, null, null, null));
     }
 
     public ArrayList<String> getEntityType() {
@@ -165,8 +177,8 @@ public class StorageViewModel extends ViewModel {
         currentStorage.setDoneStopDate(changeDateFormat(currentStorage.getDoneStopDate()));
 
         System.out.println("in viewModel data " + new Gson().toJson(currentStorage));
-        getWheelRepository.sendDataToServer(new Gson().toJson(currentStorage),
-                url.getValue()).observeForever(result -> postResult.setValue(result));
+        getRequestRepository.sendDataToServer(new Gson().toJson(currentStorage),
+                url.getValue(), token.getValue()).observeForever(result -> postResult.setValue(result));
 
     }
 

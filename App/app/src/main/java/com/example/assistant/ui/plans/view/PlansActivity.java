@@ -17,6 +17,7 @@ import com.example.assistant.ui.diary.view.DiaryActivity;
 import com.example.assistant.ui.plans.viewmodel.PlansViewModel;
 import com.example.assistant.ui.home.view.MainActivity;
 import com.example.assistant.ui.wheel.view.WheelActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 
 public class PlansActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class PlansActivity extends AppCompatActivity {
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
 
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "plans");
 
@@ -45,7 +47,7 @@ public class PlansActivity extends AppCompatActivity {
                         //recyclerview
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                         binding.allPlansRecyclerView.setLayoutManager(linearLayoutManager);
-                        PlanAdapter planAdapter = new PlanAdapter(PlansActivity.this, viewModel.getPlans(), "com.example.assistant.ui.plans.view.PlansActivity");
+                        PlanAdapter planAdapter = new PlanAdapter(PlansActivity.this, viewModel.getPlans(), "com.example.assistant.ui.plans.view.PlansActivity", SharedPreferencesHelper.getToken(getApplicationContext()));
                         binding.allPlansRecyclerView.setAdapter(planAdapter);
 
                     } else {

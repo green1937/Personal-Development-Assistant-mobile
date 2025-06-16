@@ -25,10 +25,15 @@ public class NewPlanViewModel extends ViewModel {
 
     private NewObjectRepository repository = new NewObjectRepository();
     private MutableLiveData<Boolean> saveResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
 
     public LiveData<NewPlan> getNewPlan() {
         return newPlan;
+    }
+
+    public void setToken(String t) {
+        token.setValue(t);
     }
 
     public void setNewPlanName(String planName) {
@@ -101,7 +106,7 @@ public class NewPlanViewModel extends ViewModel {
         newPlan.setValue(new NewPlan(1, currentPlan.getName(), currentPlan.getDetails(), changeDateFormat(currentPlan.getStartDate()), changeDateFormat(currentPlan.getStopDate())));
         allJsonData.add(new Gson().toJson(newPlan.getValue()));
         System.out.println(allJsonData + " " + url.getValue());
-        repository.sendDataObj(allJsonData, url.getValue(), "POST").observeForever(result -> {
+        repository.sendDataObj(allJsonData, url.getValue(), "POST", token.getValue()).observeForever(result -> {
             saveResult.setValue(result);
         });
         System.out.println("end ");

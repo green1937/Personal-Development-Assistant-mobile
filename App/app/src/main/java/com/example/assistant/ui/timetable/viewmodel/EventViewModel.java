@@ -27,6 +27,12 @@ public class EventViewModel extends ViewModel {
 
     private NewObjectRepository repository = new NewObjectRepository();
     private MutableLiveData<Boolean> saveResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
+
+
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
 
     public LiveData<Event> getEvent() {
@@ -117,7 +123,7 @@ public class EventViewModel extends ViewModel {
             }
         }
 
-        repository.sendDataObj(allJsonData, url.getValue(), "POST").observeForever(result -> {
+        repository.sendDataObj(allJsonData, url.getValue(), "POST", token.getValue()).observeForever(result -> {
             saveResult.setValue(result);
         });
 

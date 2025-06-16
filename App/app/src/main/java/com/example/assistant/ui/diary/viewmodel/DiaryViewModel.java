@@ -37,10 +37,16 @@ public class DiaryViewModel extends ViewModel {
     private MutableLiveData<Boolean> updateResult = new MutableLiveData<>();
 
     private MutableLiveData<String> getResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
+
 
 
     public DiaryViewModel() { }
 
+
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
     public LiveData<Record> getRecord() {
         return record;
@@ -76,7 +82,7 @@ public class DiaryViewModel extends ViewModel {
         Date currDate = new Date();
         todayDate.setValue(formatForDateVariant2.format(currDate));
 
-        getDataRepository.getDataObj(url.getValue()).observeForever(result -> {
+        getDataRepository.getDataObj(url.getValue(), token.getValue()).observeForever(result -> {
             getResult.setValue(result);
         });
     }
@@ -119,15 +125,18 @@ public class DiaryViewModel extends ViewModel {
     public void createRecord(String text) {
         NewRecord record = new NewRecord(1, todayDate.getValue(),text);
         String jsonData = new Gson().toJson(record);
-        repository.sendDataObj(Collections.singletonList(jsonData), url.getValue(), "POST")
+        repository.sendDataObj(Collections.singletonList(jsonData), url.getValue(), "POST", token.getValue())
                 .observeForever(result -> saveResult.setValue(result));
     }
 
 
     public void updateRecord(String text) {
-        Record record = new Record(todayRecordId.getValue(), 1, todayDate.getValue(), text);
+        Record record = new Record(todayRecordId.getValue(),
+                1,
+                todayDate.getValue(),
+                text);
         String jsonData = new Gson().toJson(record);
-        repository.sendDataObj(Collections.singletonList(jsonData), url.getValue(), "PUT")
+        repository.sendDataObj(Collections.singletonList(jsonData), url.getValue(), "PUT", token.getValue())
                 .observeForever(result -> updateResult.setValue(result));
     }
 

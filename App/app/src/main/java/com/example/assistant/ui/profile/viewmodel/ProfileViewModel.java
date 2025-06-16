@@ -13,7 +13,13 @@ public class ProfileViewModel extends ViewModel {
     private MutableLiveData<String> url = new MutableLiveData<>();
     private GetDataRepository repository = new GetDataRepository();
     private MutableLiveData<String> getResult = new MutableLiveData<>();
+    private MutableLiveData<String> token = new MutableLiveData<>();
 
+
+
+    public void setToken(String t) {
+        token.setValue(t);
+    }
 
 
     public void setUrl(String urlProfile) {
@@ -27,12 +33,14 @@ public class ProfileViewModel extends ViewModel {
 
 
     public void getDataProfile() {
-        //repository.getDataObj(url.getValue()).observeForever(result -> getResult.setValue(result));
-        getResult.setValue("{\n" +
+        repository.getDataObj(url.getValue(), token.getValue()).observeForever(result -> getResult.setValue(result));
+        /*getResult.setValue("{\n" +
                 "    \"username\": \"userTest\", \n" +
                 "    \"email\": \"usertesta3@test.com\"\n" +
                 "}");
+         */
     }
+
 
     public ArrayList<String> setData() {
         String json = getResult.getValue();
@@ -40,10 +48,8 @@ public class ProfileViewModel extends ViewModel {
 
         try {
             JSONObject jsonObject = new JSONObject(json);
-
             profileData.add(jsonObject.getString("username"));
             profileData.add(jsonObject.getString("email"));
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

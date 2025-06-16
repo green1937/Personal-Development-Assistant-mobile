@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.assistant.R;
 import com.example.assistant.databinding.ActivityNewEventBinding;
 import com.example.assistant.ui.timetable.viewmodel.EventViewModel;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -48,6 +49,8 @@ public class NewEventActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(EventViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
+
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
         Resources res = getResources();
         viewModel.setUrl(res.getString(R.string.urlTuna) + "events");
         showSpinnerFormat();

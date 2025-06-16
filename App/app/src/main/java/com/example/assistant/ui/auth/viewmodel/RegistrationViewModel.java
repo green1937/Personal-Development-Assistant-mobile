@@ -3,6 +3,8 @@ package com.example.assistant.ui.auth.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.example.assistant.repository.AuthRepository;
 import com.example.assistant.ui.auth.model.Register;
 import com.example.assistant.repository.NewObjectRepository;
 import com.google.gson.Gson;
@@ -16,8 +18,8 @@ public class RegistrationViewModel extends ViewModel {
 
     private MutableLiveData<Register> register = new MutableLiveData<>();
     private MutableLiveData<String> url = new MutableLiveData<>();
-    private NewObjectRepository repository = new NewObjectRepository();
-    private MutableLiveData<Boolean> saveResult = new MutableLiveData<>();
+    private AuthRepository repository = new AuthRepository();
+    private MutableLiveData<String> saveResult = new MutableLiveData<>();
 
     public LiveData<Register> getRegister() {
         return register;
@@ -27,7 +29,7 @@ public class RegistrationViewModel extends ViewModel {
         url.setValue(urlRegister);
     }
 
-    public LiveData<Boolean> getSaveResult() {
+    public LiveData<String> getSaveResult() {
         return saveResult;
     }
 
@@ -52,11 +54,9 @@ public class RegistrationViewModel extends ViewModel {
         Register currentRegister = register.getValue();
         register.setValue(new Register(currentRegister.getEmail(), currentRegister.getUsername(), currentRegister.getPassword(), currentRegister.getRepeatPassword()));
         allJsonData.add(new Gson().toJson(register.getValue()));
-
-        //repository.sendDataObj(allJsonData, url.getValue(), "POST").observeForever(result -> saveResult.setValue(result));
-
-        saveResult.setValue(true);
-        System.out.println("REGISTER USER data = " + allJsonData);
+        String jsonData = new Gson().toJson(register.getValue());
+        repository.sendDataToServer(jsonData, url.getValue()).observeForever(result -> saveResult.setValue(result));
+        System.out.println("REGISTER USER data = " + jsonData);
     }
 
 

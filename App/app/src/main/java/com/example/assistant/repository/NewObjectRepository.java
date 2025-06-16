@@ -12,7 +12,7 @@ import java.util.List;
 
 public class NewObjectRepository {
 
-    public LiveData<Boolean> sendDataObj(List<String> jsonData, String urlString, String requestMethod) {
+    public LiveData<Boolean> sendDataObj(List<String> jsonData, String urlString, String requestMethod, String token) {
         final MutableLiveData<Boolean> result = new MutableLiveData<>();
         System.out.println("JSON DATA " + jsonData);
 
@@ -27,6 +27,7 @@ public class NewObjectRepository {
                     connection.setDoOutput(true);
                     connection.setRequestProperty("Content-Type", "application/json");
                     connection.setRequestProperty("tuna-skip-browser-warning", "true");
+                    connection.setRequestProperty("Authorization", "Bearer " + token);
 
                     try (OutputStream os = connection.getOutputStream()) {
                         byte[] input = json.getBytes(StandardCharsets.UTF_8);

@@ -1,11 +1,12 @@
 package com.example.assistant.ui.timetable.view;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -16,11 +17,9 @@ import com.example.assistant.ui.diary.view.DiaryActivity;
 import com.example.assistant.ui.home.view.MainActivity;
 import com.example.assistant.ui.plans.view.PlansActivity;
 import com.example.assistant.ui.timetable.viewmodel.TimetableViewModel;
-import com.example.assistant.ui.timetable.viewmodel.TimetableViewModelFactory;
 import com.example.assistant.ui.wheel.view.WheelActivity;
+import com.example.assistant.utils.SharedPreferencesHelper;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class TimetableActivity extends AppCompatActivity {
@@ -33,60 +32,57 @@ public class TimetableActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_timetable);
-
-        // Создаем ViewModel через фабрику
-        viewModel = new ViewModelProvider(this, new TimetableViewModelFactory(getApplication()))
-                .get(TimetableViewModel.class);
-
+        viewModel = new ViewModelProvider(this).get(TimetableViewModel.class);
         binding.setViewModel(viewModel);
         binding.executePendingBindings();
 
-        /*try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }*/
+        viewModel.setToken(SharedPreferencesHelper.getToken(getApplicationContext()));
+        Resources res = getResources();
+        viewModel.setUrl(res.getString(R.string.urlTuna) + "events");
 
-        viewModel.getAllEventsInWeek().observe(this, new Observer<List<ArrayList<String>>>() {
-            @Override
-            public void onChanged(List<ArrayList<String>> arrayLists) {
+        viewModel.loadTimetableData();
+
+        viewModel.getResult().observe(this, success -> {
+            if (success!=null) {
+                viewModel.setEvents();
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 binding.recyclerViewTimetableMonday.setLayoutManager(linearLayoutManager);
-                TimetableAdapter timetableAdapter = new TimetableAdapter(TimetableActivity.this, arrayLists);
+                TimetableAdapter timetableAdapter = new TimetableAdapter(TimetableActivity.this, viewModel.getEvents().get(0), SharedPreferencesHelper.getToken(getApplicationContext()));
                 binding.recyclerViewTimetableMonday.setAdapter(timetableAdapter);
+            } else {
+                Toast.makeText(this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
             }
         });
+
 
         // Обработка клика по кнопке
         binding.textLL.setOnClickListener(v -> {
             System.out.println("Click!");
             int currentType = viewModel.getCurrentWeekType().getValue();
             System.out.println("type = " + currentType);
-            viewModel.setCurrentWeekType(currentType == 0 ? 1 : 0);
+            viewModel.setCurrentWeekType(currentType == 1 ? 0 : 1); //viewModel.setCurrentWeekType(currentType == 0 ? 1 : 0);
 
-            if (currentType==0) binding.textLL.setText("Четная неделя");
-            else binding.textLL.setText("Нечетная неделя");
+            if (currentType==0) binding.textLL.setText("Нечетная неделя");
+            else binding.textLL.setText("Четная неделя");
 
-            viewModel.getAllEventsInWeek().observe(this, new Observer<List<ArrayList<String>>>() {
-                @Override
-                public void onChanged(List<ArrayList<String>> arrayLists) {
+            viewModel.getResult().observe(this, success -> {
+                if (success!=null) {
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                     binding.recyclerViewTimetableMonday.setLayoutManager(linearLayoutManager);
-                    TimetableAdapter timetableAdapter = new TimetableAdapter(TimetableActivity.this, arrayLists);
+                    TimetableAdapter timetableAdapter = new TimetableAdapter(TimetableActivity.this, viewModel.getEvents().get(currentType), SharedPreferencesHelper.getToken(getApplicationContext()));
                     binding.recyclerViewTimetableMonday.setAdapter(timetableAdapter);
+                } else {
+                    Toast.makeText(this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
                 }
             });
+
         });
 
         // кнопка добавления события
-        binding.addEventBtn.setOnClickListener(v -> {
-            startActivity(new Intent(this, NewEventActivity.class));
-        });
+        binding.addEventBtn.setOnClickListener(v -> startActivity(new Intent(this, NewEventActivity.class)));
 
         // кнопка возврата на боковое меню
-        binding.backBtn.setOnClickListener(v -> {
-            startActivity(new Intent(this, SideMenuActivity.class));
-        });
+        binding.backBtn.setOnClickListener(v -> startActivity(new Intent(this, SideMenuActivity.class)));
         // Нижнее меню
         bottNavItem();
     }
